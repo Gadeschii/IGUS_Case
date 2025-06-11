@@ -16,6 +16,10 @@ class BaseRobot:
         self._last_status = None
         self.connected = False
         
+    ####################################################################################  
+    #                                  CONNECT()
+    ####################################################################################    
+        
     def connect(self):
         print(f"\n{'='*30}")
         print(f"🛠️  Prepare robot: {self.robot_id.upper()}")
@@ -36,11 +40,29 @@ class BaseRobot:
         if not self.controller.enable():
             raise Exception("❌ Can't Enable robot")
 
-        print("✅ Esperando a que el robot esté listo...")
+        print("⏳Esperando a que el robot esté listo...")
         if not self.controller.wait_for_kinematics_ready(timeout=30):
             raise Exception("❌ El robot no está listo tras el referenciado.")
+        print(f"✅ {self.robot_id.upper()}: Conected sucessfully  ")    
+        
+    ####################################################################################  
+    #                               REFERENCE()
+    ####################################################################################
+    def reference(self):
+        if self.robot_id == "scara":
+            self._reference_scara()
+        elif self.robot_id == "rebelline":
+            self._reference_rebelline()
+        elif self.robot_id in ["rebel1", "rebel2"]:
+            self._reference_rebel_generic()
+        else:
+            raise Exception(f"❌ No identificado: {self.robot_id}")
+        
+        print("⏳ Esperando readiness...")
+        if not self.controller.wait_for_kinematics_ready(timeout=30):
+            raise Exception("❌ Robot no listo tras referenciado.")
 
-
+    
 
     def reference(self):
         # 🎯 Send reference command to all joints
