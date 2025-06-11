@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Program>
+    <Header RobotName="igus REBEL-6DOF" RobotType="REBEL-6DOF-01" GripperType="" Software="iRC V902-14-003" VelocitySetting="0" />
+    <Store Nr="1" Type="number" Value="0" Name="startrebel1" Descr="" />
+    <Store Nr="2" Type="number" Value="1" Name="startrebel1" Descr="" />
+    <Store Nr="3" Type="number" Value="0" Name="isfinishrebel1" Descr="" />
+    <Store Nr="4" Type="number" Value="0" Name="posreciverebel1" Descr="" />
+    <Store Nr="5" Type="number" Value="0" Name="posdropobjrebel1" Descr="" />
+    <Joint AbortCondition="False" Nr="6" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="-108.81" a2="126.86" a3="8.02" a4="-0.48" a5="-46.13" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
+    <Store Nr="7" Type="number" Value="1" Name="posreciverebel1" Descr="" />
+    <Joint AbortCondition="False" Nr="8" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="-90.59" a2="95.48" a3="7.91" a4="-0.31" a5="-14.85" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="9" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="-59.71" a2="84.03" a3="7.91" a4="-0.31" a5="-0.73" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
+    <Store Nr="10" Type="number" Value="1" Name="posdropobjrebel1" Descr="" />
+    <Joint AbortCondition="False" Nr="11" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="3.15" a2="47.92" a3="115.08" a4="4.24" a5="-73.93" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="12" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="3.15" a2="47.92" a3="115.08" a4="2.98" a5="-73.93" a6="141.79" e1="0" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="13" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="-81.07" a2="38.66" a3="58.83" a4="0.07" a5="74.64" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="14" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="-81.07" a2="38.66" a3="58.83" a4="0.07" a5="74.64" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="15" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="-108.81" a2="126.86" a3="8.02" a4="-0.48" a5="-46.13" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
+    <Store Nr="16" Type="number" Value="1" Name="isfinishrebel1" Descr="" />
+</Program>

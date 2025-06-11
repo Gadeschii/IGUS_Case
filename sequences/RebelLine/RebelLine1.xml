@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Program>
+    <Header RobotName="igus REBEL-6DOF" RobotType="REBEL-6DOF-01" GripperType="" Software="iRC V902-14-003" VelocitySetting="0" />
+    <Store Nr="1" Type="number" Value="0" Name="startrebelline1" Descr="" />
+    <Store Nr="2" Type="number" Value="1" Name="startrebelline1" Descr="" />
+    <Store Nr="3" Type="number" Value="0" Name="isfinishrebelline1" Descr="" />
+    <Store Nr="4" Type="number" Value="0" Name="posreciverebelline1" Descr="" />
+    <Store Nr="5" Type="number" Value="0" Name="posdropobjrebellinetorebel1" Descr="" />
+    <Joint AbortCondition="False" Nr="6" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="734.15" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="7" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="475.12" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="8" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="60.97" a2="69.95" a3="58.83" a4="-0.88" a5="49.54" a6="-32.97" e1="475.12" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="9" Source="Numerical" velPercent="10" acc="40" smooth="0" a1="60.97" a2="69.95" a3="58.83" a4="-0.88" a5="49.54" a6="-32.97" e1="475.12" e2="0" e3="0" Descr="" />
+    <Output Nr="10" Channel="DOut31" State="True" Descr="" />
+    <Wait Nr="11" Type="Time" Seconds="3" Descr="" />
+    <Store Nr="12" Type="number" Value="1" Name="posreciverebelline1" Descr="" />
+    <Joint AbortCondition="False" Nr="13" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="60.97" a2="58.84" a3="63.34" a4="-0.8" a5="56.14" a6="-33.09" e1="475.12" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="14" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="88.78" a2="41.57" a3="49.71" a4="-0.67" a5="87.04" a6="-33.5" e1="1141.34" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="15" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="88.85" a2="55.17" a3="47.06" a4="-0.69" a5="76.09" a6="-33.29" e1="1141.34" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="16" Source="Numerical" velPercent="10" acc="40" smooth="0" a1="88.85" a2="64.11" a3="49.77" a4="-0.74" a5="64.45" a6="-33.14" e1="1141.34" e2="0" e3="0" Descr="" />
+    <Output Nr="17" Channel="DOut31" State="False" Descr="" />
+    <Wait Nr="18" Type="Time" Seconds="1.5" Descr="" />
+    <Store Nr="19" Type="number" Value="1" Name="posdropobjrebellinetorebel1" Descr="" />
+    <Joint AbortCondition="False" Nr="20" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="88.85" a2="55.17" a3="47.06" a4="-0.69" a5="76.09" a6="-33.29" e1="1141.34" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="21" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="734.15" e2="0" e3="0" Descr="" />
+    <Store Nr="22" Type="number" Value="1" Name="isfinishrebelline1" Descr="" />
+</Program>

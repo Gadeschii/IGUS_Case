@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Program>
+    <Header RobotName="igus REBEL-6DOF" RobotType="REBEL-6DOF-01" GripperType="" Software="iRC V902-14-003" VelocitySetting="0" />
+    <Store Nr="1" Type="number" Value="0" Name="startrebel1" Descr="" />
+    <Store Nr="2" Type="number" Value="0" Name="isfinishrebel1" Descr="" />
+    <Store Nr="3" Type="number" Value="0" Name="posreciverebel1" Descr="" />
+    <Store Nr="4" Type="number" Value="0" Name="posdropobjrebel1" Descr="" />
+    <Joint AbortCondition="False" Nr="5" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="-108.59" a2="77.24" a3="10.08" a4="-0.65" a5="-46.13" a6="1.31" e1="0" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="6" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="-108.59" a2="121.05" a3="10.08" a4="-0.65" a5="-46.13" a6="1.31" e1="0" e2="0" e3="0" Descr="" />
+</Program>

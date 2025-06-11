@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Program>
+    <Header RobotName="Scara Robot" RobotType="RL-SCR-0100" GripperType="" Software="iRC V902-14-003" VelocitySetting="2" />
+    <Store Nr="1" Type="number" Value="0" Name="startscara" Descr="" />
+    <Store Nr="2" Type="number" Value="0" Name="isfinishscara" Descr="" />
+    <Store Nr="3" Type="number" Value="0" Name="posrecivescara" Descr="" />
+    <Store Nr="4" Type="number" Value="0" Name="pordropscara" Descr="" />
+  </Program>
