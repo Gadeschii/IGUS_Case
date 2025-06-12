@@ -11,6 +11,7 @@ class Rebel1Robot(BaseRobot):
         print(f"🎯 Referencing all joints of {self.robot_id.upper()}...")
         if not self.controller.reference_all_joints():
             raise Exception("❌ Failed to reference all joints.")
+        print(f"{self.robot_id.upper()}, referenced")
 
         time.sleep(1)
         self.controller.reset()

@@ -2,11 +2,11 @@
 <Program>
     <Header RobotName="Scara Robot" RobotType="RL-SCR-0100" GripperType="" Software="iRC V902-14-003" VelocitySetting="2" />
     <Store Nr="1" Type="number" Value="0" Name="startscara" Descr="" />
-    <Store Nr="2" Type="number" Value="1" Name="startscara" Descr="" />
-    <Store Nr="3" Type="number" Value="0" Name="isfinishscara" Descr="" />
-    <Store Nr="4" Type="number" Value="0" Name="posrecivescara" Descr="" />
-    <Store Nr="5" Type="number" Value="0" Name="posdropobjscara" Descr="" />
-    <Joint AbortCondition="False" Nr="6" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="137.66" a2="-80.19" a3="78.73" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
+    <Store Nr="2" Type="number" Value="0" Name="isfinishscara" Descr="" />
+    <Store Nr="3" Type="number" Value="0" Name="posrecivescara" Descr="" />
+    <Store Nr="4" Type="number" Value="0" Name="posdropobjscara" Descr="" />
+    <Joint AbortCondition="False" Nr="5" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="137.66" a2="-80.19" a3="78.73" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
+    <Store Nr="6" Type="number" Value="1" Name="startscara" Descr="" />
     <Joint AbortCondition="False" Nr="7" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="73.16" a2="-6.6" a3="-1.51" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="8" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="6.86" a2="-6.6" a3="-1.51" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="Aqui el gripper deberia activarse" />
     <Output Nr="9" Channel="DOut23" State="True" Descr="" />
@@ -18,7 +18,7 @@
     <Output Nr="15" Channel="DOut24" State="True" Descr="" />
     <Output Nr="16" Channel="DOut22" State="True" Descr="" />
     <Wait Nr="17" Type="Time" Seconds="5" Descr="" />
-    <Store Nr="18" Type="number" Value="0" Name="posrecivescara" Descr="" />
+    <Store Nr="18" Type="number" Value="1" Name="posrecivescara" Descr="" />
     <Joint AbortCondition="False" Nr="19" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="109.46" a2="-15.67" a3="-1.51" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="20" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="109.46" a2="-74.84" a3="66.98" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="21" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="469.96" a2="-74.84" a3="66.98" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
@@ -35,5 +35,6 @@
     <Joint AbortCondition="True" Nr="32" Source="Numerical" velPercent="25" acc="40" smooth="0" a1="469.96" a2="-30.35" a3="66.98" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="33" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="470" a2="-74.84" a3="66.98" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="34" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="109.46" a2="-74.84" a3="66.98" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
-    <Store Nr="35" Type="number" Value="1" Name="isfinishscara" Descr="" />
+    <Store Nr="35" Type="number" Value="0" Name="startscara" Descr="" />
+    <Store Nr="36" Type="number" Value="1" Name="isfinishscara" Descr="" />
 </Program>

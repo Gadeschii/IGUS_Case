@@ -1,4 +1,6 @@
 from enum import Enum
+import time
+from controllers.logic_controller import LogicController
 
 class SystemState(Enum):
     CONNECTING = 1
@@ -12,43 +14,40 @@ class StateController:
         self.robots = robots
         self.state = SystemState.CONNECTING
 
-    def run(self):
+    def run_case(self):
         while self.state != SystemState.CLOSING:
             if self.state == SystemState.CONNECTING:
-                print(f"\n{'*'*30}")
-                print ("🔌 Connecting all robots...") 
-                print(f"\n{'*'*30}")
+                print("\n" + "*" * 30)
+                print("🔌 Connecting all robots...")
                 for robot in self.robots:
                     robot.connect()
                 self.state = SystemState.REFERENCING
 
             elif self.state == SystemState.REFERENCING:
-                print(f"\n{'*'*30}")
-                print ("🎯 Referencing all robots...") 
-                print(f"\n{'*'*30}")
+                print("\n" + "*" * 30)
+                print("🎯 Referencing all robots...")
                 for robot in self.robots:
                     robot.reference()
                 self.state = SystemState.IMPORTING
 
             elif self.state == SystemState.IMPORTING:
-                print(f"\n{'*'*30}")
-                print ("📥 Importing variables...") 
-                print(f"\n{'*'*30}")
+                print("\n" + "*" * 30)
+                print("📥 Importing variables...")
                 for robot in self.robots:
                     robot.import_variables()
                 self.state = SystemState.RUNNING
 
             elif self.state == SystemState.RUNNING:
-                print(f"\n{'*'*30}")
-                print ("🚀 Running tasks...")  
-                print(f"\n{'*'*30}")
-                for robot in self.robots:
-                    robot.run_task()
-                self.state = SystemState.CLOSING
+                print("\n" + "*" * 30)
+                print("🚀 Initial startup complete, passing control to logic controller...")     
+                logic = LogicController(self.robots)
+                print("\n🧠 Start coordination logic between robots")
+                logic.run_scenario()  # Esto es un bucle infinito, así que no saldrá de aquí a menos que falle
 
-        print(f"\n{'*'*30}")
-        print ("🔒 Closing all robot sessions...") 
-        print(f"\n{'*'*30}")
+                break 
+
+        print("\n" + "*" * 30)
+        print("🔒 Closing all robot sessions...")
         for robot in self.robots:
             robot.disable()
             robot.close()

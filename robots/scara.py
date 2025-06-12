@@ -11,7 +11,7 @@ class ScaraRobot(BaseRobot):
     
     def _reference_scara(self):
         print("🔧 Referenciando SCARA: primero A1...")
-        time.sleep(0.5)
+        time.sleep(0.1)
 
         if self.controller.are_all_axes_referenced(axes=("A1", "A2", "A3", "A4")):
             ScaraRobot.move_to_safe_position_scara(self)
@@ -45,9 +45,9 @@ class ScaraRobot(BaseRobot):
         if not success:
             raise Exception("❌ Failed to move to initial safe position.")
 
-        print("✅ Position reached. Lowering...")
+        print("⬇️ Position reached. Lowering...")
 
-        successLift = robot.controller.move_joints(
+        successLift = self.controller.move_joints(
             A1=300.0, A2=-74.3, A3=70.0, A4=80.0,
             A5=0.0, A6=0.0, E1=0.0, E2=0.0, E3=0.0,
             velocity=40.0, wait_move_finished=True

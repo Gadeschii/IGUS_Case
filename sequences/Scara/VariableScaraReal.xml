@@ -4,5 +4,5 @@
     <Store Nr="1" Type="number" Value="0" Name="startscara" Descr="" />
     <Store Nr="2" Type="number" Value="0" Name="isfinishscara" Descr="" />
     <Store Nr="3" Type="number" Value="0" Name="posrecivescara" Descr="" />
-    <Store Nr="4" Type="number" Value="0" Name="pordropscara" Descr="" />
+    <Store Nr="4" Type="number" Value="0" Name="posdropobjscara" Descr="" />
   </Program>

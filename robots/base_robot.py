@@ -1,5 +1,7 @@
 from cri_lib import CRIController
 import time
+# from .utils import wait_until_axes_referenced, check_robot_ready
+# from .scara import move_to_safe_position_scara
 
 class BaseRobot:
     def __init__(self, name, program_name, ip, sequence_path, var_file, port, id="",remote_folder="Programs", wait_timeout=100):
@@ -25,9 +27,12 @@ class BaseRobot:
         print(f"🛠️  Prepare robot: {self.robot_id.upper()}")
         print(f"{'='*30}")
 
-        print(f"🔌 Connect to {self.ip}:{self.port}")
+        print(f"🔌 Connecting to {self.ip}:{self.port}")
         if not self.controller.connect(self.ip, self.port):
-            raise Exception("❌ Can't connect to the robot.")
+            raise Exception(
+            f"❌ Failed to connect to robot '{self.robot_id.upper()}' at {self.ip}:{self.port}.\n"
+            f"🔎 Please ensure the robot is powered on and the IP address is correct."
+        )
 
         print("♻️ Reiniciando robot...")
         self.controller.reset()
@@ -64,110 +69,65 @@ class BaseRobot:
 
     
 
-    def reference(self):
-        # 🎯 Send reference command to all joints
-        success = True
-        if self.robot_id == "scara":
-            print("🔧 Referenciando SCARA: primero A1...")                
-            time.sleep(0.5)
-            #self.controller.reference_single_joint('A1')
-            print(f"📋 Resultado de reference_single_joint('A1'): {success}")
-            time.sleep(0.5)
-            print("Check referenced axis")
-            print(self.controller.are_all_axes_referenced())
-            if self.controller.are_all_axes_referenced(axes=("A1", "A2", "A3","A4")):
-                self.move_to_safe_position_scara()
-            else:
-
-                if not self.controller.reference_single_joint('A1') :
-                    raise Exception("❌ Fallo al referenciar A1 en SCARA.")
-                
-                print("✅ A1 referenciado. Referenciando el resto de ejes...")
-                if not self.controller.reference_all_joints():
-                    raise Exception("❌ Fallo al referenciar el resto de ejes en SCARA.")
-                time.sleep(0.2)
-
-                self.wait_until_axes_referenced(axes=("A1", "A2", "A3", "A4")) 
-                time.sleep(1)
-                self.controller.reset()
-                time.sleep(0.5)
-                self.controller.enable()
-                time.sleep(0.5)
-                self.move_to_safe_position_scara()
-
-        elif self.robot_id == "rebelline":
-            if self.controller.are_all_axes_referenced(axes=("A1", "A2", "A3", "A4", "A5", "A6","E1")):
-
-                self.move_to_safe_position_rebelLine()
-
-            else:
-                print("🔧 Referenciando REBELLINE: primero E1...")
-                time.sleep(0.5)
-                # self.controller.reference_single_joint('E1')
-                print(f"📋 Resultado de reference_single_joint('E1'): {success}")
-                time.sleep(0.5)
-                if not self.controller.reference_single_joint('E1'):
-                    raise Exception("❌ Fallo al referenciar E1 en REBELLINE.")
-                # Esperar a que E1 esté referenciado
-                
-                self.wait_until_axes_referenced(axes=("E1",), timeout=200)
-                print("✅ E1 referenciado. Continuando con el resto de ejes...")
-
-                if not self.controller.reference_all_joints():
-                    raise Exception("❌ Fallo al referenciar el resto de ejes en REBELLINE.")
-
-                time.sleep(0.2)
-
-                self.wait_until_axes_referenced(axes=("A1", "A2", "A3", "A4","A5","A6","E1" ))
-                time.sleep(1)
-                self.controller.reset()
-                time.sleep(0.5)
-                self.controller.enable()
-                time.sleep(0.5)
-                self.move_to_safe_position_rebelLine()
-                    
-        elif self.robot_id == "rebel1":
-            print("🎯 Referenciando todos los ejes de..." + self.robot_id)
-            if not self.controller.reference_all_joints():
-                raise Exception("❌ Fallo al referenciar todos los ejes.")
-                
-            time.sleep(1)
-            self.controller.reset()
-            time.sleep(0.5)
-            self.controller.enable()
-            time.sleep(5)
-                
-        elif self.robot_id == "rebel2":
-            print("🎯 Referenciando todos los ejes de..." + self.robot_id)
-            if not self.controller.reference_all_joints():
-                raise Exception("❌ Fallo al referenciar todos los ejes.")
-            time.sleep(1)
-            self.controller.reset()
-            time.sleep(0.5)
-            self.controller.enable()
-            time.sleep(5)
-                
-        else:
-            raise Exception("❌ No identificado " + self.robot_id)
-
-        print("✅ Esperando a que el robot esté listo...")
-        if not self.controller.wait_for_kinematics_ready(timeout=30):
-            raise Exception("❌ El robot no está listo tras el referenciado.")
-
-        time.sleep(0.5)
-
     def import_variables(self):
-        # 📥 Load required variables (placeholder)
-        pass
+        print("📥 Loading required variables...")
+        
+        if self.var_file:
+            print(f"📤 Uploading variable file: {self.sequence_path + self.var_file}")
+            if not self.controller.upload_file(self.sequence_path + self.var_file, self.remote_folder):
+                raise Exception("❌ Failed to upload variable file.")
+            
+            time.sleep(0.1)
+            print(f"📦 Loading variable file into memory: {self.var_file}")
+            if not self.controller.load_programm(self.var_file):
+                raise Exception("❌ Failed to load variable file.")
 
+            print("✅ Variables successfully initialized.")
+
+            print("▶️ Starting program...")
+            time.sleep(0.5)
+            # print("✨ This is where the magic should happen")
+            if not self.controller.start_programm():
+                raise Exception("❌ Error while starting the variable program.")
+
+            print(f"🤖 Robot {self.robot_id.upper()} variable state:")
+            print(self.controller.robot_state.variabels)
+            print(f"📍 Robot {self.robot_id} was in the above state")
+
+        print(f"✅ Variable preparation complete for: {self.robot_id.upper()}")
+
+        
     def run_task(self):
-        # 🚀 Execute main task (placeholder)
-        pass
+        try:
+            print ("🚀 Execute main task (placeholder)")
+            print(f"\n{'='*30}")
+            print(f"▶️  Ejecutando secuencia para: {self.robot_id.upper()}")
+            print(f"{'='*30}")
+
+            print(f"📤 Subiendo archivo de secuencia: {self.sequence_path + self.program_name}")
+            if not self.controller.upload_file(self.sequence_path + self.program_name, self.remote_folder):
+                raise Exception("❌ Fallo al subir el archivo de secuencia.")
+
+            print(f"📦 Cargando programa de movimiento... {self.program_name}")
+            if not self.controller.load_programm(self.program_name):
+                raise Exception("❌ Fallo al cargar el programa de movimiento.")
+
+            print(f"▶️ Iniciando programa de {self.robot_id.upper()}")
+            if not self.controller.start_programm():
+                raise Exception("❌ Error al iniciar el programa de movimiento.")
+            time.sleep(2)
+
+            # self.wait_for_finish_signal()
+            # print(f"✅ Secuencia completada para: {self.robot_id.upper()}")
+
+        except Exception as e:
+            print(f"❌ Error en secuencia de {self.robot_id.upper()}: {e}") 
+        
 
     def disable(self):
-        # ⛔ Disable motors
-        self.cri.disable()
+        print("⛔ Disable motors")
+        self.controller.disable()
 
     def close(self):
-        # 🔒 Close CRI connection
-        self.cri.close()
+        print("🔒 Close CRI connection")
+        self.controller.close()
