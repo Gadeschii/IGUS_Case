@@ -36,6 +36,10 @@ class LogicController:
                 print(f"\n{'--'*30}")
                 print(f"🔍 Rebel Line variables:  {rebelline_vars}")
                 print(f"\n{'--'*30}")
+                print(f"🔍 Rebel 1 variables:  {rebel1_vars}")
+                print(f"\n{'--'*30}")
+                print(f"🔍 Rebel 2 variables:  {rebel2_vars}")
+                print(f"\n{'--'*30}")
 
                 #=====================================================
                 #               🤖 SCARA robot logic
@@ -43,6 +47,9 @@ class LogicController:
                 if scara_vars.get("startscara", 0.0) == 0.0:
                     print("🟢 Starting initial SCARA task...")
                     self.robot_map["scara"].run_task()
+                    if scara_vars.get("isfinishscara", 0.0) == 1.0:
+                        print("\n♻️ Resetting SCARA variables...")
+                        self.robot_map["scara"].import_variables()
 
                 #=====================================================
                 #              🤖 REBELLINE robot logic
@@ -54,8 +61,11 @@ class LogicController:
                 ):
                     print("📦 Detected object dropped by SCARA → REBELLINE")
                     print(f"Rebel variables: {rebelline_vars}")
-
+                    
+                    
+                    # obj_type = 1
                     obj_type = random.randint(1, 100)
+                    print(f"RAMDOM NUMBER IS: {obj_type}")
 
                     if obj_type % 2 == 0:
                         print("🎲 Object type is EVEN → Load RebelLine2 sequence")
@@ -68,13 +78,17 @@ class LogicController:
 
                     self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
                     self.robot_map["rebelline"].run_task()
+                    
+                    if rebelline_vars.get("isfinishrebelline", 0.0) == 1.0:
+                        print("\n♻️ Resetting Rebel Line variables...")
+                        self.robot_map["rebelline"].import_variables()
 
                 #=====================================================
                 #                   🤖 REBEL1 robot logic
                 #=====================================================
                 if (
                     rebelline_vars.get("posdropobjrebellinetorebel1") == 1.0 and
-                    rebelline_vars.get("lastprogram") == "RebelLine1" and
+                #    rebelline_vars.get("lastprogram") == "RebelLine1" and
                     rebel1_vars.get("startrebel1") == 0.0
                 ):
                     print("📦 REBELLINE dropped to REBEL1")
@@ -86,7 +100,7 @@ class LogicController:
                 #=====================================================
                 if (
                     rebelline_vars.get("posdropobjrebellinetorebel2") == 1.0 and
-                    rebelline_vars.get("lastprogram") == "RebelLine2" and
+                    # rebelline_vars.get("lastprogram") == "RebelLine2" and
                     rebel2_vars.get("startrebel2") == 0.0
                 ):
                     print("📦 REBELLINE dropped to REBEL2")
