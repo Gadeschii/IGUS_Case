@@ -90,9 +90,9 @@ class BaseRobot:
             if not self.controller.start_programm():
                 raise Exception("❌ Error while starting the variable program.")
 
-            print(f"🤖 Robot {self.robot_id.upper()} variable state:")
-            print(self.controller.robot_state.variabels)
-            print(f"📍 Robot {self.robot_id} was in the above state")
+            # print(f"🤖 Robot {self.robot_id.upper()} variable state:")
+            # print(self.controller.robot_state.variabels)
+            # print(f"📍 Robot {self.robot_id} was in the above state")
 
         print(f"✅ Variable preparation complete for: {self.robot_id.upper()}")
 

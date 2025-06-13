@@ -23,8 +23,14 @@ class LogicController:
             if robot.controller.get_e_stop():
                 print(f"🛑 Emergency stop detected on robot: {robot_id.upper()}")
         
+    
+    
     def run_scenario(self):
-        print("\n🔁 Starting infinite production loop...")
+        print("\n🔁 Starting infinite production loop, waiting for objet")
+        
+        isObjForScara = False
+        isObjForRebelLine = False
+        
         while True:
             try:
                 scara_vars = self.get_robot_vars("Scara")
@@ -39,34 +45,62 @@ class LogicController:
                 print(f"🔍 Rebel 1 variables:  {rebel1_vars}")
                 print(f"\n{'--'*30}")
                 print(f"🔍 Rebel 2 variables:  {rebel2_vars}")
-                print(f"\n{'--'*30}")
-
+                print(f"\n{'=='*30}")
+                
+                # Randomly trigger SCARA availability
+                if not isObjForScara:
+                    rand = random.randint(1, 50)
+                    if rand % 5 == 0:
+                        print(f"🎲 Generated number {rand} is multiple of 5 → SCARA available")
+                        isObjForScara = True
+                        
+                print(f"🎲 Generated number {rand}")
+                
+                print('========================================================')     
+                print(f"Is there object for Rebel Line? --> {isObjForRebelLine} ")
+                print(f"Is there object for Scara? --> {isObjForScara} ")
+                print('========================================================')
+                
                 #=====================================================
                 #               🤖 SCARA robot logic
                 #=====================================================
-                if scara_vars.get("startscara", 0.0) == 0.0:
+                if(
+                    isObjForScara and
+                    not isObjForRebelLine and
+                    scara_vars.get("startscara", 0.0) == 0.0
+                ):
                     print("🟢 Starting initial SCARA task...")
                     self.robot_map["scara"].run_task()
-                #---------------Reset SCARA variable---------------------    
+                    isObjForScara = False
+                  
+                #=====================================================
+                #          🔄 SCARA triggers REBELLINE flag
+                #=====================================================
+                if scara_vars.get("posdropobjscara") == 1.0:
+                    isObjForRebelLine = True
+                    print("📦 SCARA dropped object → there is objet for Rebel Line")
+
+                if rebelline_vars.get("posreciverebelline1") == 1.0 or rebelline_vars.get("posreciverebelline2") == 1.0 :
+                    isObjForRebelLine = False
+                    print("🔄 RebelLine received object → there isn't objet for Rebel Line")  
+                    
+                 #---------------Reset SCARA variable--------------------- 
+                   
                 if scara_vars.get("isfinishscara", 0.0) == 1.0:
                     print("\n♻️ Resetting SCARA variables...")
                     self.robot_map["scara"].import_variables()
                     # 🔄 Recargar variables después de importarlas
-                    scara_vars = self.get_robot_vars("Scara")
-
-                    # 👀 Mostrar todas las variables importadas
-                    print("📥 Imported SCARA variables:")
-                    for k, v in scara_vars.items():
-                        print(f"  - {k}: {v}")
-
+                    scara_vars = self.get_robot_vars("Scara")    
+    
                 #=====================================================
                 #              🤖 REBELLINE robot logic
                 #=====================================================
                 if (
-                    scara_vars.get("posdropobjscara") == 1.0 and
+                    isObjForRebelLine and
                     rebelline_vars.get("startrebelline") == 0.0 and
                     scara_vars.get("startscara") == 1.0
                 ):
+                    
                     print("📦 Detected object dropped by SCARA → REBELLINE")
                     print(f"Rebel variables: {rebelline_vars}")
                  
@@ -85,17 +119,15 @@ class LogicController:
                     self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
                     self.robot_map["rebelline"].run_task()
                     rebelline_vars["startrebelline"] = 1.0
-                #---------------Reset SCARA variable---------------------     
-                if rebelline_vars.get("isfinishrebelline1", 0.0) == 1.0 or rebelline_vars.get("isfinishrebelline2", 0.0) == 1.0:
+                #---------------Reset Rebel Line variable---------------------     
+                if (
+                    rebelline_vars.get("isfinishrebelline1", 0.0) == 1.0 or 
+                    rebelline_vars.get("isfinishrebelline2", 0.0) == 1.0
+                ):     
                     print("\n♻️ Resetting Rebel Line variables...")
                     self.robot_map["rebelline"].import_variables()
                     # 🔄 Recargar variables después de importarlas
                     rebelline_vars = self.get_robot_vars("RebelLine")
-                    
-                    # 👀 Mostrar todas las variables importadas
-                    print("📥 Imported Rebel Line variables:")
-                    for k, v in rebelline_vars.items():
-                        print(f"  - {k}: {v}")
 
                 #=====================================================
                 #                   🤖 REBEL1 robot logic
