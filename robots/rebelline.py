@@ -14,36 +14,37 @@ class RebelLineRobot(BaseRobot):
         if self.controller.are_all_axes_referenced(axes=("A1", "A2", "A3", "A4", "A5", "A6", "E1")):
             RebelLineRobot.move_to_safe_position_rebelline(self)
             return
+        else:
 
-        print("🔧 Referencing E1...")
-        time.sleep(0.5)
-        if not self.controller.reference_single_joint('E1'):
-            raise Exception("❌ Failed to reference E1 in REBELLINE.")
-        
-        wait_until_axes_referenced(self,axes=("E1",))
-        print("✅ E1 referenced. Referencing remaining axes...")
-        
-        time.sleep(0.1)
-        
-        if not self.controller.reference_single_joint('A5'):
-            raise Exception("❌ Failed to reference A5 in REBELLINE.")
-        
-        time.sleep(0.1)
-        
-        if not self.controller.reference_single_joint('A6'):
-            raise Exception("❌ Failed to reference A6 in REBELLINE.")
-        
-        if not self.controller.reference_all_joints():
-            raise Exception("❌ Failed to reference remaining joints in REBELLINE.")
+            print("🔧 Referencing E1...")
+            time.sleep(0.5)
+            if not self.controller.reference_single_joint('E1'):
+                raise Exception("❌ Failed to reference E1 in REBELLINE.")
+            
+            wait_until_axes_referenced(self,axes=("E1",))
+            print("✅ E1 referenced. Referencing remaining axes...")
+            
+            time.sleep(0.1)
+            
+            if not self.controller.reference_single_joint('A5'):
+                raise Exception("❌ Failed to reference A5 in REBELLINE.")
+            
+            time.sleep(0.1)
+            
+            if not self.controller.reference_single_joint('A6'):
+                raise Exception("❌ Failed to reference A6 in REBELLINE.")
+            
+            if not self.controller.reference_all_joints():
+                raise Exception("❌ Failed to reference remaining joints in REBELLINE.")
 
-        time.sleep(0.2)
-        wait_until_axes_referenced(self,axes=("A1", "A2", "A3", "A4", "A5", "A6", "E1"))
-        time.sleep(1)
-        self.controller.reset()
-        time.sleep(0.5)
-        self.controller.enable()
-        time.sleep(0.5)
-        RebelLineRobot.move_to_safe_position_rebelline(self)
+            time.sleep(0.2)
+            wait_until_axes_referenced(self,axes=("A1", "A2", "A3", "A4", "A5", "A6", "E1"))
+            time.sleep(1)
+            self.controller.reset()
+            time.sleep(0.5)
+            self.controller.enable()
+            time.sleep(0.5)
+            RebelLineRobot.move_to_safe_position_rebelline(self)
         
             
             
