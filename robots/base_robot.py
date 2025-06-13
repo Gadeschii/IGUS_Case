@@ -19,6 +19,13 @@ class BaseRobot:
         self.connected = False
         
     ####################################################################################  
+    #                                  E-Stop()
+    ####################################################################################
+    
+    def get_e_stop(self):
+        return self.controller.get_e_stop()
+        
+    ####################################################################################  
     #                                  CONNECT()
     ####################################################################################    
         
@@ -95,7 +102,9 @@ class BaseRobot:
             # print(f"📍 Robot {self.robot_id} was in the above state")
 
         print(f"✅ Variable preparation complete for: {self.robot_id.upper()}")
+        print(f"\n{'='*30}")
 
+    
         
     def run_task(self):
         try:

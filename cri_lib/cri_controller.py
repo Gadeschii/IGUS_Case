@@ -544,7 +544,50 @@ class CRIController:
                 return True
         else:
             return False
+        
+    #Javi:
+    def motors_are_enabled(self) -> bool:
+        """Check if all motors are enabled (no error blocking axes)."""
+        with self.robot_state_lock:
+            for axis_error in self.robot_state.error_states:
+                '''
+                axis_error
+                :
+                over_temp: bool = False
+                estop_lowv: bool = False
+                motor_not_enabled: bool = False
+                com: bool = False
+                position_lag: bool = False
+                ENC: bool = False
+                overcurrent: bool = False
+                driver: bool = False
+                '''
+                
+                if any(vars(axis_error).values()):
+                    return False
+            return True
     
+    #Javi:
+    def get_e_stop(self):
+        try:
+            msg_id = self._send_command("get estop", register_answer=True)
+            if msg_id is None:
+                print("⚠️ Could not send 'get estop' command.")
+                return False
+
+            response = self._wait_for_answer(str(msg_id), timeout=5.0)
+            if response is None:
+                print("⚠️ No response received for 'get estop'.")
+                return False
+
+            return response.strip() == "1"
+
+        except Exception as e:
+            print(f"⚠️ Error checking e-stop: {e}")
+            return False
+
+
+
     #Javi
     def is_axis_referenced(self, axis: str) -> bool:
         """
