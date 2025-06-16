@@ -1,6 +1,6 @@
 import time
 
-def wait_until_axes_referenced(self, axes=("A1", "A2", "A3", "A4", "A5", "A6", "E1"), timeout = 200) -> bool:
+def wait_until_axes_referenced(self, axes=("A1", "A2", "A3", "A4", "A5", "A6", "E1"), timeout = 400) -> bool:
     print(f"⏳ Waiting for axes {axes} to be referenced...")
     start = time.time()
     while time.time() - start < timeout:

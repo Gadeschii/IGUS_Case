@@ -7,6 +7,7 @@ class LogicController:
     def __init__(self, robots):
         self.robots = robots
         self.robot_map = {robot.robot_id: robot for robot in robots}
+        self._was_in_emergency = False
 
     def get_robot_vars(self, robot_name):
         return self.robot_map[robot_name.lower()].controller.robot_state.variabels
@@ -26,21 +27,27 @@ class LogicController:
         isObjForRebelLine = False
         
         while True:
+            
             # =========================
             # 🛑 Check for emergency stop
             # =========================
-            if self.check_emergency_by_motor_status():
-                print("🚨 Emergency state detected by motor status.")
-                while self.check_emergency_by_motor_status():
-                    print("🕒 Waiting for all emergency stops to be released...")
-                    time.sleep(2)
-            print("✅ Emergency stop cleared! Restarting sequence...")
-    
-            # Reiniciar el sistema como si fuera el arranque inicial
-            for robot_id, robot in self.robot_map.items():
-                print(f"♻️ Re-importing variables for {robot_id.upper()}")
-                robot.import_variables()
-    
+            in_emergency = self.check_emergency_by_motor_status()
+
+            if in_emergency:
+                if not self._was_in_emergency:
+                    print("🚨 Emergency state detected by motor status.")
+                print("🕒 Waiting for all emergency stops to be released...")
+                time.sleep(2)
+                self._was_in_emergency = True
+                return  # Salta el ciclo de trabajo hasta que se libere
+            elif self._was_in_emergency:
+                # Solo entra aquí cuando se ha recuperado del estado de emergencia
+                print("✅ Emergency stop cleared! Restarting sequence...")
+                for robot_id, robot in self.robot_map.items():
+                    print(f"♻️ Re-importing variables for {robot_id.upper()}")
+                    robot.import_variables()
+                self._was_in_emergency = False
+                
             isObjForScara = False
             isObjForRebelLine = False
 
