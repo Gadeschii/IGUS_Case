@@ -33,11 +33,11 @@ def check_robot_ready(self):
     for i, err in enumerate(self.controller.robot_state.error_states):
         if any([getattr(err, attr) for attr in vars(err)]):
             raise Exception(f"❌ Error on axis {i}: {err}")
-print("✅ Safe SCARA position.")
+    print("✅ Safe SCARA position.")
 
-  ####################################################################################  
-  #                                      Get Variable() from .xml
-   ####################################################################################   
+##################################################################################### 
+#                                      Get Variable() from .xml
+#####################################################################################   
 
 def get_variable(self, name: str) -> float:
     """📖 Reads a variable from the robot's state."""

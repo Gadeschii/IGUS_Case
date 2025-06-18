@@ -1,6 +1,14 @@
 from cri_lib import CRIController
 import time
 import random
+import threading
+import time
+from controllers.color_detector import detect_pingpong_color
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+RTSP_URL = os.getenv("RTSP_URL")
 
 
 class LogicController:
@@ -18,6 +26,29 @@ class LogicController:
                 print(f"🛑 Detected disabled motors on {robot_id.upper()} → possible E-STOP")
                 return True
         return False
+    
+    def print_robot_variables_periodically(self):
+        while True:
+            try:
+                scara_vars = self.get_robot_vars("Scara")
+                rebelline_vars = self.get_robot_vars("RebelLine")
+                rebel1_vars = self.get_robot_vars("Rebel1")
+                rebel2_vars = self.get_robot_vars("Rebel2")
+
+                print(f"🔍 Scara variables:  {scara_vars}")
+                print(f"\n{'--'*30}")
+                print(f"🔍 Rebel Line variables:  {rebelline_vars}")
+                print(f"\n{'--'*30}")
+                print(f"🔍 Rebel 1 variables:  {rebel1_vars}")
+                print(f"\n{'--'*30}")
+                print(f"🔍 Rebel 2 variables:  {rebel2_vars}")
+                print(f"\n{'=='*30}")
+
+            except Exception as e:
+                print(f"⚠️ Error while printing robot variables: {e}")
+            
+            time.sleep(15)
+
 
          
     def run_scenario(self):
@@ -26,7 +57,9 @@ class LogicController:
         isObjForScara = False
         isObjForRebelLine = False
         
-        while True:
+        threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
+        
+        while True:   
             
             # =========================
             # 🛑 Check for emergency stop
@@ -47,25 +80,14 @@ class LogicController:
                     print(f"♻️ Re-importing variables for {robot_id.upper()}")
                     robot.import_variables()
                 self._was_in_emergency = False
-                
-            isObjForScara = False
-            isObjForRebelLine = False
 
             try:
                 scara_vars = self.get_robot_vars("Scara")
                 rebelline_vars = self.get_robot_vars("RebelLine")
                 rebel1_vars = self.get_robot_vars("Rebel1")
                 rebel2_vars = self.get_robot_vars("Rebel2")
-
-                print(f"🔍 Scara variables:  {scara_vars}")
-                print(f"\n{'--'*30}")
-                print(f"🔍 Rebel Line variables:  {rebelline_vars}")
-                print(f"\n{'--'*30}")
-                print(f"🔍 Rebel 1 variables:  {rebel1_vars}")
-                print(f"\n{'--'*30}")
-                print(f"🔍 Rebel 2 variables:  {rebel2_vars}")
-                print(f"\n{'=='*30}")
-                
+               
+                ''' 
                 # Randomly trigger SCARA availability
                 if not isObjForScara:
                     rand = random.randint(1, 50)
@@ -74,7 +96,17 @@ class LogicController:
                         isObjForScara = True
                         
                 print(f"🎲 Generated number {rand}")
-                
+                '''  
+
+                if not isObjForScara:
+                    try:
+                        color = detect_pingpong_color(RTSP_URL, show_debug=True) 
+                        print("✅ Ping pong ball detected → SCARA task ready")
+                        isObjForScara = True
+                    except RuntimeError as e:
+                        print(f"⚠️ No ping pong ball detected: {e}")
+
+            
                 print('========================================================')     
                 print(f"Is there object for Rebel Line? --> {isObjForRebelLine} ")
                 print(f"Is there object for Scara? --> {isObjForScara} ")
@@ -111,33 +143,43 @@ class LogicController:
                     # 🔄 Recargar variables después de importarlas
                     scara_vars = self.get_robot_vars("Scara")    
     
+              
                 #=====================================================
                 #              🤖 REBELLINE robot logic
                 #=====================================================
                 if (
                     isObjForRebelLine and
-                    rebelline_vars.get("startrebelline") == 0.0 and
-                    scara_vars.get("startscara") == 1.0
+                    rebelline_vars.get("startrebelline") == 0.0 and (
+                        scara_vars.get("startscara") == 1.0 or
+                        scara_vars.get("isfinishscara") == 0.0
+                    )
+              
                 ):
-                    
                     print("📦 Detected object dropped by SCARA → REBELLINE")
                     print(f"Rebel variables: {rebelline_vars}")
-                 
-                    obj_type = random.randint(1, 100)
-                    print(f"RAMDOM NUMBER IS: {obj_type}")
 
-                    if obj_type % 2 == 0:
-                        print("🎲 Object type is EVEN → Load RebelLine2 sequence")
-                        self.robot_map["rebelline"].program_name = "RebelLine2.xml"
-                        rebelline_vars["lastprogram"] = "RebelLine2"
-                    else:
-                        print("🎲 Object type is ODD → Load RebelLine1 sequence")
-                        self.robot_map["rebelline"].program_name = "RebelLine1.xml"
-                        rebelline_vars["lastprogram"] = "RebelLine1"
+                    try:
+                        color = detect_pingpong_color(RTSP_URL)
+                        print(f"🎨 Detected color: {color}")
 
-                    self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
-                    self.robot_map["rebelline"].run_task()
-                    rebelline_vars["startrebelline"] = 1.0
+                        if color == "white":
+                            print("🎲 Color is WHITE → Load RebelLine1 sequence")
+                            self.robot_map["rebelline"].program_name = "RebelLine1.xml"
+                            rebelline_vars["lastprogram"] = "RebelLine1"
+                        else:
+                            print("🎲 Color is BLACK → Load RebelLine2 sequence")
+                            self.robot_map["rebelline"].program_name = "RebelLine2.xml"
+                            rebelline_vars["lastprogram"] = "RebelLine2"
+
+                        self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
+                        self.robot_map["rebelline"].run_task()
+                        rebelline_vars["startrebelline"] = 1.0
+
+                    except RuntimeError as e:
+                        print(f"⚠️ Camera error: {e}")
+                    except Exception as e:
+                        print(f"⚠️ Color detection failed: {e}")
+
                 #---------------Reset Rebel Line variable---------------------     
                 if (
                     rebelline_vars.get("isfinishrebelline1", 0.0) == 1.0 or 
@@ -187,3 +229,39 @@ class LogicController:
             except Exception as e:
                 print(f"⚠️ Logic loop error: {e}")
                 time.sleep(1)
+
+
+
+
+
+                #=====================================================
+                #              🤖 REBELLINE robot logic old
+                #=====================================================
+                
+                #Random between rebel1 and rebel2
+                '''
+                if (
+                    isObjForRebelLine and
+                    rebelline_vars.get("startrebelline") == 0.0 and
+                    scara_vars.get("startscara") == 1.0
+                ):
+                    
+                    print("📦 Detected object dropped by SCARA → REBELLINE")
+                    print(f"Rebel variables: {rebelline_vars}")
+                 
+                    obj_type = random.randint(1, 100)
+                    print(f"RAMDOM NUMBER IS: {obj_type}")
+
+                    if obj_type % 2 == 0:
+                        print("🎲 Object type is EVEN → Load RebelLine2 sequence")
+                        self.robot_map["rebelline"].program_name = "RebelLine2.xml"
+                        rebelline_vars["lastprogram"] = "RebelLine2"
+                    else:
+                        print("🎲 Object type is ODD → Load RebelLine1 sequence")
+                        self.robot_map["rebelline"].program_name = "RebelLine1.xml"
+                        rebelline_vars["lastprogram"] = "RebelLine1"
+
+                    self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
+                    self.robot_map["rebelline"].run_task()
+                    rebelline_vars["startrebelline"] = 1.0
+                '''

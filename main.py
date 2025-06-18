@@ -10,8 +10,6 @@ from cri_lib import CRIController
 import importlib
 import time
 
-
-
 def load_robot_class(class_name):
     module_name = "robots." + class_name.replace("Robot", "").lower()
     module = importlib.import_module(module_name)
