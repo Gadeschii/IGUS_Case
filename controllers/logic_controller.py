@@ -165,15 +165,17 @@ class LogicController:
                 #          🔄 SCARA triggers REBELLINE flag
                 #=====================================================
                 if scara_vars.get("posdropobjscara") == 1.0:
-                    try:
-                        # Confirm visually with USB camera
-                        if usb_detect_pingpong_color(camera_index=1, debug=True):
-                            isObjForRebelLine = True
-                            print("🎥 USB camera confirmed object → isObjForRebelLine = True")
-                        else:
-                            print("⚠️ USB camera did NOT detect object → skipping.")
-                    except Exception as e:
-                        print(f"❌ USB camera error: {e}")
+                    # test
+                    isObjForRebelLine = True
+                    # try:
+                    #     # Confirm visually with USB camera
+                    #     if usb_detect_pingpong_color(camera_index=1, debug=True):
+                    #         isObjForRebelLine = True
+                    #         print("🎥 USB camera confirmed object → isObjForRebelLine = True")
+                    #     else:
+                    #         print("⚠️ USB camera did NOT detect object → skipping.")
+                    # except Exception as e:
+                    #     print(f"❌ USB camera error: {e}")
 
                     print("📦 SCARA dropped object → there is objet for Rebel Line")
 
@@ -189,7 +191,6 @@ class LogicController:
                     # 🔄 Recargar variables después de importarlas
                     scara_vars = self.get_robot_vars("Scara")
 
-
                 #=====================================================
                 #              🤖 REBELLINE robot logic
                 #=====================================================
@@ -199,23 +200,24 @@ class LogicController:
                         scara_vars.get("startscara") == 1.0 or
                         scara_vars.get("isfinishscara") == 0.0
                     )
-
                 ):
                     print("📦 Detected object dropped by SCARA → REBELLINE")
                     print(f"Rebel variables: {rebelline_vars}")
 
                     try:
-                        color = usb_detect_pingpong_color(camera_index=1, debug=True)
+                        color = detect_pingpong_presence(RTSP_URL, show_debug=True)
                         print(f"🎨 Detected color: {color}")
 
                         if color == "white":
                             print("🎲 Color is WHITE → Load RebelLine1 sequence")
                             self.robot_map["rebelline"].program_name = "RebelLine1.xml"
                             rebelline_vars["lastprogram"] = "RebelLine1"
-                        else:
-                            print("🎲 Color is BLACK → Load RebelLine2 sequence")
+                        elif color in ("black", "red"):
+                            print(f"🎲 Color is {color.upper()} → Load RebelLine2 sequence")
                             self.robot_map["rebelline"].program_name = "RebelLine2.xml"
                             rebelline_vars["lastprogram"] = "RebelLine2"
+                        else:
+                            raise ValueError(f"❌ Unknown color detected: {color}")
 
                         self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
                         self.robot_map["rebelline"].run_task()

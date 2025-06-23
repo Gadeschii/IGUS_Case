@@ -11,8 +11,8 @@
     <Joint AbortCondition="False" Nr="8" Source="Numerical" velPercent="90" acc="40" smooth="0" a1="-90.59" a2="95.48" a3="7.91" a4="-0.31" a5="-14.85" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="9" Source="Numerical" velPercent="90" acc="40" smooth="0" a1="-59.71" a2="84.03" a3="7.91" a4="-0.31" a5="-0.73" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
     <Store Nr="10" Type="number" Value="1" Name="posdropobjrebel2" Descr="" />
-    <Joint AbortCondition="False" Nr="11" Source="Numerical" velPercent="90" acc="40" smooth="0" a1="3.15" a2="47.92" a3="115.08" a4="4.24" a5="-73.93" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
-    <Joint AbortCondition="False" Nr="12" Source="Numerical" velPercent="90" acc="40" smooth="0" a1="3.15" a2="47.92" a3="115.08" a4="2.98" a5="-73.93" a6="141.79" e1="0" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="11" Source="Numerical" velPercent="90" acc="40" smooth="0" a1="93.8" a2="38.8" a3="119" a4="94.5" a5="-84.7" a6="-2.8" e1="0" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="12" Source="Numerical" velPercent="90" acc="40" smooth="0" a1="93.76" a2="38.84" a3="119.02" a4="94.49" a5="-84.9" a6="89.34" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="13" Source="Numerical" velPercent="90" acc="40" smooth="0" a1="-81.07" a2="38.66" a3="58.83" a4="0.07" a5="74.64" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="14" Source="Numerical" velPercent="90" acc="40" smooth="0" a1="-81.07" a2="38.66" a3="58.83" a4="0.07" a5="74.64" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="15" Source="Numerical" velPercent="90" acc="40" smooth="0" a1="-108.81" a2="126.86" a3="8.02" a4="-0.48" a5="-46.13" a6="1.27" e1="0" e2="0" e3="0" Descr="" />

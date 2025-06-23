@@ -2,27 +2,16 @@ import cv2
 import os
 from datetime import datetime
 import numpy as np
-import supervision as sv
 from ultralytics import YOLO
 
-# Load YOLO model (pretrained on COCO)
-model = YOLO("yolov8n.pt")  # Make sure it's downloaded
+# Load YOLO model
+model = YOLO("yolov8n.pt")  # Asegúrate de tenerlo descargado
 
 def usb_detect_pingpong_color(camera_index=1, debug=True) -> str | None:
     """
     Detects a ping pong ball using a USB camera and determines its color.
 
-    Parameters
-    ----------
-    camera_index : int
-        USB camera index (typically 0 or 1).
-    debug : bool
-        If True, shows and saves debug images.
-
-    Returns
-    -------
-    str or None
-        "white" or "black" based on brightness, or None if ball is not detected.
+    Returns "white" or "black" based on brightness, or None if not detected.
     """
     save_dir = os.path.join(os.getcwd(), "photosUsb")
     os.makedirs(save_dir, exist_ok=True)
@@ -42,21 +31,24 @@ def usb_detect_pingpong_color(camera_index=1, debug=True) -> str | None:
     cv2.imwrite(full_frame_path, frame)
 
     # Run YOLO detection
-    results = model(frame)[0]
-    detections = sv.Detections.from_yolov8(results)
-    labels = results.names
+    results = model.predict(frame, conf=0.3)[0]
 
-    for i, cls_id in enumerate(detections.class_id):
-        if labels[cls_id] == "sports ball":
-            # Extract bounding box
-            x1, y1, x2, y2 = detections.xyxy[i].astype(int)
+    if results.boxes is None or results.boxes.cls is None:
+        if debug:
+            print("⚠️ No detections.")
+        return None
+
+    for box, cls_id in zip(results.boxes.xyxy, results.boxes.cls):
+        cls_id = int(cls_id.item())
+        if model.names[cls_id] == "sports ball":
+            x1, y1, x2, y2 = map(int, box)
             ball_crop = frame[y1:y2, x1:x2]
 
             # Save cropped ball
             ball_crop_path = os.path.join(save_dir, f"usb_ball_crop_{timestamp}.jpg")
             cv2.imwrite(ball_crop_path, ball_crop)
 
-            # Calculate brightness
+            # Determine brightness
             hsv = cv2.cvtColor(ball_crop, cv2.COLOR_BGR2HSV)
             brightness = hsv[:, :, 2].mean()
             color = "white" if brightness > 100 else "black"
@@ -71,5 +63,5 @@ def usb_detect_pingpong_color(camera_index=1, debug=True) -> str | None:
             return color
 
     if debug:
-        print("⚠️ No ping pong ball detected in USB camera.")
+        print("⚠️ No sports ball detected in USB image.")
     return None
