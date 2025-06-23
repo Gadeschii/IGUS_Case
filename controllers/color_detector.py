@@ -1,7 +1,12 @@
-def detect_pingpong_color(rtsp_url: str, show_debug: bool = False) -> str:
+import os
+from datetime import datetime
+import cv2
+from ultralytics import YOLO
+from ultralytics.utils.plotting import Annotator
+
+def detect_pingpong_presence(rtsp_url: str, show_debug: bool = False) -> bool:
     """
-    Detects a ping pong ball using a YOLO model and determines its color (white or black)
-    based on the brightness of the detected region.
+    Detects the presence of a ping pong ball using YOLO from an RTSP stream.
 
     Parameters
     ----------
@@ -9,56 +14,67 @@ def detect_pingpong_color(rtsp_url: str, show_debug: bool = False) -> str:
         RTSP stream URL of the camera.
 
     show_debug : bool
-        If True, displays the analyzed frame for debugging.
+        If True, displays and saves the analyzed frames.
 
     Returns
     -------
-    str
-        'white' if the ball is bright, 'black' otherwise.
+    bool
+        True if a ping pong ball is detected.
 
     Raises
     ------
     RuntimeError
-        If the camera stream fails or the ball is not detected.
+        If the stream fails or the ball is not detected.
     """
-    from ultralytics import YOLO
-    import cv2
-
-    # Load the YOLOv8 model (ensure it's downloaded)
     model = YOLO("yolov8n.pt")
+    save_dir = r"C:\Users\javie\Desktop\IgusRobotsCase\IgusRobotControllerCase\IGUS_Case\photos"
+    os.makedirs(save_dir, exist_ok=True)
 
-    # Open the RTSP stream
     cap = cv2.VideoCapture(rtsp_url)
     if not cap.isOpened():
         raise RuntimeError("❌ Failed to open RTSP stream.")
 
-    # Capture a single frame
     ret, frame = cap.read()
     cap.release()
-
     if not ret:
         raise RuntimeError("❌ Could not read frame from camera.")
 
-    # Run YOLO inference for class 37 (sports ball)
-    results = model.predict(source=frame, conf=0.5)
+    # Get center square region
+    h, w, _ = frame.shape
+    square_size = 800
+    cx, cy = w // 2, h // 2
+    x1 = max(cx - square_size // 2, 0)
+    y1 = max(cy - square_size // 2, 0)
+    x2 = min(cx + square_size // 2, w)
+    y2 = min(cy + square_size // 2, h)
+    center_crop = frame[y1:y2, x1:x2]
 
-    # Optionally show the frame for debugging
+    # Save the cropped region
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    crop_path = os.path.join(save_dir, f"pingpong_crop_{timestamp}.jpg")
+    cv2.imwrite(crop_path, center_crop)
+
+    # Run YOLO detection ONLY on cropped image
+    results = model.predict(source=center_crop, conf=0.5)
+    detections = results[0].boxes
+
+    if not detections or len(detections.cls) == 0:
+        raise RuntimeError("❌ No objects detected in cropped image.")
+
+    # Debug visualization with bounding boxes
     if show_debug:
-        cv2.imshow("Detected Frame", frame)
-        cv2.waitKey(1000)  # Display the image for 1000ms
+        annotator = Annotator(center_crop.copy())
+        for box, cls_id in zip(detections.xyxy, detections.cls):
+            annotator.box_label(box, label=f"cls {int(cls_id)}")
+        cv2.imshow("Detection Overlay", annotator.result())
+        cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    # If no detections, raise error
-    if not results or not results[0].boxes or len(results[0].boxes.xyxy) == 0:
-        raise RuntimeError("❌ No ping pong ball detected.")
+    # Check if any detected object is a sports ball (class 37)
+    for cls in detections.cls:
+        if int(cls) == 37:
+            print(f"📦 Detected classes: {[int(cls) for cls in detections.cls]}")
+            print(f"🟫 Bounding boxes: {detections.xyxy}")
+            return True
 
-    # Get the first detected bounding box
-    box = results[0].boxes.xyxy[0].cpu().numpy().astype(int)
-    x1, y1, x2, y2 = box
-    ball_region = frame[y1:y2, x1:x2]
-
-    # Convert the ball region to HSV to better analyze brightness
-    hsv = cv2.cvtColor(ball_region, cv2.COLOR_BGR2HSV)
-    brightness = hsv[:, :, 2].mean()
-
-    return "white" if brightness > 100 else "black"
+    raise RuntimeError("❌ No ping pong ball detected.")

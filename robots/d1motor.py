@@ -136,7 +136,7 @@ class D1Motor:
                 if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
                     break
                 time.sleep(0.1)
-                print ("Motion A")
+                print ("🚪 Motor moving to OPEN position")
 
     def move_to_closed(self):
         # self._prepare_motion()
@@ -153,7 +153,7 @@ class D1Motor:
                 if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
                     break
                 time.sleep(0.1)
-                print ("Motion B")
+                print ("Motor moving to CLOSED position")
         
     
     # def move_to(self, position):
@@ -195,7 +195,7 @@ class D1Motor:
     def _start_motion(self):
         self._send(bytearray([0, 0, 0, 0, 0, 15, 0, 43, 13, 1, 0, 0, 96, 64, 0, 0, 0, 0, 2, 31, 0]))
         print("Go movement")
-        time.sleep(15)
+        time.sleep(1)
 
     def disable(self):
         print(f"⛔ Disable not implemented for D1Motor '{self.robot_id}'")
