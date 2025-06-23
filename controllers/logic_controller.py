@@ -5,51 +5,63 @@ import threading
 import time
 from controllers.color_detector import detect_pingpong_color
 from dotenv import load_dotenv
+from usb_pingpong_detector import usb_detect_pingpong
 import os
 
 load_dotenv()
 RTSP_URL = os.getenv("RTSP_URL")
 
+DOOR_CLOSED_POS = 0.0
+DOOR_OPEN_POS = 100.0 # tengo qeu mirar para que el open door sea dar una vuelta
+
+ELEVATOR_BOTTOM_POS = 0.0
+ELEVATOR_TOP_POS = 250.0
 
 class LogicController:
     def __init__(self, robots):
         self.robots = robots
         self.robot_map = {robot.robot_id: robot for robot in robots}
         self._was_in_emergency = False
+        self.d1_door = None
+        self.d1_elevator = None
+        
+        for robot in robots:
+            if robot.__class__.__name__ == "D1Motor":
+                if getattr(robot, "role", None) == "door":
+                    self.d1_door = robot
+                elif getattr(robot, "role", None) == "elevator":
+                    self.d1_elevator = robot
 
     def get_robot_vars(self, robot_name):
         return self.robot_map[robot_name.lower()].controller.robot_state.variabels
         
     def check_emergency_by_motor_status(self):
         for robot_id, robot in self.robot_map.items():
+            # Saltar los D1Motor que no tienen controlador CRI
+            if not hasattr(robot, "controller"):
+                continue
             if not robot.controller.motors_are_enabled():
                 print(f"🛑 Detected disabled motors on {robot_id.upper()} → possible E-STOP")
                 return True
         return False
+
     
     def print_robot_variables_periodically(self):
         while True:
             try:
-                scara_vars = self.get_robot_vars("Scara")
-                rebelline_vars = self.get_robot_vars("RebelLine")
-                rebel1_vars = self.get_robot_vars("Rebel1")
-                rebel2_vars = self.get_robot_vars("Rebel2")
-
-                print(f"🔍 Scara variables:  {scara_vars}")
-                print(f"\n{'--'*30}")
-                print(f"🔍 Rebel Line variables:  {rebelline_vars}")
-                print(f"\n{'--'*30}")
-                print(f"🔍 Rebel 1 variables:  {rebel1_vars}")
-                print(f"\n{'--'*30}")
-                print(f"🔍 Rebel 2 variables:  {rebel2_vars}")
-                print(f"\n{'=='*30}")
+                for name in ["Scara", "RebelLine", "Rebel1", "Rebel2"]:
+                    vars_ = self.get_robot_vars(name)
+                    print(f"🔍 {name} variables:  {vars_}\n{'--'*30}")
+                    
+                if self.d1_door:
+                    print(f"🚪 D1 Door position: {self.d1_door.current_position}")
+                if self.d1_elevator:
+                    print(f"🏗️ D1 Elevator position: {self.d1_elevator.current_position}")
+                print(f"{'='*60}")
 
             except Exception as e:
                 print(f"⚠️ Error while printing robot variables: {e}")
-            
             time.sleep(15)
-
-
          
     def run_scenario(self):
         print("\n🔁 Starting infinite production loop, waiting for objet")
@@ -72,7 +84,10 @@ class LogicController:
                 print("🕒 Waiting for all emergency stops to be released...")
                 time.sleep(2)
                 self._was_in_emergency = True
-                return  # Salta el ciclo de trabajo hasta que se libere
+                
+                
+                continue  
+                  
             elif self._was_in_emergency:
                 # Solo entra aquí cuando se ha recuperado del estado de emergencia
                 print("✅ Emergency stop cleared! Restarting sequence...")
@@ -87,25 +102,38 @@ class LogicController:
                 rebel1_vars = self.get_robot_vars("Rebel1")
                 rebel2_vars = self.get_robot_vars("Rebel2")
                
-                ''' 
-                # Randomly trigger SCARA availability
-                if not isObjForScara:
-                    rand = random.randint(1, 50)
-                    if rand % 5 == 0:
-                        print(f"🎲 Generated number {rand} is multiple of 5 → SCARA available")
-                        isObjForScara = True
-                        
-                print(f"🎲 Generated number {rand}")
-                '''  
+               
+                #=====================================================
+                #               🤖 Dry D1 robot logic
+                #=====================================================
 
-                if not isObjForScara:
-                    try:
-                        color = detect_pingpong_color(RTSP_URL, show_debug=True) 
-                        print("✅ Ping pong ball detected → SCARA task ready")
-                        isObjForScara = True
-                    except RuntimeError as e:
-                        print(f"⚠️ No ping pong ball detected: {e}")
+                if self.d1_door:
+                    # Ensure motor is referenced before any movement
+                    self.d1_door.reference()
 
+                    if not isObjForScara:
+                        try:
+                            # Try to detect the ping pong ball
+                            color = detect_pingpong_color(RTSP_URL, show_debug=True)
+                            print("✅ Ping pong ball detected → SCARA task ready")
+                            isObjForScara = True
+
+                            # 🔒 Move door to closed position 
+                            self.d1_door.move_to_closed()
+                            self.d1_door.current_position = 0.0
+
+                        except RuntimeError as e:
+                            print(f"⚠️ No ping pong ball detected: {e}")
+                            # 🚪 Open the door
+                            self.d1_door.move_to_open()
+                            self.d1_door.current_position = 250.0  # mm (or adjust to match your target)
+
+
+                if self.d1_elevator:
+                    if rebelline_vars.get("startascensor", 0.0) == 1.0:
+                        self.d1_elevator.move_to(ELEVATOR_TOP_POS)
+                        time.sleep(0.5)
+                        self.d1_elevator.move_to(ELEVATOR_BOTTOM_POS)
             
                 print('========================================================')     
                 print(f"Is there object for Rebel Line? --> {isObjForRebelLine} ")
@@ -231,9 +259,6 @@ class LogicController:
                 time.sleep(1)
 
 
-
-
-
                 #=====================================================
                 #              🤖 REBELLINE robot logic old
                 #=====================================================
@@ -264,4 +289,16 @@ class LogicController:
                     self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
                     self.robot_map["rebelline"].run_task()
                     rebelline_vars["startrebelline"] = 1.0
-                '''
+                    
+                    
+                        ----------------------------------------------------------------
+              
+                    # Randomly trigger SCARA availability
+                    if not isObjForScara:
+                        rand = random.randint(1, 50)
+                        if rand % 5 == 0:
+                            print(f"🎲 Generated number {rand} is multiple of 5 → SCARA available")
+                            isObjForScara = True
+                            
+                    print(f"🎲 Generated number {rand}")
+                '''  

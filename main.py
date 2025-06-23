@@ -11,7 +11,8 @@ import importlib
 import time
 
 def load_robot_class(class_name):
-    module_name = "robots." + class_name.replace("Robot", "").lower()
+    # module_name = "robots." + class_name.replace("Robot", "").lower()
+    module_name = "robots." + class_name.lower() if class_name == "D1Motor" else "robots." + class_name.replace("Robot", "").lower()
     module = importlib.import_module(module_name)
     return getattr(module, class_name)
 
