@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 import cv2
 import numpy as np
-
+from ultralytics import *
 def detect_pingpong_presence(rtsp_url: str, show_debug: bool = False) -> str | None:
     """
     Detects a ping pong ball by finding circular shapes in the center of the frame
@@ -83,7 +83,227 @@ def detect_pingpong_presence(rtsp_url: str, show_debug: bool = False) -> str | N
     return None
 
 
+def detect_pingpong_presence_color_white(rtsp_url: str, show_debug: bool = False) -> str | None:
+    model = YOLO("C:/Users/javie/Desktop/IgusRobotsCase/IgusRobotControllerCase/IGUS_Case/train14/weights/best.pt")
 
+    # Connect to camera
+    cap = cv2.VideoCapture(rtsp_url)
+    ret, frame = cap.read()
+    if not ret:
+        print("Cannot connect to camera")
+        return
+    
+    h, w = frame.shape[:2]
+    
+    #Zone detection definition
+    roi_x, roi_y = int(w*0.575), int(h*0.375)
+    roi_w, roi_h = int(w*0.125), int(h*0.275)
+    zone_x1, zone_y1 = roi_x, roi_y
+    zone_x2, zone_y2 = roi_x+roi_w, roi_y+roi_h
+    
+    results = model(frame, conf=0.5)[0]
+    whiteBallDetected = False
+    
+    for box in results.boxes:
+        x1, y1, x2, y2 = map(int, box.xyxy[0])
+        cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
+
+        class_id = int(box.cls[0])
+        class_name = model.names[class_id]
+
+        # Check if PingPongWhite is on zone
+        if class_name == "PingPongWhite" and zone_x1 <= cx <= zone_x2 and zone_y1 <= cy <= zone_y2:
+            whiteBallDetected = True
+            cv2.putText(frame, f"{class_name} DETECTED", (x1, y1 - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+
+
+        # Draw bounding box
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 255), 2)
+        cv2.circle(frame, (cx, cy), 4, (0, 255, 0), -1)
+
+    # Draw Interest zone
+    cv2.rectangle(frame, (zone_x1, zone_y1), (zone_x2, zone_y2), (0, 255, 255), 2)
+
+    # Show state
+    estado = "Finded" if whiteBallDetected else "NO DETECTED"
+    cv2.putText(frame, f"PingPongWhite: {estado}", (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+
+    # Show the frame
+    cv2.imshow("YOLOv8 - RTSP + Zona", frame)
+
+    cap.release()
+    cv2.destroyAllWindows()
+    return whiteBallDetected
+    
+def detect_pingpong_presence_color_blue(rtsp_url: str, show_debug: bool = False) -> str | None:
+    model = YOLO("C:/Users/javie/Desktop/IgusRobotsCase/IgusRobotControllerCase/IGUS_Case/train14/weights/best.pt")
+
+    # Connect to camera
+    cap = cv2.VideoCapture(rtsp_url)
+    ret, frame = cap.read()
+    if not ret:
+        print("Cannot connect to camera")
+        return
+    
+    h, w = frame.shape[:2]
+    
+    #Zone detection definition
+    roi_x, roi_y = int(w*0.575), int(h*0.375)
+    roi_w, roi_h = int(w*0.125), int(h*0.275)
+    zone_x1, zone_y1 = roi_x, roi_y
+    zone_x2, zone_y2 = roi_x+roi_w, roi_y+roi_h
+    
+    results = model(frame, conf=0.5)[0]
+    blueBallDetected = False
+    
+    for box in results.boxes:
+        x1, y1, x2, y2 = map(int, box.xyxy[0])
+        cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
+
+        class_id = int(box.cls[0])
+        class_name = model.names[class_id]
+
+        # Check if PingPongBlue is on zone
+       
+
+        if class_name == "PingPongBlue" and zone_x1 <= cx <= zone_x2 and zone_y1 <= cy <= zone_y2:
+            blueBallDetected = True
+            cv2.putText(frame, f"{class_name} DETECTED", (x1, y1 - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+
+        # Draw bounding box
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 255), 2)
+        cv2.circle(frame, (cx, cy), 4, (0, 255, 0), -1)
+
+    # Draw Interest zone
+    cv2.rectangle(frame, (zone_x1, zone_y1), (zone_x2, zone_y2), (0, 255, 255), 2)
+
+    # Show state
+    estado = "Finded" if blueBallDetected else "NO DETECTED"
+    cv2.putText(frame, f"PingPongBlue: {estado}", (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+
+    # Show the frame
+    cv2.imshow("YOLOv8 - RTSP + Zona", frame)
+
+    cap.release()
+    cv2.destroyAllWindows()
+    return blueBallDetected
+    
+def detect_pingpong_presence_color_white2(rtsp_url: str, show_debug: bool = False) -> str | None:
+    model = YOLO("C:/Users/javie/Desktop/IgusRobotsCase/IgusRobotControllerCase/IGUS_Case/train14/weights/best.pt")
+
+    # Connect to camera
+    cap = cv2.VideoCapture(rtsp_url)
+    ret, frame = cap.read()
+    if not ret:
+        print("Cannot connect to camera")
+        return
+    
+    h, w = frame.shape[:2]
+    
+    #Zone detection definition
+    roi_x, roi_y = int(w*0.575), int(h*0.375)
+    roi_w, roi_h = int(w*0.125), int(h*0.275)
+    zone_x1, zone_y1 = roi_x, roi_y
+    zone_x2, zone_y2 = roi_x+roi_w, roi_y+roi_h
+    
+    results = model(frame, conf=0.5)[0]
+    whiteBallDetected = False
+    
+    for box in results.boxes:
+        x1, y1, x2, y2 = map(int, box.xyxy[0])
+        cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
+
+        class_id = int(box.cls[0])
+        class_name = model.names[class_id]
+
+        # Check if PingPongWhite is on zone
+        if class_name == "PingPongWhite" and zone_x1 <= cx <= zone_x2 and zone_y1 <= cy <= zone_y2:
+            whiteBallDetected = True
+            cv2.putText(frame, f"{class_name} DETECTED", (x1, y1 - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+
+
+        # Draw bounding box
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 255), 2)
+        cv2.circle(frame, (cx, cy), 4, (0, 255, 0), -1)
+
+    # Draw Interest zone
+    cv2.rectangle(frame, (zone_x1, zone_y1), (zone_x2, zone_y2), (0, 255, 255), 2)
+
+    # Show state
+    estado = "Finded" if whiteBallDetected else "NO DETECTED"
+    cv2.putText(frame, f"PingPongWhite: {estado}", (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+
+    # Show the frame
+    cv2.imshow("YOLOv8 - RTSP + Zona", frame)
+
+    cap.release()
+    cv2.destroyAllWindows()
+    return whiteBallDetected
+    
+def detect_pingpong_presence_color_blue2(rtsp_url: str, show_debug: bool = False) -> str | None:
+    model = YOLO("C:/Users/javie/Desktop/IgusRobotsCase/IgusRobotControllerCase/IGUS_Case/train14/weights/best.pt")
+
+    # Connect to camera
+    cap = cv2.VideoCapture(rtsp_url)
+    ret, frame = cap.read()
+    if not ret:
+        print("Cannot connect to camera")
+        return
+    
+    h, w = frame.shape[:2]
+    
+    #Zone detection definition
+    roi_x, roi_y = int(w*0.575), int(h*0.375)
+    roi_w, roi_h = int(w*0.125), int(h*0.275)
+    zone_x1, zone_y1 = roi_x, roi_y
+    zone_x2, zone_y2 = roi_x+roi_w, roi_y+roi_h
+    
+    results = model(frame, conf=0.5)[0]
+    blueBallDetected = False
+    
+    for box in results.boxes:
+        x1, y1, x2, y2 = map(int, box.xyxy[0])
+        cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
+
+        class_id = int(box.cls[0])
+        class_name = model.names[class_id]
+
+        # Check if PingPongBlue is on zone
+       
+
+        if class_name == "PingPongBlue" and zone_x1 <= cx <= zone_x2 and zone_y1 <= cy <= zone_y2:
+            blueBallDetected = True
+            cv2.putText(frame, f"{class_name} DETECTED", (x1, y1 - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+
+        # Draw bounding box
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 255), 2)
+        cv2.circle(frame, (cx, cy), 4, (0, 255, 0), -1)
+
+    # Draw Interest zone
+    cv2.rectangle(frame, (zone_x1, zone_y1), (zone_x2, zone_y2), (0, 255, 255), 2)
+
+    # Show state
+    estado = "Finded" if blueBallDetected else "NO DETECTED"
+    cv2.putText(frame, f"PingPongBlue: {estado}", (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+
+    # Show the frame
+    cv2.imshow("YOLOv8 - RTSP + Zona", frame)
+
+    cap.release()
+    cv2.destroyAllWindows()
+    return blueBallDetected
+
+    
+
+    
 
 
 

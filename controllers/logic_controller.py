@@ -3,13 +3,14 @@ import time
 import random
 import threading
 import time
-from controllers.color_detector import detect_pingpong_presence
+from controllers.color_detector import *
 from dotenv import load_dotenv
 from controllers.usb_pingpong_detector import usb_detect_pingpong_color
 import os
 
 load_dotenv()
 RTSP_URL = os.getenv("RTSP_URL")
+RTSP_URL_2 = os.getenv("RTSP_URL_2")
 
 DOOR_CLOSED_POS = 0.0
 DOOR_OPEN_POS = 100.0 # tengo qeu mirar para que el open door sea dar una vuelta
@@ -61,7 +62,7 @@ class LogicController:
 
             except Exception as e:
                 print(f"⚠️ Error while printing robot variables: {e}")
-            time.sleep(15)
+            time.sleep(5)
 
     def run_scenario(self):
         print("\n🔁 Starting infinite production loop, waiting for objet")
@@ -69,7 +70,7 @@ class LogicController:
         isObjForScara = False
         isObjForRebelLine = False
 
-        # threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
+        threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
 
         while True:
 
@@ -111,12 +112,14 @@ class LogicController:
                     # Ensure motor is referenced before any movement
                     self.d1_door.reference()
 
-                    if not isObjForScara:
+                    if not isObjForScara and not isObjForRebelLine:
                         try:
                             # Try to detect the ping pong ball
                             ball_detected = False
                             try:
-                                ball_detected = detect_pingpong_presence(RTSP_URL, show_debug=True)
+                                whiteBall = detect_pingpong_presence_color_white(RTSP_URL)
+                                blueBall = detect_pingpong_presence_color_blue(RTSP_URL)
+                                ball_detected = whiteBall or blueBall
                             except RuntimeError as e:
                                 print(f"⚠️ Ping pong detection error: {e}")
 
@@ -154,7 +157,8 @@ class LogicController:
                 #=====================================================
                 if(
                     isObjForScara and
-                    not isObjForRebelLine and
+                    not detect_pingpong_presence_color_white2(RTSP_URL_2) and
+                    not detect_pingpong_presence_color_blue2(RTSP_URL_2) and
                     scara_vars.get("startscara", 0.0) == 0.0
                 ):
                     print("🟢 Starting initial SCARA task...")
@@ -164,23 +168,30 @@ class LogicController:
                 #=====================================================
                 #          🔄 SCARA triggers REBELLINE flag
                 #=====================================================
-                if scara_vars.get("posdropobjscara") == 1.0:
+                if True: #scara_vars.get("posdropobjscara") == 1.0:
                     # test
-                    isObjForRebelLine = True
-                    # try:
-                    #     # Confirm visually with USB camera
-                    #     if usb_detect_pingpong_color(camera_index=1, debug=True):
-                    #         isObjForRebelLine = True
-                    #         print("🎥 USB camera confirmed object → isObjForRebelLine = True")
-                    #     else:
-                    #         print("⚠️ USB camera did NOT detect object → skipping.")
-                    # except Exception as e:
-                    #     print(f"❌ USB camera error: {e}")
+                    #isObjForRebelLine = True
+                    try:
+                        ball_detected2 = False
+                        # Confirm visually with USB camera
+                        whiteBall2 = detect_pingpong_presence_color_white2(RTSP_URL_2)
+                        blueBall2 = detect_pingpong_presence_color_blue2(RTSP_URL_2)
+                        ball_detected2 = whiteBall2 or blueBall2
+                        print("ENTREACA==================================================")
+                        print(ball_detected2)
+                        print("SALIACA==================================================")
+                        if ball_detected2:
+                            isObjForRebelLine = True
+                            print("🎥 USB camera confirmed object → isObjForRebelLine = True")
+                        else:
+                            print("⚠️ USB camera did NOT detect object → skipping.")
+                    except Exception as e:
+                        print(f"❌ USB camera error: {e}")
 
                     print("📦 SCARA dropped object → there is objet for Rebel Line")
 
                 if rebelline_vars.get("posreciverebelline1") == 1.0 or rebelline_vars.get("posreciverebelline2") == 1.0 :
-                    isObjForRebelLine = False
+                    isObjForRebelLine = detect_pingpong_presence_color_white2(RTSP_URL_2) and detect_pingpong_presence_color_blue2(RTSP_URL_2) #False
                     print("🔄 RebelLine received object → there isn't objet for Rebel Line")
 
                  #---------------Reset SCARA variable---------------------
@@ -195,27 +206,34 @@ class LogicController:
                 #              🤖 REBELLINE robot logic
                 #=====================================================
                 if (
-                    isObjForRebelLine and
-                    rebelline_vars.get("startrebelline") == 0.0 and (
-                        scara_vars.get("startscara") == 1.0 or
-                        scara_vars.get("isfinishscara") == 0.0
-                    )
+                    ##isObjForRebelLine and
+                    (detect_pingpong_presence_color_white2(RTSP_URL_2) or detect_pingpong_presence_color_blue2(RTSP_URL_2)) and
+                    rebelline_vars.get("startrebelline") == 0.0 #and (
+                    #     scara_vars.get("startscara") == 1.0 or
+                    #     scara_vars.get("isfinishscara") == 0.0
+                    # )
                 ):
                     print("📦 Detected object dropped by SCARA → REBELLINE")
                     print(f"Rebel variables: {rebelline_vars}")
 
                     try:
-                        color = detect_pingpong_presence(RTSP_URL, show_debug=True)
+                        whiteBall3 = detect_pingpong_presence_color_white2(RTSP_URL_2)
+                        blueBall3 = detect_pingpong_presence_color_blue2(RTSP_URL_2)
+                        if whiteBall3:
+                            color = "white"
+                        elif blueBall3:
+                            color = "blue"
+                        #color = detect_pingpong_presence(RTSP_URL, show_debug=True)
                         print(f"🎨 Detected color: {color}")
 
                         if color == "white":
                             print("🎲 Color is WHITE → Load RebelLine1 sequence")
                             self.robot_map["rebelline"].program_name = "RebelLine1.xml"
                             rebelline_vars["lastprogram"] = "RebelLine1"
-                        elif color in ("black", "red"):
+                        elif color in ("black", "red", "blue"):
                             print(f"🎲 Color is {color.upper()} → Load RebelLine2 sequence")
-                            self.robot_map["rebelline"].program_name = "RebelLine2.xml"
-                            rebelline_vars["lastprogram"] = "RebelLine2"
+                            self.robot_map["rebelline"].program_name = "RebelLine1.xml"
+                            rebelline_vars["lastprogram"] = "RebelLine1"
                         else:
                             raise ValueError(f"❌ Unknown color detected: {color}")
 
@@ -241,6 +259,10 @@ class LogicController:
                 #=====================================================
                 #                   🤖 REBEL1 robot logic
                 #=====================================================
+                print("ACAENTROREBELLINE============================================================")
+                print(rebelline_vars.get("posdropobjrebellinetorebel1") )
+                print("ACAENTROREBELLINE============================================================")
+                
                 if (
                     rebelline_vars.get("posdropobjrebellinetorebel1") == 1.0 and
                 #    rebelline_vars.get("lastprogram") == "RebelLine1" and
@@ -322,3 +344,4 @@ class LogicController:
 
                     print(f"🎲 Generated number {rand}")
                 '''
+                

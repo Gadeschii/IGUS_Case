@@ -129,14 +129,14 @@ class D1Motor:
         self._start_motion()
         print("🚪 Motor moving to OPEN position")
         #Check Statusword for signal referenced and if an error in the D1 comes up
-        while (self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
-            and self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 22]):
-                #Wenn der Stoptaster gedrückt wird soll die Kette unterbrechen
-                #If the StopButton is pushed the loop breaks
-                if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
-                    break
-                time.sleep(0.1)
-                print ("🚪 Motor moving to OPEN position")
+        # while (self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
+        #     and self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 22]):
+        #         #Wenn der Stoptaster gedrückt wird soll die Kette unterbrechen
+        #         #If the StopButton is pushed the loop breaks
+        #         if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
+        #             break
+        #         time.sleep(0.1)
+        #         print ("🚪 Motor moving to OPEN position")
 
     def move_to_closed(self):
         # self._prepare_motion()
@@ -146,14 +146,14 @@ class D1Motor:
         self._start_motion()
         print("🚪 Motor moving to CLOSED position")
         # Check Statusword for signal referenced and if an error in the D1 comes up
-        while (self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
-            and self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 22]):
-                #Wenn der Stoptaster gedrückt wird soll die Kette unterbrechen
-                #If the StopButton is pushed the loop breaks
-                if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
-                    break
-                time.sleep(0.1)
-                print ("Motor moving to CLOSED position")
+        # while (self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
+        #     and self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 22]):
+        #         #Wenn der Stoptaster gedrückt wird soll die Kette unterbrechen
+        #         #If the StopButton is pushed the loop breaks
+        #         if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
+        #             break
+        #         time.sleep(0.1)
+        #         print ("Motor moving to CLOSED position")
         
     
     # def move_to(self, position):
@@ -175,7 +175,7 @@ class D1Motor:
         self._send(self._cmd_set_mode(1))  # Profile Position Mode
 
     def _send_velocity_accel(self):
-        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 129, 0, 0, 0, 0, 4, 232, 3, 0, 0])) #speed
+        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 129, 0, 0, 0, 0, 4, 136, 19, 0, 0])) #speed
         self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 131, 0, 0, 0, 0, 4, 100, 0, 0, 0])) #acc
         print("⚙️ Velocidad y aceleración enviadas")
 

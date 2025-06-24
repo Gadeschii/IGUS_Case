@@ -29,7 +29,7 @@ def main():
         time.sleep(0.05)
     print(f"✅ 🧱 Created robot instance")
     print("🔄 Dynamically import robot class from robots.<file>")
-    time.sleep(1)
+    time.sleep(0.25)
         
     print( "\n🔧 Initialize system state controller (connection, reference, import)")
     controller = StateController(robot_instances)

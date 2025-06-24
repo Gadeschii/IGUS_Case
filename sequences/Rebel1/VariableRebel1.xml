@@ -5,4 +5,5 @@
     <Store Nr="2" Type="number" Value="0" Name="isfinishrebel1" Descr="" />
     <Store Nr="3" Type="number" Value="0" Name="posreciverebel1" Descr="" />
     <Store Nr="4" Type="number" Value="0" Name="posdropobjrebel1" Descr="" />
+    <Store Nr="5" Type="number" Value="0" Name="posdropobjrebellinetorebel1" Descr="" />
 </Program>
