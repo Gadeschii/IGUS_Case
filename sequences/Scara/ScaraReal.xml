@@ -7,7 +7,7 @@
     <Store Nr="4" Type="number" Value="0" Name="posdropobjscara" Descr="" />
     <Joint AbortCondition="False" Nr="5" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="137.66" a2="-80.19" a3="78.73" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
     <Store Nr="6" Type="number" Value="1" Name="startscara" Descr="" />
-    <Joint AbortCondition="False" Nr="7" Source="Numerical" velPercent="50" acc="40" smooth="0" a1="200" a2="-6.6" a3="-1.51" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="7" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="200" a2="-6.6" a3="-1.51" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="8" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="68.36" a2="-10.76" a3="40.95" a4="34.02" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
     <Output Nr="9" Channel="DOut23" State="True" Descr="Blow" />
     <Output Nr="10" Channel="DOut22" State="True" Descr="" />

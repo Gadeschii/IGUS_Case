@@ -2,11 +2,11 @@
 <Program>
     <Header RobotName="igus REBEL-6DOF" RobotType="REBEL-6DOF-01" GripperType="" Software="iRC V902-14-003" VelocitySetting="0" />
     <Store Nr="1" Type="number" Value="0" Name="startrebel1" Descr="" />
-    <Store Nr="2" Type="number" Value="1" Name="startrebel1" Descr="" />
-    <Store Nr="3" Type="number" Value="0" Name="isfinishrebel1" Descr="" />
-    <Store Nr="4" Type="number" Value="0" Name="posreciverebel1" Descr="" />
-    <Store Nr="5" Type="number" Value="0" Name="posdropobjrebel1" Descr="" />
-    <Joint AbortCondition="False" Nr="6" Source="Numerical" velPercent="75" acc="40" smooth="0" a1="-108.81" a2="126.86" a3="8.02" a4="-0.48" a5="-46.13" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
+    <Store Nr="2" Type="number" Value="0" Name="isfinishrebel1" Descr="" />
+    <Store Nr="3" Type="number" Value="0" Name="posreciverebel1" Descr="" />
+    <Store Nr="4" Type="number" Value="0" Name="posdropobjrebel1" Descr="" />
+    <Joint AbortCondition="False" Nr="5" Source="Numerical" velPercent="75" acc="40" smooth="0" a1="-108.81" a2="126.86" a3="8.02" a4="-0.48" a5="-46.13" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
+    <Store Nr="6" Type="number" Value="1" Name="startrebel1" Descr="" />
     <Store Nr="7" Type="number" Value="1" Name="posreciverebel1" Descr="" />
     <Joint AbortCondition="False" Nr="8" Source="Numerical" velPercent="100" acc="40" smooth="0" a1="-90.59" a2="95.48" a3="7.91" a4="-0.31" a5="-14.85" a6="1.27" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="9" Source="Numerical" velPercent="100" acc="40" smooth="0" a1="-59.71" a2="84.03" a3="7.91" a4="-0.31" a5="-0.73" a6="1.27" e1="0" e2="0" e3="0" Descr="" />

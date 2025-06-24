@@ -4,7 +4,7 @@
     <Store Nr="1" Type="number" Value="0" Name="startrebelline" Descr="" />
     <Store Nr="2" Type="number" Value="0" Name="isfinishrebelline" Descr="" />
     <Store Nr="3" Type="number" Value="0" Name="posreciverebelline" Descr="" />
-    <Store Nr="4" Type="number" Value="0" Name="posdropobjrebellinetorebel1" Descr="" />
+    <Store Nr="4" Type="number" Value="0" Name="posdropobjrebellinetorebel" Descr="" />
     <Joint AbortCondition="False" Nr="5" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="734.15" e2="0" e3="0" Descr="" />
     <Store Nr="6" Type="number" Value="1" Name="startrebelline" Descr="" />
     <Joint AbortCondition="False" Nr="7" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="475.12" e2="0" e3="0" Descr="" />
@@ -19,7 +19,7 @@
     <Joint AbortCondition="False" Nr="16" Source="Numerical" velPercent="10" acc="40" smooth="0" a1="88.85" a2="64.11" a3="49.77" a4="-0.74" a5="64.45" a6="-33.14" e1="1141.34" e2="0" e3="0" Descr="" />
     <Output Nr="17" Channel="DOut31" State="False" Descr="" />
     <Wait Nr="18" Type="Time" Seconds="1.5" Descr="" />
-    <Store Nr="19" Type="number" Value="1" Name="posdropobjrebellinetorebel1" Descr="" />
+    <Store Nr="19" Type="number" Value="1" Name="posdropobjrebellinetorebel" Descr="" />
     <Store Nr="20" Type="number" Value="0" Name="posreciverebelline" Descr="" />
     <Joint AbortCondition="False" Nr="21" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="88.85" a2="55.17" a3="47.06" a4="-0.69" a5="76.09" a6="-33.29" e1="1141.34" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="22" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="734.15" e2="0" e3="0" Descr="" />

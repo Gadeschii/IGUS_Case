@@ -100,18 +100,18 @@ class D1Motor:
         # self._send(self._cmd_set_revolution())
         # self._send(self._cmd_speed())
         # self._send(self._cmd_acceleration())
-        print("Estado: ")
+        print("EstadoACACACAACCACACACAA: ")
         print(self._send(bytearray(self.status_array)))
-        while (self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
-            and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 6]
-            and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 34]
-            and  self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 2]):
-                #Wenn der Stoptaster gedrückt wird soll die Kette unterbrechen
-                #If the StopButton is pushed the loop breaks
-                if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
-                    break
-                time.sleep(0.1)
-                print ("Homing")
+        # while (self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
+        #     and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 6]
+        #     and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 34]
+        #     and  self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 2]):
+        #         #Wenn der Stoptaster gedrückt wird soll die Kette unterbrechen
+        #         #If the StopButton is pushed the loop breaks
+        #         if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
+        #             break
+        #         time.sleep(0.1)
+        #         print ("Homing")
         
         # ✔️ Update internal state and shared configuration
         self.current_position = 0.0

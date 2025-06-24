@@ -6,26 +6,26 @@
     <Store Nr="3" Type="number" Value="0" Name="isfinishrebelline2" Descr="" />
     <Store Nr="4" Type="number" Value="0" Name="posreciverebelline2" Descr="" />
     <Store Nr="5" Type="number" Value="0" Name="posdropobjrebellinetorebel2" Descr="" />
-    <Joint AbortCondition="False" Nr="6" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="334.2" e2="25" e3="0" Descr="" />
-    <Joint AbortCondition="False" Nr="7" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="60.97" a2="70.7" a3="107.2" a4="0" a5="6.4" a6="-32.97" e1="334.2" e2="25" e3="0" Descr="" />
-    <Joint AbortCondition="False" Nr="8" Source="Numerical" velPercent="60" acc="40" smooth="0" a1="60.97" a2="89" a3="91.5" a4="-0.4" a5="3.8" a6="-32.97" e1="334.2" e2="25" e3="0" Descr="" />
-    <Joint AbortCondition="False" Nr="9" Source="Numerical" velPercent="10" acc="40" smooth="0" a1="61.8" a2="114.8" a3="63.4" a4="0" a5="6" a6="-32" e1="334.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="6" Source="Numerical" velPercent="50" acc="50" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="334.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="7" Source="Numerical" velPercent="50" acc="50" smooth="0" a1="60.97" a2="70.7" a3="107.2" a4="0" a5="6.4" a6="-32.97" e1="334.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="8" Source="Numerical" velPercent="60" acc="50" smooth="0" a1="60.97" a2="89" a3="91.5" a4="-0.4" a5="3.8" a6="-32.97" e1="334.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="9" Source="Numerical" velPercent="20" acc="30" smooth="0" a1="61.7" a2="117.4" a3="64.6" a4="0.1" a5="2.3" a6="-32.4" e1="334.2" e2="25" e3="0" Descr="" />
     <Output Nr="10" Channel="DOut31" State="True" Descr="" />
     <Wait Nr="11" Type="Time" Seconds="3" Descr="" />
     <Store Nr="12" Type="number" Value="1" Name="posreciverebelline2" Descr="" />
-    <Joint AbortCondition="False" Nr="13" Source="Numerical" velPercent="25" acc="40" smooth="0" a1="61.8" a2="95.4" a3="86.9" a4="0" a5="2" a6="-32.3" e1="334.2" e2="0" e3="0" Descr="" />
-    <Joint AbortCondition="False" Nr="14" Source="Numerical" velPercent="40" acc="90" smooth="0" a1="59.7" a2="46.88" a3="67.67" a4="-0.16" a5="69.66" a6="-34.19" e1="334.24" e2="0" e3="0" Descr="" />
-    <Joint AbortCondition="False" Nr="15" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="88.63" a2="-27.41" a3="114.17" a4="-1.2" a5="94.41" a6="-33.39" e1="2227.23" e2="25" e3="0" Descr="" />
-    <Joint AbortCondition="False" Nr="16" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="88.85" a2="55.17" a3="47.06" a4="-0.69" a5="76.09" a6="-33.29" e1="2227.2" e2="25" e3="0" Descr="" />
-    <Joint AbortCondition="False" Nr="17" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="106.2" a2="63.9" a3="57.6" a4="0" a5="57" a6="-33.14" e1="2227.2" e2="25" e3="0" Descr="" />
-    <Joint AbortCondition="False" Nr="18" Source="Numerical" velPercent="25" acc="40" smooth="0" a1="106.12" a2="96.63" a3="31.67" a4="-0.01" a5="50.16" a6="-33.09" e1="2227.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="13" Source="Numerical" velPercent="35" acc="50" smooth="0" a1="60.3" a2="95.8" a3="82.1" a4="-1" a5="12.9" a6="-32.8" e1="334.2" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="14" Source="Numerical" velPercent="50" acc="50" smooth="0" a1="59.7" a2="46.88" a3="67.67" a4="-0.16" a5="69.66" a6="-34.19" e1="334.24" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="15" Source="Numerical" velPercent="50" acc="50" smooth="0" a1="88.63" a2="-27.41" a3="114.17" a4="-1.2" a5="94.41" a6="-33.39" e1="2227.23" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="16" Source="Numerical" velPercent="50" acc="40" smooth="0" a1="88.85" a2="55.17" a3="47.06" a4="-0.69" a5="76.09" a6="-33.29" e1="2227.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="17" Source="Numerical" velPercent="50" acc="40" smooth="0" a1="106.2" a2="63.9" a3="57.6" a4="0" a5="57" a6="-33.14" e1="2227.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="18" Source="Numerical" velPercent="35" acc="40" smooth="0" a1="106.12" a2="96.63" a3="31.67" a4="-0.01" a5="50.16" a6="-33.09" e1="2227.2" e2="25" e3="0" Descr="" />
     <Output Nr="19" Channel="DOut31" State="False" Descr="" />
     <Wait Nr="20" Type="Time" Seconds="1.5" Descr="" />
-    <Joint AbortCondition="False" Nr="21" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="106.12" a2="54.28" a3="57.35" a4="-0.01" a5="66.83" a6="-33.09" e1="2227.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="21" Source="Numerical" velPercent="50" acc="40" smooth="0" a1="106.12" a2="54.28" a3="57.35" a4="-0.01" a5="66.83" a6="-33.09" e1="2227.2" e2="25" e3="0" Descr="" />
     <Store Nr="22" Type="number" Value="1" Name="posdropobjrebellinetorebel2" Descr="" />
-    <Joint AbortCondition="False" Nr="23" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="106.12" a2="54.28" a3="57.35" a4="-0.69" a5="66.83" a6="-33.29" e1="2227.2" e2="25" e3="0" Descr="" />
-    <Joint AbortCondition="False" Nr="24" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="123.8" a2="47" a3="69.3" a4="0" a5="66.83" a6="-33.29" e1="1000" e2="25" e3="0" Descr="" />
-    <Joint AbortCondition="False" Nr="25" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="734.15" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="23" Source="Numerical" velPercent="50" acc="40" smooth="0" a1="106.12" a2="54.28" a3="57.35" a4="-0.69" a5="66.83" a6="-33.29" e1="2227.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="24" Source="Numerical" velPercent="50" acc="40" smooth="0" a1="123.8" a2="47" a3="69.3" a4="0" a5="66.83" a6="-33.29" e1="1000" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="25" Source="Numerical" velPercent="50" acc="40" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="734.15" e2="25" e3="0" Descr="" />
     <Store Nr="26" Type="number" Value="0" Name="startrebelline2" Descr="" />
     <Store Nr="27" Type="number" Value="1" Name="isfinishrebelline2" Descr="" />
 </Program>
