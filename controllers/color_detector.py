@@ -91,7 +91,7 @@ def detect_pingpong_presence_color_white(rtsp_url: str, show_debug: bool = False
     ret, frame = cap.read()
     if not ret:
         print("Cannot connect to camera")
-        return
+        return False
     
     h, w = frame.shape[:2]
     
@@ -145,7 +145,7 @@ def detect_pingpong_presence_color_blue(rtsp_url: str, show_debug: bool = False)
     ret, frame = cap.read()
     if not ret:
         print("Cannot connect to camera")
-        return
+        return False
     
     h, w = frame.shape[:2]
     
@@ -197,10 +197,11 @@ def detect_pingpong_presence_color_white2(rtsp_url: str, show_debug: bool = Fals
 
     # Connect to camera
     cap = cv2.VideoCapture(rtsp_url)
+    # cap = cv2.VideoCapture(1)
     ret, frame = cap.read()
     if not ret:
         print("Cannot connect to camera")
-        return
+        return False
     
     h, w = frame.shape[:2]
     
@@ -251,10 +252,11 @@ def detect_pingpong_presence_color_blue2(rtsp_url: str, show_debug: bool = False
 
     # Connect to camera
     cap = cv2.VideoCapture(rtsp_url)
+    # cap = cv2.VideoCapture(1)
     ret, frame = cap.read()
     if not ret:
         print("Cannot connect to camera")
-        return
+        return False
     
     h, w = frame.shape[:2]
     
