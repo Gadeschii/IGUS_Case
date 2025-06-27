@@ -42,7 +42,7 @@ class StateController:
                 print("🚀 Initial startup complete, passing control to logic controller...")     
                 logic = LogicController(self.robots)
                 print("\n🧠 Start coordination logic between robots")
-                logic.run_scenario()  # Esto es un bucle infinito, así que no saldrá de aquí a menos que falle
+                logic.run_scenario() 
 
                 break 
 

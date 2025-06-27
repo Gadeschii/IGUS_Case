@@ -100,18 +100,17 @@ class D1Motor:
         # self._send(self._cmd_set_revolution())
         # self._send(self._cmd_speed())
         # self._send(self._cmd_acceleration())
-        print("EstadoACACACAACCACACACAA: ")
         print(self._send(bytearray(self.status_array)))
-        # while (self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
-        #     and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 6]
-        #     and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 34]
-        #     and  self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 2]):
-        #         #Wenn der Stoptaster gedrückt wird soll die Kette unterbrechen
-        #         #If the StopButton is pushed the loop breaks
-        #         if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
-        #             break
-        #         time.sleep(0.1)
-        #         print ("Homing")
+        while (self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
+            and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 6]
+            and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 34]
+            and  self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 2]):
+                #Wenn der Stoptaster gedrückt wird soll die Kette unterbrechen
+                #If the StopButton is pushed the loop breaks
+                if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
+                    break
+                time.sleep(0.1)
+                print ("Homing")
         
         # ✔️ Update internal state and shared configuration
         self.current_position = 0.0
@@ -142,7 +141,7 @@ class D1Motor:
         # self._prepare_motion()
         self.sendCommand(self.enableOperation_array)
         self._send_velocity_accel()
-        self._send_target_positionb(250)
+        self._send_target_positionb(0)
         self._start_motion()
         print("🚪 Motor moving to CLOSED position")
         # Check Statusword for signal referenced and if an error in the D1 comes up
@@ -175,7 +174,7 @@ class D1Motor:
         self._send(self._cmd_set_mode(1))  # Profile Position Mode
 
     def _send_velocity_accel(self):
-        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 129, 0, 0, 0, 0, 4, 136, 19, 0, 0])) #speed
+        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 129, 0, 0, 0, 0, 4, 76, 29, 0, 0])) #speed
         self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 131, 0, 0, 0, 0, 4, 100, 0, 0, 0])) #acc
         print("⚙️ Velocidad y aceleración enviadas")
 

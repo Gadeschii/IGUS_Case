@@ -5,4 +5,12 @@
     <Store Nr="2" Type="number" Value="0" Name="isfinishrebelline" Descr="" />
     <Store Nr="3" Type="number" Value="0" Name="posreciverebelline" Descr="" />
     <Store Nr="4" Type="number" Value="0" Name="posdropobjrebelline" Descr="" />
+    <Store Nr="5" Type="number" Value="0" Name="startrebelline1" Descr="" />
+    <Store Nr="6" Type="number" Value="0" Name="isfinishrebelline1" Descr="" />
+    <Store Nr="7" Type="number" Value="0" Name="posreciverebelline1" Descr="" />
+    <Store Nr="8" Type="number" Value="0" Name="posdropobjrebelline1" Descr="" />
+    <Store Nr="9" Type="number" Value="0" Name="startrebelline2" Descr="" />
+    <Store Nr="10" Type="number" Value="0" Name="isfinishrebelline2" Descr="" />
+    <Store Nr="11" Type="number" Value="0" Name="posreciverebelline2" Descr="" />
+    <Store Nr="12" Type="number" Value="0" Name="posdropobjrebelline2" Descr="" />
 </Program>

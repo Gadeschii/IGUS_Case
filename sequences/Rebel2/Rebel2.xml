@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Program>
     <Header RobotName="igus REBEL-6DOF" RobotType="REBEL-6DOF-01" GripperType="" Software="iRC V902-14-003" VelocitySetting="0" />
-    <Wait Nr="1" Type="Time" Seconds="1" Descr="" />
+    <Wait Nr="1" Type="Time" Seconds="0" Descr="" />
     <Store Nr="2" Type="number" Value="0" Name="startrebel2" Descr="" />
     <Store Nr="3" Type="number" Value="0" Name="isfinishrebel2" Descr="" />
     <Store Nr="4" Type="number" Value="0" Name="posreciverebel2" Descr="" />
