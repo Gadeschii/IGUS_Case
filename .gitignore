@@ -1,0 +1,4 @@
+# Ignorar archivos de pesos pesados
+train14/weights/best.pt
+train14/weights/*.pt
+train14/weights/
