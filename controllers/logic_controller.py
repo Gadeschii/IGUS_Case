@@ -15,9 +15,6 @@ RTSP_URL_2 = os.getenv("RTSP_URL_2")
 DOOR_CLOSED_POS = 0.0
 DOOR_OPEN_POS = 100.0 # tengo qeu mirar para que el open door sea dar una vuelta
 
-ELEVATOR_BOTTOM_POS = 0.0
-ELEVATOR_TOP_POS = 250.0
-
 class LogicController:
     def __init__(self, robots):
         self.robots = robots
@@ -97,44 +94,16 @@ class LogicController:
                 rebelline_vars = self.get_robot_vars("RebelLine")
                 rebel1_vars = self.get_robot_vars("Rebel1")
                 rebel2_vars = self.get_robot_vars("Rebel2")
-
+                
+                print('========================================================')
+                print(f"Is there object for Rebel Line? --> {isObjForRebelLine} ")
+                print(f"Is there object for Scara? --> {isObjForScara} ")
+                print('========================================================')
 
                 #=====================================================
                 #               🤖 Dry D1 robot logic
                 #=====================================================
 
-                # if self.d1_door:
-                #     # Ensure motor is referenced before any movement
-                #     self.d1_door.reference()
-
-                    # if (not detect_pingpong_presence_color_white(RTSP_URL) and not
-                    #     detect_pingpong_presence_color_blue(RTSP_URL)): #and not isObjForRebelLine:
-                    #     try:
-                    #         # Try to detect the ping pong ball
-                    #         ball_detected = False
-                    #         try:
-                    #             whiteBall = detect_pingpong_presence_color_white(RTSP_URL)
-                    #             blueBall = detect_pingpong_presence_color_blue(RTSP_URL)
-                    #             ball_detected = whiteBall or blueBall
-                    #         except RuntimeError as e:
-                    #             print(f"⚠️ Ping pong detection error: {e}")
-
-                    #         if ball_detected:
-                    #             print("✅ Ping pong ball detected → SCARA task ready")
-                    #             isObjForScara = True
-
-                    #             # 🔒 Move door to closed position
-                    #             self.d1_door.move_to_closed()
-                    #             self.d1_door.current_position = 0.0
-
-                    #         else:
-                    #             raise RuntimeError("❌ No ping pong ball detected.")
-
-                    #     except RuntimeError as e:
-                    #         print(f"⚠️ {e}")
-                    #         # 🚪 Open the door
-                    #         self.d1_door.move_to_open()
-                    #         self.d1_door.current_position = 250.0  # mm (or appropriate open value)
                 
                 if self.d1_door:
                     self.d1_door.reference()
@@ -155,62 +124,19 @@ class LogicController:
                                 print("✅ Ping pong ball detected → SCARA task ready")
                                 isObjForScara = True
                                 # 🔒 Move door to closed position
-                                self.d1_door.move_to_closed()
+                                self.d1_door.move_to_right() 
                                 self.d1_door.current_position = 0.0
                             else:
                                 print("⏳ No ball yet for SCARA")
                                 # 🚪 Open the door
-                                self.d1_door.move_to_open()
-                                self.d1_door.current_position = 250.0  # mm (or appropriate open value)
+                                self.d1_door.move_to_left()
+                                self.d1_door.current_position = 250.0  
                         except RuntimeError as e:
                             print(f"⚠️ SCARA camera error: {e}")
-                          
-      
-                # if self.d1_elevator:
-                #     if rebelline_vars.get("startascensor", 0.0) == 1.0:
-                #         self.d1_elevator.move_to(ELEVATOR_TOP_POS)
-                #         time.sleep(0.5)
-                #         self.d1_elevator.move_to(ELEVATOR_BOTTOM_POS)
-
-                print('========================================================')
-                print(f"Is there object for Rebel Line? --> {isObjForRebelLine} ")
-                print(f"Is there object for Scara? --> {isObjForScara} ")
-                print('========================================================')
 
                 #=====================================================
                 #               🤖 SCARA robot logic
-                #=====================================================
-                # if (
-                #     (
-                #         (detect_pingpong_presence_color_white(RTSP_URL) or
-                #         detect_pingpong_presence_color_blue(RTSP_URL)) and
-                #         not detect_pingpong_presence_color_white2(RTSP_URL_2) and
-                #         not detect_pingpong_presence_color_blue2(RTSP_URL_2) and
-                #         scara_vars.get("startscara", 0.0) == 0.0 and
-                #         (
-                #             True
-                #             #not rebelline_vars.get("startrebelline1", 0.0) == 1.0 or
-                #             #not rebelline_vars.get("startrebelline2", 0.0) == 1.0
-                #         )
-                #     )
-                #     # or
-                #     # (
-                #     #     isObjForScara and
-                #     #     not detect_pingpong_presence_color_white2(RTSP_URL_2) and
-                #     #     not detect_pingpong_presence_color_blue2(RTSP_URL_2) and
-                #     #     scara_vars.get("startscara", 0.0) == 0.0 and
-                #     #     (
-                #     #         rebelline_vars.get("posreciverebelline1", 0.0) == 1.0 or
-                #     #         rebelline_vars.get("posreciverebelline2", 0.0) == 1.0
-                #     #     )
-                #     # )
-                # ):
-                
-                    # print("🟢 Starting initial SCARA task...")
-                    # self.robot_map["scara"].run_task()
-                    # isObjForScara = detect_pingpong_presence_color_white(RTSP_URL) or detect_pingpong_presence_color_blue(RTSP_URL)
-                
-                
+                #=====================================================      
                                 
                 if (
                     isObjForScara and
@@ -226,33 +152,8 @@ class LogicController:
                 #          🔄 SCARA triggers REBELLINE flag
                 #=====================================================
                 
-                # if True: #scara_vars.get("posdropobjscara") == 1.0:
-                #     # test
-                #     #isObjForRebelLine = True
-                #     try:
-                #         ball_detected2 = False
-                #         # 🔍 Check presence of ball using RL camera
-                #         whiteBall2 = detect_pingpong_presence_color_white2(RTSP_URL_2)
-                #         blueBall2 = detect_pingpong_presence_color_blue2(RTSP_URL_2)
-                #         ball_detected2 = whiteBall2 or blueBall2
-                        
-                #         print("ENTREACA==================================================")
-                #         print(f"Ball detected: {ball_detected2}")
-                #         print("SALIACA==================================================")
-                        
-                #         if ball_detected2:
-                #             isObjForRebelLine = True
-                #             print("🎥 RL camera confirmed object → isObjForRebelLine = True")
-                #         else:
-                #             print("⚠️ RL camera did NOT detect object → skipping.")
-                #     except Exception as e:
-                #         print(f"❌ USB camera error: {e}")
-
-                #     print("📦 SCARA dropped object → there is objet for Rebel Line")
-                
                 # RebelLine camera
                 detected_rebel, color_rebel = detect_ball_and_color(RTSP_URL_2)
-                
                 if detected_rebel:
                     isObjForRebelLine = True
                     print(f"🎥 [REBEL CAM] Ball detected? → isObjForRebelLine = {isObjForRebelLine}")
@@ -304,7 +205,7 @@ class LogicController:
                     print("📦 Detected object dropped by SCARA → REBELLINE")
 
                     try:
-                        if color_rebel == "white":
+                        if color_rebel == "white" or color_rebel == "orange":
                             self.robot_map["rebelline"].program_name = "RebelLine1.xml"
                             rebelline_vars["lastprogram"] = "RebelLine1"
                             print(f"🤖 Load: RebelLine1")
@@ -323,87 +224,6 @@ class LogicController:
                         print(f"⚠️ RebelLine color logic failed: {e}")
 
                     print(f"📦 Finalized: REBELLINE task started. Vars: {rebelline_vars}")
-                
-                
-                # if (
-                #      #isObjForRebelLine and
-                #     (detect_pingpong_presence_color_white2(RTSP_URL_2) or detect_pingpong_presence_color_blue2(RTSP_URL_2)) and
-                #     rebelline_vars.get("startrebelline") == 0.0 and (
-                #         scara_vars.get("posdropobjscara") == 1.0 or
-                #         scara_vars.get("startscara") == 0.0 or
-                #         scara_vars.get("isfinishscara") == 1.0
-                #     )
-                # ):
-                        
-                    # try:
-                    #     # Generar número aleatorio
-                    #     rand_num = random.randint(1, 100)
-                    #     print(f"🎲 Random number generated: {rand_num}")
-
-                    #     self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
-
-                    #     if rand_num % 2 == 0:
-                    #         # Número par → usar RebelLine2 y Rebel2
-                    #         print("📦 EVEN number → Load RebelLine2 sequence & run Rebel2")
-                    #         self.robot_map["rebelline"].program_name = "RebelLine2.xml"
-                    #         rebelline_vars["lastprogram"] = "RebelLine2"
-                    #         self.robot_map["rebelline"].run_task()
-                    #         rebelline_vars["startrebelline"] = 1.0
-
-                    #         self.robot_map["rebel2"].run_task()
-                    #         rebel2_vars["startrebel2"] = 1.0
-
-                    #     else:
-                    #         # Número impar → usar RebelLine1 y Rebel1
-                    #         print("📦 ODD number → Load RebelLine1 sequence & run Rebel1")
-                    #         self.robot_map["rebelline"].program_name = "RebelLine1.xml"
-                    #         rebelline_vars["lastprogram"] = "RebelLine1"
-                    #         self.robot_map["rebelline"].run_task()
-                    #         rebelline_vars["startrebelline"] = 1.0
-
-                    #         self.robot_map["rebel1"].run_task()
-                    #         rebel1_vars["startrebel1"] = 1.0
-
-                    # except Exception as e:
-                    #     print(f"⚠️ Execution error: {e}")
-
-                    # try:
-                    #     whiteBall3 = detect_pingpong_presence_color_white2(RTSP_URL_2)
-                    #     blueBall3 = detect_pingpong_presence_color_blue2(RTSP_URL_2)
-                    #     if whiteBall3:
-                    #         color = "white"
-                    #     elif blueBall3:
-                    #         color = "blue"
-                            
-                    #     #color = detect_pingpong_presence(RTSP_URL, show_debug=True)
-                        
-                    #     print(f"🎨 Detected color: {color}")
-                        
-                    #     self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
-
-                    #     # Load RebelLine1
-                    #     if color == "white":
-                    #         print("🎲 Color is WHITE → Load RebelLine1 sequence")
-                    #         self.robot_map["rebelline"].program_name = "RebelLine1.xml"
-                    #         rebelline_vars["lastprogram"] = "RebelLine1"
-                    #         self.robot_map["rebelline"].run_task()
-                    #         rebelline_vars["startrebelline"] = 1.0
-                            
-                    #     # Load RebelLine2
-                    #     elif color in ("black", "blue"):
-                    #         print(f"🎲 Color is {color.upper()} → Load RebelLine2 sequence")
-                    #         self.robot_map["rebelline"].program_name = "RebelLine2.xml"
-                    #         rebelline_vars["lastprogram"] = "RebelLine2"
-                    #         self.robot_map["rebelline"].run_task()
-                    #         rebelline_vars["startrebelline"] = 1.0
-                    #     else:
-                    #         raise ValueError(f"❌ Unknown color detected: {color}")
-                        
-
-                    # except RuntimeError as e:
-                    #     print(f"⚠️ Camera error: {e}")
-                    # except Exception as e:
-                    #     print(f"⚠️ Color detection failed: {e}")
 
                 #---------------Reset Rebel Line variable---------------------
                 if (

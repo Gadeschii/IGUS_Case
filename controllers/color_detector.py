@@ -6,7 +6,7 @@ from ultralytics import *
 
 model = YOLO("C:/Users/javie/Desktop/IgusRobotsCase/IgusRobotControllerCase/IGUS_Case/train14/weights/best.pt")
 
-def detect_ball_and_color(rtsp_url: str, expected_colors=("white", "blue"), debug=False) -> tuple[bool, str | None]:
+def detect_ball_and_color(rtsp_url: str, expected_colors=("white", "blue", "orange"), debug=False) -> tuple[bool, str | None]:
     """
     Detecta si hay una pelota y determina su color usando YOLO, con depuración visual y validación.
     
@@ -41,6 +41,9 @@ def detect_ball_and_color(rtsp_url: str, expected_colors=("white", "blue"), debu
             return True, detected_color
         elif class_name == "PingPongBlue" and "blue" in expected_colors:
             detected_color = "blue"
+            return True, detected_color
+        elif class_name == "PingPongOrange" and "orange" in expected_colors:
+            detected_color = "orange"
             return True, detected_color
 
     return False, None

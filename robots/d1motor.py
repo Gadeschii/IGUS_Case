@@ -101,16 +101,17 @@ class D1Motor:
         # self._send(self._cmd_speed())
         # self._send(self._cmd_acceleration())
         print(self._send(bytearray(self.status_array)))
-        while (self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
-            and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 6]
-            and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 34]
-            and  self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 2]):
-                #Wenn der Stoptaster gedrückt wird soll die Kette unterbrechen
-                #If the StopButton is pushed the loop breaks
-                if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
-                    break
-                time.sleep(0.1)
-                print ("Homing")
+        
+        # while (self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
+        #     and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 6]
+        #     and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 34]
+        #     and  self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 2]):
+        #         #Wenn der Stoptaster gedrückt wird soll die Kette unterbrechen
+        #         #If the StopButton is pushed the loop breaks
+        #         if self._send(self.DInputs_array) == [0, 0, 0, 0, 0, 17, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4, 8, 0, 66, 0]:
+        #             break
+        #         time.sleep(0.1)
+        #         print ("Homing")
         
         # ✔️ Update internal state and shared configuration
         self.current_position = 0.0
@@ -119,14 +120,14 @@ class D1Motor:
         print(f"🔁 door_config.DOOR_CLOSED_POS set to {door_config.DOOR_CLOSED_POS}")
 
 
-    def move_to_open(self):
+    def move_to_left(self):
         # self._prepare_motion()
         self.set_mode(1)
         self.sendCommand(self.enableOperation_array)
         self._send_velocity_accel()
         self._send_target_positiona(250)  # mm
         self._start_motion()
-        print("🚪 Motor moving to OPEN position")
+        print("🚪 Motor moving to LEFT position")
         #Check Statusword for signal referenced and if an error in the D1 comes up
         # while (self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
         #     and self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 22]):
@@ -137,13 +138,14 @@ class D1Motor:
         #         time.sleep(0.1)
         #         print ("🚪 Motor moving to OPEN position")
 
-    def move_to_closed(self):
+    def move_to_right(self):
         # self._prepare_motion()
+        self.set_mode(1)
         self.sendCommand(self.enableOperation_array)
         self._send_velocity_accel()
         self._send_target_positionb(0)
         self._start_motion()
-        print("🚪 Motor moving to CLOSED position")
+        print("🚪 Motor moving to Right position")
         # Check Statusword for signal referenced and if an error in the D1 comes up
         # while (self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
         #     and self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 22]):
@@ -179,14 +181,16 @@ class D1Motor:
         print("⚙️ Velocidad y aceleración enviadas")
 
     def _send_target_positiona(self, pos_mm):
-        val = int(pos_mm * 100)
+        # print(f"📍 Sending target position: {val} → bytes: {bytes_}")
+        # val = int(pos_mm * 100)
         # bytes_ = [val & 0xFF, (val >> 8) & 0xFF, (val >> 16) & 0xFF, (val >> 24) & 0xFF]
         # self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4] + bytes_))
         print("Comando a pos a")
         self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4, 80, 70, 0, 0]))
     
     def _send_target_positionb(self, pos_mm):
-        val = int(pos_mm * 100)
+        # print(f"📍 Sending target position: {val} → bytes: {bytes_}")
+        # val = int(pos_mm * 100)
         # bytes_ = [val & 0xFF, (val >> 8) & 0xFF, (val >> 16) & 0xFF, (val >> 24) & 0xFF]
         # self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4] + bytes_))
         self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4, 0, 0, 0, 0]))

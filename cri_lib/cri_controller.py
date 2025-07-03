@@ -26,7 +26,7 @@ class CRIController:
     ALIVE_JOG_INTERVAL_SEC = 0.2
     ACTIVE_JOG_INTERVAL_SEC = 0.02
     RECEIVE_TIMEOUT_SEC = 5
-    DEFAULT_ANSWER_TIMEOUT = 10.0
+    DEFAULT_ANSWER_TIMEOUT = 20.0
 
     class MotionType(Enum):
         """Robot Motion Type for Jogging"""
