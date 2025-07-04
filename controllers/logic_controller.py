@@ -54,15 +54,15 @@ class LogicController:
                     vars_ = self.get_robot_vars(name)
                     print(f"🔍 {name} variables:  {vars_}\n{'--'*30}")
 
-                if self.d1_door:
-                    print(f"🚪 D1 Door position: {self.d1_door.current_position}")
-                if self.d1_elevator:
-                    print(f"🏗️ D1 Elevator position: {self.d1_elevator.current_position}")
-                print(f"{'='*60}")
+                # if self.d1_door:
+                #     print(f"🚪 D1 Door position: {self.d1_door.current_position}")
+                # if self.d1_elevator:
+                #     print(f"🏗️ D1 Elevator position: {self.d1_elevator.current_position}")
+                # print(f"{'='*60}")
 
             except Exception as e:
                 print(f"⚠️ Error while printing robot variables: {e}")
-            time.sleep(15)
+            time.sleep(5)
 
     def run_scenario(self):
         print("\n🔁 Starting infinite production loop, waiting for objet")
@@ -103,8 +103,6 @@ class LogicController:
                 #=====================================================
                 #               🤖 Dry D1 robot logic
                 #=====================================================
-
-                
                 if self.d1_door:
                     self.d1_door.reference()
                     
@@ -124,13 +122,13 @@ class LogicController:
                                 print("✅ Ping pong ball detected → SCARA task ready")
                                 isObjForScara = True
                                 # 🔒 Move door to closed position
-                                self.d1_door.move_to_right() 
-                                self.d1_door.current_position = 0.0
+                                self.d1_door.move_to_left() 
+                                # self.d1_door.current_position = 0.0
                             else:
                                 print("⏳ No ball yet for SCARA")
                                 # 🚪 Open the door
-                                self.d1_door.move_to_left()
-                                self.d1_door.current_position = 250.0  
+                                self.d1_door.move_to_right() 
+                                # self.d1_door.current_position = -250.0  
                         except RuntimeError as e:
                             print(f"⚠️ SCARA camera error: {e}")
 
@@ -245,13 +243,16 @@ class LogicController:
                 print(f"lastprogram = {rebelline_vars.get('lastprogram')}")
                 
                 if (
-                    rebelline_vars.get("posdropobjrebellinetorebel1") == 1.0 and
-                    # rebelline_vars.get("lastprogram") == "RebelLine1" and
+                    rebelline_vars.get("posdropobjrebellinetorebel1") == 1.0 and  
                     rebel1_vars.get("startrebel1") == 0.0
                 ):
                     print("📦 REBELLINE dropped to REBEL1")
-                    self.robot_map["rebel1"].run_task()
+                    threading.Thread(
+                        target=self.robot_map["rebel1"].run_task, 
+                        daemon=True
+                    ).start()
                     rebel1_vars["startrebel1"] = 1.0
+
 
                 if rebel1_vars.get("isfinishrebel1", 0.0) == 1.0:
                     print("\n♻️ Resetting REBEL1 variables...")
@@ -267,13 +268,16 @@ class LogicController:
                 print(f"startrebel2 = {rebel1_vars.get('startrebel2')}")
                 print(f"isfinishrebelline1 = {rebelline_vars.get('isfinishrebelline2')}")
                 print(f"lastprogram = {rebelline_vars.get('lastprogram')}")
+                
                 if (
                     rebelline_vars.get("posdropobjrebellinetorebel2") == 1.0 and
-                    # rebelline_vars.get("lastprogram") == "RebelLine2" and
                     rebel2_vars.get("startrebel2") == 0.0
                 ):
                     print("📦 REBELLINE dropped to REBEL2")
-                    self.robot_map["rebel2"].run_task()
+                    threading.Thread(
+                        target=self.robot_map["rebel2"].run_task, 
+                        daemon=True
+                    ).start()
                     rebel2_vars["startrebel2"] = 1.0
 
                 if rebel2_vars.get("isfinishrebel2", 0.0) == 1.0:

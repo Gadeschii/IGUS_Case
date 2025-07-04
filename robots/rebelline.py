@@ -39,7 +39,7 @@ class RebelLineRobot(BaseRobot):
 
             time.sleep(0.2)
             wait_until_axes_referenced(self,axes=("A1", "A2", "A3", "A4", "A5", "A6", "E1"))
-            time.sleep(1)
+            time.sleep(0.5)
             self.controller.reset()
             time.sleep(0.5)
             self.controller.enable()

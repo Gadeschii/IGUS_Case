@@ -40,7 +40,7 @@ class ScaraRobot(BaseRobot):
         check_robot_ready(self)
 
         success = self.controller.move_joints(
-            A1=400.0, A2=-74.3, A3=70.0, A4=80.0,
+            A1=40.0, A2=-74.3, A3=70.0, A4=80.0,
             A5=0.0, A6=0.0, E1=0.0, E2=0.0, E3=0.0,
             velocity=40.0, wait_move_finished=True
         )
@@ -58,3 +58,4 @@ class ScaraRobot(BaseRobot):
             raise Exception("❌ Failed to move to final safe position.")
 
         print("✅ SCARA is now safe.")
+

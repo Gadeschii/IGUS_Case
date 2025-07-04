@@ -1,6 +1,5 @@
 import socket
 import time
-from config.door_config import door_config 
 from config.robots_config import robots_config
  
 
@@ -113,19 +112,13 @@ class D1Motor:
         #         time.sleep(0.1)
         #         print ("Homing")
         
-        # ✔️ Update internal state and shared configuration
-        self.current_position = 0.0
-        door_config.DOOR_CLOSED_POS = 0.0
-        print(f"✅ Homing completed → position set to {self.current_position}")
-        print(f"🔁 door_config.DOOR_CLOSED_POS set to {door_config.DOOR_CLOSED_POS}")
-
-
+       
     def move_to_left(self):
         # self._prepare_motion()
         self.set_mode(1)
         self.sendCommand(self.enableOperation_array)
         self._send_velocity_accel()
-        self._send_target_positiona(250)  # mm
+        self._send_target_positionB()  
         self._start_motion()
         print("🚪 Motor moving to LEFT position")
         #Check Statusword for signal referenced and if an error in the D1 comes up
@@ -143,7 +136,7 @@ class D1Motor:
         self.set_mode(1)
         self.sendCommand(self.enableOperation_array)
         self._send_velocity_accel()
-        self._send_target_positionb(0)
+        self._send_target_positionA()
         self._start_motion()
         print("🚪 Motor moving to Right position")
         # Check Statusword for signal referenced and if an error in the D1 comes up
@@ -180,25 +173,26 @@ class D1Motor:
         self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 131, 0, 0, 0, 0, 4, 100, 0, 0, 0])) #acc
         print("⚙️ Velocidad y aceleración enviadas")
 
-    def _send_target_positiona(self, pos_mm):
+    def _send_target_positionB(self):
         # print(f"📍 Sending target position: {val} → bytes: {bytes_}")
         # val = int(pos_mm * 100)
         # bytes_ = [val & 0xFF, (val >> 8) & 0xFF, (val >> 16) & 0xFF, (val >> 24) & 0xFF]
         # self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4] + bytes_))
-        print("Comando a pos a")
+        print("Comando a pos LEFT")
         self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4, 80, 70, 0, 0]))
     
-    def _send_target_positionb(self, pos_mm):
+    def _send_target_positionA(self):
         # print(f"📍 Sending target position: {val} → bytes: {bytes_}")
         # val = int(pos_mm * 100)
         # bytes_ = [val & 0xFF, (val >> 8) & 0xFF, (val >> 16) & 0xFF, (val >> 24) & 0xFF]
         # self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4] + bytes_))
+        print("Comando a pos RIGHT")
         self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4, 0, 0, 0, 0]))
 
     def _start_motion(self):
         self._send(bytearray([0, 0, 0, 0, 0, 15, 0, 43, 13, 1, 0, 0, 96, 64, 0, 0, 0, 0, 2, 31, 0]))
         print("Go movement")
-        time.sleep(1)
+        time.sleep(0.1)
 
     def disable(self):
         print(f"⛔ Disable not implemented for D1Motor '{self.robot_id}'")
@@ -233,23 +227,6 @@ class D1Motor:
         except Exception as e:
             print(f"⚠️ Could not check error for '{self.robot_id}': {e}")
         return False
-
-    def rotate_full(self):
-        """
-        Rotates the motor 360 degrees from its current position.
-        Resets to 0 if it exceeds 360.
-        """
-        print(f"🔄 Rotating motor '{self.robot_id}' one full turn (360°)...")
-        
-        # Estimamos que 360 grados corresponde a una posición de 360 mm (ajusta si necesitas otro valor)
-        next_pos = (self.current_position or 0) + 360.0
-        
-        # Si pasa de 360, reseteamos a 0
-        if next_pos >= 360:
-            next_pos = 0.0
-        
-        self.move_to(next_pos)
-        print(f"📍 New position for '{self.robot_id}': {next_pos} mm")
 
     
     # ======= Commands ========
