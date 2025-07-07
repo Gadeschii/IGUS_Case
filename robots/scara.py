@@ -27,7 +27,7 @@ class ScaraRobot(BaseRobot):
                 raise Exception("❌ Fallo al referenciar el resto de ejes en SCARA.")
 
             wait_until_axes_referenced(self, ("A1", "A2", "A3", "A4"))
-            time.sleep(0.5)
+            time.sleep(0.2)
             self.controller.reset()
             time.sleep(0.5)
             self.controller.enable()
@@ -35,14 +35,14 @@ class ScaraRobot(BaseRobot):
         
     def move_to_safe_position_scara(self):
         print("🕹️ Moving SCARA to safe position...")
-        time.sleep(5)
+        time.sleep(0.5)
 
         check_robot_ready(self)
 
         success = self.controller.move_joints(
-            A1=40.0, A2=-74.3, A3=70.0, A4=80.0,
+            A1=450.0, A2=-74.3, A3=70.0, A4=80.0,
             A5=0.0, A6=0.0, E1=0.0, E2=0.0, E3=0.0,
-            velocity=40.0, wait_move_finished=True
+            velocity=70.0, wait_move_finished=True
         )
         if not success:
             raise Exception("❌ Failed to move to initial safe position.")
@@ -52,7 +52,7 @@ class ScaraRobot(BaseRobot):
         successLift = self.controller.move_joints(
             A1=300.0, A2=-74.3, A3=70.0, A4=80.0,
             A5=0.0, A6=0.0, E1=0.0, E2=0.0, E3=0.0,
-            velocity=40.0, wait_move_finished=True
+            velocity=70.0, wait_move_finished=True
         )
         if not successLift:
             raise Exception("❌ Failed to move to final safe position.")

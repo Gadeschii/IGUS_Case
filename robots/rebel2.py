@@ -13,7 +13,7 @@ class Rebel2Robot(BaseRobot):
          raise Exception("❌ Failed to reference all joints.")
       print(f"{self.robot_id.upper()}, referenced")
 
-      time.sleep(0.5)
+      time.sleep(0.1)
       self.controller.reset()
       time.sleep(0.5)
       self.controller.enable()

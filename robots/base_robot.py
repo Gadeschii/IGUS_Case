@@ -124,7 +124,7 @@ class BaseRobot:
             print(f"▶️ Iniciando programa de {self.robot_id.upper()}")
             if not self.controller.start_programm():
                 raise Exception("❌ Error al iniciar el programa de movimiento.")
-            time.sleep(2)
+            time.sleep(0.5)
 
             # self.wait_for_finish_signal()
             # print(f"✅ Secuencia completada para: {self.robot_id.upper()}")

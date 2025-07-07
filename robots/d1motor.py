@@ -31,6 +31,14 @@ class D1Motor:
         self.DInputs = DInputs
         
         self.DInputs_array = bytearray(DInputs)
+        
+        self.statusSpeed = [0, 0, 0, 0, 0, 13, 0, 43, 13, 0, 0, 0, 96, 108, 0, 0, 0, 0, 4]
+        self.statusSpeed_array = bytearray(self.statusSpeed)
+        
+        self.statusPosition = [0, 0, 0, 0, 0, 13, 0, 43, 13, 0, 0, 0, 96, 100, 0, 0, 0, 0, 4]
+        self.statusPosition_array = bytearray(self.statusPosition)
+        self.boolHomeAfterSequence = False
+        self.boolHomingAfterSequence = False
         self.role = role
         self.current_position = None
         self.sock = None
@@ -45,7 +53,8 @@ class D1Motor:
     def connect(self):
         print(f"==============================")
         print(f"🛠️  Prepare motor: {self.robot_id.upper()}")
-        print(f"==============================")
+        
+        (f"==============================")
         print(f"🔌 Connecting to {self.ip}:{self.port}")
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
@@ -83,6 +92,7 @@ class D1Motor:
     
     
     def homing(self):
+        self.boolHomingAfterSequence = True
         print(f"🌟 Starting homing for '{self.robot_id}'...")
         self.sendCommand(self.enableOperation_array)
         self.set_mode(6)
@@ -100,6 +110,8 @@ class D1Motor:
         # self._send(self._cmd_speed())
         # self._send(self._cmd_acceleration())
         print(self._send(bytearray(self.status_array)))
+        self.boolHomeAfterSequence = False
+        self.boolHomingAfterSequence = False
         
         # while (self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
         #     and self._send(bytearray(self.status_array)) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 6]
@@ -121,6 +133,7 @@ class D1Motor:
         self._send_target_positionB()  
         self._start_motion()
         print("🚪 Motor moving to LEFT position")
+        self.homing()
         #Check Statusword for signal referenced and if an error in the D1 comes up
         # while (self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
         #     and self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 22]):
@@ -133,12 +146,23 @@ class D1Motor:
 
     def move_to_right(self):
         # self._prepare_motion()
-        self.set_mode(1)
-        self.sendCommand(self.enableOperation_array)
-        self._send_velocity_accel()
-        self._send_target_positionA()
-        self._start_motion()
+        if ((self.convertBytesToInt(self.sendCommand(self.statusPosition_array), 4)> 360000) and
+            self.boolHomeAfterSequence and
+            not self.boolHomingAfterSequence):
+            
+            self.homing()
+            
+        elif not (self.convertBytesToInt(self.sendCommand(self.statusSpeed_array), 4)> 0.5) and not self.boolHomingAfterSequence:
+        
+            self.set_mode(1)
+            self.sendCommand(self.enableOperation_array)
+            self._send_velocity_accel()
+            self._send_target_positionA()
+            self._start_motion()
+            self.boolHomeAfterSequence = True
+            
         print("🚪 Motor moving to Right position")
+        # self.homing()
         # Check Statusword for signal referenced and if an error in the D1 comes up
         # while (self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 39, 22]
         #     and self._send(self.status_array) != [0, 0, 0, 0, 0, 15, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2, 8, 22]):
@@ -169,8 +193,8 @@ class D1Motor:
         self._send(self._cmd_set_mode(1))  # Profile Position Mode
 
     def _send_velocity_accel(self):
-        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 129, 0, 0, 0, 0, 4, 76, 29, 0, 0])) #speed
-        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 131, 0, 0, 0, 0, 4, 100, 0, 0, 0])) #acc
+        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 129, 0, 0, 0, 0, 4, 76, 29, 0, 0])) #speed  4, 76, 29, 0, 
+        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 131, 0, 0, 0, 0, 4, 100, 0, 0, 0])) #acc 4, 100, 0, 0, 0
         print("⚙️ Velocidad y aceleración enviadas")
 
     def _send_target_positionB(self):
@@ -179,7 +203,9 @@ class D1Motor:
         # bytes_ = [val & 0xFF, (val >> 8) & 0xFF, (val >> 16) & 0xFF, (val >> 24) & 0xFF]
         # self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4] + bytes_))
         print("Comando a pos LEFT")
-        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4, 80, 70, 0, 0]))
+        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4, 80, 70, 0, 0])) #4, 80, 70, 0, 0
+    
+    
     
     def _send_target_positionA(self):
         # print(f"📍 Sending target position: {val} → bytes: {bytes_}")
@@ -187,10 +213,24 @@ class D1Motor:
         # bytes_ = [val & 0xFF, (val >> 8) & 0xFF, (val >> 16) & 0xFF, (val >> 24) & 0xFF]
         # self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4] + bytes_))
         print("Comando a pos RIGHT")
-        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4, 0, 0, 0, 0]))
+        self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4, 96, 115, 255, 255]))
 
+    def convertBytesToBit(self, arrayParam):
+        data = arrayParam[-2:]
+        dataConvertedToInt = int.from_bytes(data, byteorder='little')
+        dataConvertedToBin = bin(dataConvertedToInt)[2:].zfill(16)
+        print("Result of status word: " + dataConvertedToBin)
+        return dataConvertedToInt
+    def _send_getSpeedCommand(self):
+        return self._send(bytearray([0, 0, 0, 0, 0, 17, 0, 43, 13, 1, 0, 0, 96, 122, 0, 0, 0, 0, 4, 96, 115, 255, 255]))
+        
+    def convertBytesToInt(self, arrayParam, numberOfBytes):
+        data = arrayParam[(numberOfBytes*-1):]
+        dataConvertedToInt = int.from_bytes(data, byteorder='little')
+        return dataConvertedToInt
+        
     def _start_motion(self):
-        self._send(bytearray([0, 0, 0, 0, 0, 15, 0, 43, 13, 1, 0, 0, 96, 64, 0, 0, 0, 0, 2, 31, 0]))
+        self._send(bytearray([0, 0, 0, 0, 0, 15, 0, 43, 13, 1, 0, 0, 96, 64, 0, 0, 0, 0, 2, 95, 0]))
         print("Go movement")
         time.sleep(0.1)
 

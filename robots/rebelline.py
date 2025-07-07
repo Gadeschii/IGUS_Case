@@ -39,7 +39,7 @@ class RebelLineRobot(BaseRobot):
 
             time.sleep(0.2)
             wait_until_axes_referenced(self,axes=("A1", "A2", "A3", "A4", "A5", "A6", "E1"))
-            time.sleep(0.5)
+            time.sleep(0.1)
             self.controller.reset()
             time.sleep(0.5)
             self.controller.enable()
@@ -50,10 +50,11 @@ class RebelLineRobot(BaseRobot):
             
     def move_to_safe_position_rebelline(self):
         print("🕹️ Moving RebelLine to safe position...")
-        time.sleep(5)
+        time.sleep(0.5)
 
         check_robot_ready(self)
-
+        print("📋 Checking readiness before safe move:")
+        print("🔧 Kinematics ready? = ", self.controller.wait_for_kinematics_ready(timeout=5))
         success = self.controller.move_joints(
             A1=60.0, A2=41.66, A3=51.17, A4=-0.7,
             A5=85.5, A6=-33.5, E1=734.2, E2=0.0, E3=0.0,

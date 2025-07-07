@@ -62,7 +62,7 @@ class LogicController:
 
             except Exception as e:
                 print(f"⚠️ Error while printing robot variables: {e}")
-            time.sleep(5)
+            time.sleep(15)
 
     def run_scenario(self):
         print("\n🔁 Starting infinite production loop, waiting for objet")
@@ -122,13 +122,14 @@ class LogicController:
                                 print("✅ Ping pong ball detected → SCARA task ready")
                                 isObjForScara = True
                                 # 🔒 Move door to closed position
-                                self.d1_door.move_to_left() 
+                                # self.d1_door.move_to_left() 
                                 # self.d1_door.current_position = 0.0
                             else:
                                 print("⏳ No ball yet for SCARA")
                                 # 🚪 Open the door
-                                self.d1_door.move_to_right() 
-                                # self.d1_door.current_position = -250.0  
+                                if not(((self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusSpeed_array), 4)) > 0.5)):
+                                   self.d1_door.move_to_right() 
+    
                         except RuntimeError as e:
                             print(f"⚠️ SCARA camera error: {e}")
 
@@ -145,7 +146,6 @@ class LogicController:
                     self.robot_map["scara"].run_task()
                     isObjForScara = False
                     
-
                 #=====================================================
                 #          🔄 SCARA triggers REBELLINE flag
                 #=====================================================
@@ -284,7 +284,6 @@ class LogicController:
                     print("\n♻️ Resetting REBEL2 variables...")
                     self.robot_map["rebel2"].import_variables()
                     rebel2_vars = self.get_robot_vars("Rebel2")
-                time.sleep(1)
 
             except Exception as e:
                 print(f"⚠️ Logic loop error: {e}")
