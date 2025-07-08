@@ -4,6 +4,7 @@ import random
 import threading
 import time
 from controllers.color_detector import *
+from controllers.color_detector import VisionManager
 from dotenv import load_dotenv
 from controllers.usb_pingpong_detector import usb_detect_pingpong_color
 import os
@@ -25,6 +26,12 @@ class LogicController:
         self.RebelLineStart = False
         self.ScaraStarted = False
         
+        self.vision = VisionManager({
+            "URL_scara": RTSP_URL,
+            "URL_rebel": RTSP_URL_2
+        })
+
+        
         for robot in robots:
             if robot.__class__.__name__ == "D1Motor":
                 if getattr(robot, "role", None) == "door":
@@ -32,7 +39,6 @@ class LogicController:
                 elif getattr(robot, "role", None) == "elevator":
                     self.d1_elevator = robot
                     
-    
     def get_robot_vars(self, robot_name):
         return self.robot_map[robot_name.lower()].controller.robot_state.variabels
 
@@ -54,26 +60,18 @@ class LogicController:
                     vars_ = self.get_robot_vars(name)
                     print(f"🔍 {name} variables:  {vars_}\n{'--'*30}")
 
-                # if self.d1_door:
-                #     print(f"🚪 D1 Door position: {self.d1_door.current_position}")
-                # if self.d1_elevator:
-                #     print(f"🏗️ D1 Elevator position: {self.d1_elevator.current_position}")
-                # print(f"{'='*60}")
-
             except Exception as e:
                 print(f"⚠️ Error while printing robot variables: {e}")
-            time.sleep(15)
+            time.sleep(5)
 
     def run_scenario(self):
         print("\n🔁 Starting infinite production loop, waiting for objet")
 
-        isObjForScara = False
-        isObjForRebelLine = False
+        
 
-        threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
+        # threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
 
         while True:
-
             # =========================
             # 🛑 Check for emergency stop
             # =========================
@@ -89,6 +87,23 @@ class LogicController:
                     except Exception as e:
                         print(f"⚠️ Failed to disconnect {robot.robot_id.upper()}: {e}")
                 break  # ⛔ Exit infinite loop
+            
+            
+            #=====================================================
+            #               🎥 Camara vision
+            #=====================================================
+            detected_scara, _ , ts_scara = self.vision.get_detection("URL_scara")
+            detected_rebel, color_rebel, ts_rebel = self.vision.get_detection("URL_rebel")
+
+            now = time.time()
+            recent_scara = detected_scara and (now - ts_scara < 3.0)
+            recent_rebel = detected_rebel and (now - ts_rebel < 2.0)
+
+            isObjForScara = recent_scara
+            isObjForRebelLine = recent_rebel
+                
+            #=====================================================
+            
             try:
                 scara_vars = self.get_robot_vars("Scara")
                 rebelline_vars = self.get_robot_vars("RebelLine")
@@ -107,31 +122,69 @@ class LogicController:
                     self.d1_door.reference()
                     
                     # Scara camera
-                    detected_scara, color_scara = detect_ball_and_color(RTSP_URL)
+                    # detected_scara, color_scara = detect_ball_and_color(RTSP_URL)
+                    detected_scara, color_scara, timestamp  = self.vision.get_detection("URL_scara")
+
                     
                     print(f"🎥 [SCARA CAM] Ball detected? → isObjForScara = {isObjForScara}")
                     print(f"🔎 [SCARA CAM] Raw detection result (detected_scara) → {detected_scara}")
                     print(f"🎨 [SCARA CAM] Detected ball color → {color_scara} (It's not necessary)")
-                    print("📦 Ball ready for SCARA → SCARA can start its task")
-
+                  
+                
                     # ========== 🎯 SCARA ball detection ==========
+                    
                     if not isObjForScara:
-                        try:
-                            detected_scara, _ = detect_ball_and_color(RTSP_URL)
-                            if detected_scara:
-                                print("✅ Ping pong ball detected → SCARA task ready")
-                                isObjForScara = True
-                                # 🔒 Move door to closed position
-                                # self.d1_door.move_to_left() 
-                                # self.d1_door.current_position = 0.0
-                            else:
-                                print("⏳ No ball yet for SCARA")
-                                # 🚪 Open the door
-                                if not(((self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusSpeed_array), 4)) > 0.5)):
-                                   self.d1_door.move_to_right() 
+                        print("⏳ No recent ball detected for SCARA → move D1 door")
+                        if self.d1_door:
+                            speed = self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusSpeed_array), 4)
+                            if speed <= 0.5:
+                                self.d1_door.move_to_right()
+                    else:
+                        print("✅ ping pong ball detected for SCARA")
+                        if self.d1_door:
+                            isObjForScara = True
+             
+                    
+                    # if not isObjForScara:
+                    #     try:
+                    #         # Get latest detection status and timestamp
+                    #         detected_scara, _ , ts_scara  = self.vision.get_detection("URL_scara")
+                    #         now = time.time()
+                    #         recent_detection = detected_scara and (now - ts_scara) < 1.5
+                            
+                    #         if not recent_detection:
+                    #             print("⏳ No ball detected for SCARA → move D1 door")
+                    #             if self.d1_door:
+                    #                 # Only open if the door isn't already open (motor not moving)
+                    #                 if not(((self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusSpeed_array), 4)) > 0.5)):
+                    #                     self.d1_door.move_to_right()
+                    #         else:
+                    #             print("✅ Recent ping pong ball detected for SCARA")
+                    #             isObjForScara = True
+
+                            
+                    #         # # detected_scara, _ = detect_ball_and_color(RTSP_URL)
+                    #         # detected_scara, _ , ts_scara  = self.vision.get_detection("URL_scara")
+                    #         # now = time.time()
+                    #         # recent_detection = detected_scara and (now - ts_scara) < 1.5
+                    #         # if recent_detection:
+                    #         #     print("✅ Ping pong ball detected → SCARA task ready")
+                    #         #     isObjForScara = True
+                    #         #     # 🔒 Move door to closed position
+                    #         #     # self.d1_door.move_to_left() 
+                    #         #     # self.d1_door.current_position = 0.0
+                    #         # else:
+                    #         #     print("⏳ No ball yet for SCARA")
+                    #         #     # 🚪 Open the door
+                    #         #     if not(((self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusSpeed_array), 4)) > 0.5)):
+                    #         #        self.d1_door.move_to_right() 
     
-                        except RuntimeError as e:
-                            print(f"⚠️ SCARA camera error: {e}")
+    
+    
+                    #     except RuntimeError as e:
+                    #         print(f"⚠️ SCARA camera error: {e}")
+                            
+                    # print("📦 Ball ready for SCARA → SCARA can start its task")
 
                 #=====================================================
                 #               🤖 SCARA robot logic
@@ -139,10 +192,14 @@ class LogicController:
                                 
                 if (
                     isObjForScara and
-                    not detect_ball_and_color(RTSP_URL_2)[0] and
+                    not isObjForRebelLine and
                     scara_vars.get("startscara") == 0.0
+                    
+                    # not detect_ball_and_color(RTSP_URL_2)[0] and
+                    # not self.vision.get_detection("URL_rebel")[0] and #not isObjForRebelLine
                 ):
                     print("🟢 Starting initial SCARA task...")
+                    time.sleep(2.5) # time to be sure that the ball was static
                     self.robot_map["scara"].run_task()
                     isObjForScara = False
                     
@@ -151,8 +208,10 @@ class LogicController:
                 #=====================================================
                 
                 # RebelLine camera
-                detected_rebel, color_rebel = detect_ball_and_color(RTSP_URL_2)
-                if detected_rebel:
+                # detected_rebel, color_rebel = detect_ball_and_color(RTSP_URL_2)
+                detected_rebel, color_rebel, timestamp  = self.vision.get_detection("URL_rebel")
+                
+                if detected_rebel and (time.time() - timestamp) < 1.5:
                     isObjForRebelLine = True
                     print(f"🎥 [REBEL CAM] Ball detected? → isObjForRebelLine = {isObjForRebelLine}")
                     print(f"🔎 [REBEL CAM] Raw detection result (detected_rebel) → {detected_rebel}")
@@ -161,7 +220,6 @@ class LogicController:
                     
                 else:
                     print("⚠️ RL camera did NOT detect object → skipping.")
-
 
                 if rebelline_vars.get("posreciverebelline1") == 1.0 or rebelline_vars.get("posreciverebelline2") == 1.0:
                     isObjForRebelLine = False     
@@ -243,16 +301,13 @@ class LogicController:
                 print(f"lastprogram = {rebelline_vars.get('lastprogram')}")
                 
                 if (
-                    rebelline_vars.get("posdropobjrebellinetorebel1") == 1.0 and  
+                    rebelline_vars.get("posdropobjrebellinetorebel1") == 1.0 and
+                    # rebelline_vars.get("lastprogram") == "RebelLine1" and
                     rebel1_vars.get("startrebel1") == 0.0
                 ):
                     print("📦 REBELLINE dropped to REBEL1")
-                    threading.Thread(
-                        target=self.robot_map["rebel1"].run_task, 
-                        daemon=True
-                    ).start()
+                    self.robot_map["rebel1"].run_task()
                     rebel1_vars["startrebel1"] = 1.0
-
 
                 if rebel1_vars.get("isfinishrebel1", 0.0) == 1.0:
                     print("\n♻️ Resetting REBEL1 variables...")
@@ -268,24 +323,23 @@ class LogicController:
                 print(f"startrebel2 = {rebel1_vars.get('startrebel2')}")
                 print(f"isfinishrebelline1 = {rebelline_vars.get('isfinishrebelline2')}")
                 print(f"lastprogram = {rebelline_vars.get('lastprogram')}")
-                
                 if (
                     rebelline_vars.get("posdropobjrebellinetorebel2") == 1.0 and
                     rebel2_vars.get("startrebel2") == 0.0
                 ):
                     print("📦 REBELLINE dropped to REBEL2")
-                    threading.Thread(
-                        target=self.robot_map["rebel2"].run_task, 
-                        daemon=True
-                    ).start()
+                    self.robot_map["rebel2"].run_task()
                     rebel2_vars["startrebel2"] = 1.0
 
                 if rebel2_vars.get("isfinishrebel2", 0.0) == 1.0:
                     print("\n♻️ Resetting REBEL2 variables...")
                     self.robot_map["rebel2"].import_variables()
                     rebel2_vars = self.get_robot_vars("Rebel2")
+                time.sleep(1)
 
             except Exception as e:
                 print(f"⚠️ Logic loop error: {e}")
                 time.sleep(1)
+
+
 

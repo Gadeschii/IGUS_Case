@@ -1,52 +1,134 @@
 import os
+import threading
 from datetime import datetime
 import cv2
 import numpy as np
+import time
 from ultralytics import *
 
 model = YOLO("C:/Users/javie/Desktop/IgusRobotsCase/IgusRobotControllerCase/IGUS_Case/train14/weights/best.pt")
 
-def detect_ball_and_color(rtsp_url: str, expected_colors=("white", "blue", "orange"), debug=False) -> tuple[bool, str | None]:
-    """
-    Detecta si hay una pelota y determina su color usando YOLO, con depuración visual y validación.
+# def detect_ball_and_color(rtsp_url: str, expected_colors=("white", "blue", "orange"), debug=False) -> tuple[bool, str | None]:
+#     """
+#     Detecta si hay una pelota y determina su color usando YOLO, con depuración visual y validación.
     
-    Returns:
-        (bool, color) → Ej: (True, "white") o (False, None)
-    """
-    cap = cv2.VideoCapture(rtsp_url)
-    ret, frame = cap.read()
-    cap.release()
+#     Returns:
+#         (bool, color) → Ej: (True, "white") o (False, None)
+#     """
+#     cap = cv2.VideoCapture(rtsp_url)
+#     ret, frame = cap.read()
+#     cap.release()
 
-    if not ret:
-        print("❌ No se pudo capturar la imagen de la cámara.")
-        return False, None
+#     if not ret:
+#         print("❌ No se pudo capturar la imagen de la cámara.")
+#         return False, None
 
-    # 🖼️ Guarda imagen para debugging visual (desactivar si no se necesita)
-    if debug:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        cv2.imwrite("debug_latest.jpg", frame)
-        cv2.imshow("🖼️ Vista de cámara", frame)
-        cv2.waitKey(0)
+#     # 🖼️ Guarda imagen para debugging visual (desactivar si no se necesita)
+#     if debug:
+#         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+#         cv2.imwrite("debug_latest.jpg", frame)
+#         cv2.imshow("🖼️ Vista de cámara", frame)
+#         cv2.waitKey(0)
 
-    # 🔍 Ejecuta la detección
-    results = model(frame, conf=0.5)[0]
-    detected_color = None
+#     # 🔍 Ejecuta la detección
+#     results = model(frame, conf=0.5)[0]
+#     detected_color = None
     
-    for box in results.boxes:
-        class_id = int(box.cls[0])
-        class_name = model.names[class_id]
+#     for box in results.boxes:
+#         class_id = int(box.cls[0])
+#         class_name = model.names[class_id]
 
-        if class_name == "PingPongWhite" and "white" in expected_colors:
-            detected_color = "white"
-            return True, detected_color
-        elif class_name == "PingPongBlue" and "blue" in expected_colors:
-            detected_color = "blue"
-            return True, detected_color
-        elif class_name == "PingPongOrange" and "orange" in expected_colors:
-            detected_color = "orange"
-            return True, detected_color
+#         if class_name == "PingPongWhite" and "white" in expected_colors:
+#             detected_color = "white"
+#             return True, detected_color
+#         elif class_name == "PingPongBlue" and "blue" in expected_colors:
+#             detected_color = "blue"
+#             return True, detected_color
+#         elif class_name == "PingPongOrange" and "orange" in expected_colors:
+#             detected_color = "orange"
+#             return True, detected_color
 
-    return False, None
+#     return False, None
+
+
+
+
+
+
+
+
+
+class VisionManager:
+    def __init__(self, rtsp_sources: dict[str, str], poll_interval=1.0):
+        """
+        rtsp_sources: Dict like {"scara": "rtsp://url1", "rebel": "rtsp://url2"}
+        poll_interval: seconds between YOLO inferences
+        """
+        self.rtsp_sources = rtsp_sources
+        self.poll_interval = poll_interval
+        self.detections = {name: (False, None, 0.0) for name in rtsp_sources}
+        self._threads = []
+        self._lock = threading.Lock()
+
+        for name, url in rtsp_sources.items():
+            t = threading.Thread(target=self._update_loop, args=(name, url), daemon=True)
+            t.start()
+            self._threads.append(t)
+
+    def _update_loop(self, name: str, rtsp_url: str):
+        while True:
+            try:
+                cap = cv2.VideoCapture(rtsp_url)
+                ret, frame = cap.read()
+                cap.release()
+
+                if not ret:
+                    self._set_detection(name, (False, None))
+                    time.sleep(self.poll_interval)
+                    continue
+
+                results = model(frame, conf=0.5)[0]
+                found = False
+                color = None
+
+                for box in results.boxes:
+                    class_id = int(box.cls[0].item())
+                    label = model.names[class_id].lower()
+                    if label.startswith("pingpong"):
+                        found = True
+                        if "white" in label:
+                            color = "white"
+                        elif "blue" in label:
+                            color = "blue"
+                        elif "orange" in label:
+                            color = "orange"
+                        else:
+                            color = "unknown"
+                        break
+
+                self._set_detection(name, (found, color))
+            except Exception as e:
+                print(f"[{name.upper()} CAMERA ERROR] {e}")
+                self._set_detection(name, (False, None))
+
+            time.sleep(self.poll_interval)
+
+    def _set_detection(self, name: str, detection: tuple[bool, str | None]):
+        with self._lock:
+            self.detections[name] = (*detection, time.time())
+
+
+    def get_detection(self, name: str) -> tuple[bool, str | None, float]:
+        with self._lock:
+            return self.detections.get(name, (False, None, 0.0))
+
+
+
+
+
+
+
+
 
 
 # def detect_pingpong_presence(rtsp_url: str, show_debug: bool = False) -> str | None:

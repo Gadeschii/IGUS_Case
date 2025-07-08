@@ -109,7 +109,9 @@ class D1Motor:
         # self._send(self._cmd_set_revolution())
         # self._send(self._cmd_speed())
         # self._send(self._cmd_acceleration())
-        print(self._send(bytearray(self.status_array)))
+       
+        # print(self._send(bytearray(self.status_array)))
+       
         self.boolHomeAfterSequence = False
         self.boolHomingAfterSequence = False
         
@@ -308,7 +310,7 @@ class D1Motor:
             raise Exception(f"❌ Motor '{self.robot_id}' is not connected.")
         self.sock.send(data)
         res = self.sock.recv(24)
-        print(list(res))
+        # print(list(res))
         return list(res)
 
         

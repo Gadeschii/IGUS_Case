@@ -13,4 +13,6 @@
     <Store Nr="10" Type="number" Value="0" Name="isfinishrebelline2" Descr="" />
     <Store Nr="11" Type="number" Value="0" Name="posreciverebelline2" Descr="" />
     <Store Nr="12" Type="number" Value="0" Name="posdropobjrebelline2" Descr="" />
+    <Output Nr="13" Channel="DOut31" State="False" Descr="" />
+    <Output Nr="14" Channel="DOut32" State="False" Descr="" />
 </Program>
