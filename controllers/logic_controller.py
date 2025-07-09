@@ -96,8 +96,8 @@ class LogicController:
             detected_rebel, color_rebel, ts_rebel = self.vision.get_detection("URL_rebel")
 
             now = time.time()
-            recent_scara = detected_scara and (now - ts_scara < 3.0)
-            recent_rebel = detected_rebel and (now - ts_rebel < 2.0)
+            recent_scara = detected_scara and (now - ts_scara < 1.5)
+            recent_rebel = detected_rebel and (now - ts_rebel < 1.5)
 
             isObjForScara = recent_scara
             isObjForRebelLine = recent_rebel
@@ -134,7 +134,7 @@ class LogicController:
                     # ========== 🎯 SCARA ball detection ==========
                     
                     if not isObjForScara:
-                        print("⏳ No recent ball detected for SCARA → move D1 door")
+                        print("⏳ No ball detected for SCARA → move D1 door")
                         if self.d1_door:
                             speed = self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusSpeed_array), 4)
                             if speed <= 0.5:
@@ -199,9 +199,12 @@ class LogicController:
                     # not self.vision.get_detection("URL_rebel")[0] and #not isObjForRebelLine
                 ):
                     print("🟢 Starting initial SCARA task...")
-                    time.sleep(2.5) # time to be sure that the ball was static
+                    # time to be sure that the ball was static
+                    time.sleep(3.5) 
                     self.robot_map["scara"].run_task()
+                    scara_vars.get("posrecivescara") == 1.0
                     isObjForScara = False
+                    print("🔄 Scara received object → there isn't objet for Scara")
                     
                 #=====================================================
                 #          🔄 SCARA triggers REBELLINE flag
@@ -209,10 +212,8 @@ class LogicController:
                 
                 # RebelLine camera
                 # detected_rebel, color_rebel = detect_ball_and_color(RTSP_URL_2)
-                detected_rebel, color_rebel, timestamp  = self.vision.get_detection("URL_rebel")
                 
-                if detected_rebel and (time.time() - timestamp) < 1.5:
-                    isObjForRebelLine = True
+                if isObjForRebelLine: 
                     print(f"🎥 [REBEL CAM] Ball detected? → isObjForRebelLine = {isObjForRebelLine}")
                     print(f"🔎 [REBEL CAM] Raw detection result (detected_rebel) → {detected_rebel}")
                     print(f"🎨 [REBEL CAM] Detected ball color → {color_rebel} ")
@@ -222,6 +223,7 @@ class LogicController:
                     print("⚠️ RL camera did NOT detect object → skipping.")
 
                 if rebelline_vars.get("posreciverebelline1") == 1.0 or rebelline_vars.get("posreciverebelline2") == 1.0:
+                    
                     isObjForRebelLine = False     
                     #isObjForRebelLine = detect_pingpong_presence_color_white2(RTSP_URL_2) and detect_pingpong_presence_color_blue2(RTSP_URL_2) #False
                     print("🔄 RebelLine received object → there isn't objet for Rebel Line")
@@ -244,9 +246,6 @@ class LogicController:
                     detected_rebel, color_rebel = False, None
                     print(f"⚠️ Rebel camera detection error: {e}")
 
-                # 2. Guardar flag de objeto para RebelLine
-                isObjForRebelLine = detected_rebel
-                
                 # 3. Lógica de ejecución si hay objeto y condiciones de SCARA son válidas
                 if (
                     isObjForRebelLine and 
@@ -274,6 +273,10 @@ class LogicController:
 
                         self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
                         self.robot_map["rebelline"].run_task()
+                        print(f"🤖 Load: InitSafePos")
+                            
+                            
+                            
                         rebelline_vars["startrebelline"] = 1.0
 
                     except Exception as e:
@@ -294,11 +297,12 @@ class LogicController:
                 #=====================================================
                 #                   🤖 REBEL1 robot logic
                 #=====================================================
-                print("\n🔍 REVISIÓN PARA REBEL1")
-                print(f"posdropobjrebellinetorebel1 = {rebelline_vars.get('posdropobjrebellinetorebel1')}")
-                print(f"startrebel1 = {rebel1_vars.get('startrebel1')}")
-                print(f"isfinishrebelline1 = {rebelline_vars.get('isfinishrebelline1')}")
-                print(f"lastprogram = {rebelline_vars.get('lastprogram')}")
+                if(rebelline_vars.get("startrebelline1", 0.0) == 1.0):
+                    print("\n🔍 REVISIÓN PARA REBEL1")
+                    print(f"posdropobjrebellinetorebel1 = {rebelline_vars.get('posdropobjrebellinetorebel1')}")
+                    print(f"startrebel1 = {rebel1_vars.get('startrebel1')}")
+                    print(f"isfinishrebelline1 = {rebelline_vars.get('isfinishrebelline1')}")
+                    print(f"lastprogram = {rebelline_vars.get('lastprogram')}")
                 
                 if (
                     rebelline_vars.get("posdropobjrebellinetorebel1") == 1.0 and
@@ -307,6 +311,7 @@ class LogicController:
                 ):
                     print("📦 REBELLINE dropped to REBEL1")
                     self.robot_map["rebel1"].run_task()
+                    print("🟢 Move REBEL1")
                     rebel1_vars["startrebel1"] = 1.0
 
                 if rebel1_vars.get("isfinishrebel1", 0.0) == 1.0:
@@ -317,18 +322,19 @@ class LogicController:
                 #=====================================================
                 #                  🤖 REBEL2 robot logic
                 #=====================================================
-                
-                print("\n🔍 REVISIÓN PARA REBEL2")
-                print(f"posdropobjrebellinetorebel2 = {rebelline_vars.get('posdropobjrebellinetorebel2')}")
-                print(f"startrebel2 = {rebel1_vars.get('startrebel2')}")
-                print(f"isfinishrebelline1 = {rebelline_vars.get('isfinishrebelline2')}")
-                print(f"lastprogram = {rebelline_vars.get('lastprogram')}")
+                if(rebelline_vars.get("startrebelline2", 0.0) == 1.0):
+                    print("\n🔍 REVISIÓN PARA REBEL2")
+                    print(f"posdropobjrebellinetorebel2 = {rebelline_vars.get('posdropobjrebellinetorebel2')}")
+                    print(f"startrebel2 = {rebel1_vars.get('startrebel2')}")
+                    print(f"isfinishrebelline2 = {rebelline_vars.get('isfinishrebelline2')}")
+                    print(f"lastprogram = {rebelline_vars.get('lastprogram')}")
                 if (
                     rebelline_vars.get("posdropobjrebellinetorebel2") == 1.0 and
                     rebel2_vars.get("startrebel2") == 0.0
                 ):
                     print("📦 REBELLINE dropped to REBEL2")
                     self.robot_map["rebel2"].run_task()
+                    print("🟢 Move REBEL2")
                     rebel2_vars["startrebel2"] = 1.0
 
                 if rebel2_vars.get("isfinishrebel2", 0.0) == 1.0:
