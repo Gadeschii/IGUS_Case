@@ -17,4 +17,5 @@
     <Store Nr="14" Type="number" Value="0" Name="posdropobjrebellinetorebel2" Descr="" />
     <Output Nr="15" Channel="DOut31" State="False" Descr="" />
     <Output Nr="16" Channel="DOut32" State="False" Descr="" />
+    <Store Nr="17" Type="number" Value="0" Name="safepos" Descr="" />
 </Program>

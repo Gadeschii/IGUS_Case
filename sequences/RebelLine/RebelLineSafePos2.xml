@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Program>
+    <Header RobotName="igus REBEL-6DOF" RobotType="REBEL-6DOF-01" GripperType="" Software="iRC V902-14-003" VelocitySetting="0" />
+    <Store Nr="1" Type="number" Value="0" Name="startrebelline2" Descr="" />
+    <Store Nr="2" Type="number" Value="1" Name="startrebelline2" Descr="" />
+    <Store Nr="3" Type="number" Value="0" Name="isfinishrebelline2" Descr="" />
+    <Store Nr="4" Type="number" Value="0" Name="posreciverebelline2" Descr="" />
+    <Store Nr="5" Type="number" Value="0" Name="safepos" Descr="" />
+    <Store Nr="6" Type="number" Value="0" Name="posdropobjrebellinetorebel2" Descr="" />
+    <Joint AbortCondition="False" Nr="7" Source="Numerical" velPercent="70" acc="50" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="334.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="8" Source="Numerical" velPercent="70" acc="50" smooth="0" a1="60.97" a2="70.7" a3="107.2" a4="0" a5="6.4" a6="-32.97" e1="334.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="9" Source="Numerical" velPercent="70" acc="50" smooth="0" a1="60.97" a2="89" a3="91.5" a4="-0.4" a5="3.8" a6="-32.97" e1="334.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="10" Source="Numerical" velPercent="40" acc="30" smooth="0" a1="59.9" a2="116.5" a3="66.4" a4="-1.9" a5="2.9" a6="-32.2" e1="341.9" e2="25" e3="0" Descr="" />
+    <Output Nr="11" Channel="DOut31" State="False" Descr="" />
+    <Wait Nr="12" Type="Time" Seconds="3" Descr="" />
+    <Store Nr="13" Type="number" Value="1" Name="posreciverebelline2" Descr="" />
+    <Joint AbortCondition="False" Nr="14" Source="Numerical" velPercent="45" acc="50" smooth="0" a1="60.3" a2="95.8" a3="82.1" a4="-1" a5="12.9" a6="-32.8" e1="334.2" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="15" Source="Numerical" velPercent="70" acc="50" smooth="0" a1="58.2" a2="3.5" a3="86.1" a4="-0.3" a5="89.7" a6="-35.7" e1="334.24" e2="0" e3="0" Descr="" />
+    <Store Nr="16" Type="number" Value="1" Name="safepos" Descr="" />
+    <Store Nr="17" Type="number" Value="0" Name="startrebelline2" Descr="" />
+    <Store Nr="18" Type="number" Value="0" Name="startrebelline1" Descr="" />
+</Program>

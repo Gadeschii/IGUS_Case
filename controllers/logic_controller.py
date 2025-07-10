@@ -25,7 +25,7 @@ class LogicController:
         self.d1_elevator = None
         self.RebelLineStart = False
         self.ScaraStarted = False
-        
+        self.boolWaitingForConfirmBallPickUp = False
         self.vision = VisionManager({
             "URL_scara": RTSP_URL,
             "URL_rebel": RTSP_URL_2
@@ -39,7 +39,8 @@ class LogicController:
                 elif getattr(robot, "role", None) == "elevator":
                     self.d1_elevator = robot
                     
-    def get_robot_vars(self, robot_name):
+    def get_robot_vars(self, robot_name): 
+        print(robot_name + " variables updated.")
         return self.robot_map[robot_name.lower()].controller.robot_state.variabels
 
     def check_emergency_by_motor_status(self):
@@ -69,7 +70,7 @@ class LogicController:
 
         
 
-        # threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
+        threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
 
         while True:
             # =========================
@@ -222,11 +223,11 @@ class LogicController:
                 else:
                     print("⚠️ RL camera did NOT detect object → skipping.")
 
-                if rebelline_vars.get("posreciverebelline1") == 1.0 or rebelline_vars.get("posreciverebelline2") == 1.0:
+                # if rebelline_vars.get("posreciverebelline1") == 1.0 or rebelline_vars.get("posreciverebelline2") == 1.0:
                     
-                    isObjForRebelLine = False     
-                    #isObjForRebelLine = detect_pingpong_presence_color_white2(RTSP_URL_2) and detect_pingpong_presence_color_blue2(RTSP_URL_2) #False
-                    print("🔄 RebelLine received object → there isn't objet for Rebel Line")
+                #     isObjForRebelLine = False     
+                #     #isObjForRebelLine = detect_pingpong_presence_color_white2(RTSP_URL_2) and detect_pingpong_presence_color_blue2(RTSP_URL_2) #False
+                #     print("🔄 RebelLine received object → there isn't objet for Rebel Line")
 
                  #---------------Reset SCARA variable---------------------
 
@@ -247,8 +248,9 @@ class LogicController:
                     print(f"⚠️ Rebel camera detection error: {e}")
 
                 # 3. Lógica de ejecución si hay objeto y condiciones de SCARA son válidas
+                
                 if (
-                    isObjForRebelLine and 
+                    (isObjForRebelLine  or self.boolWaitingForConfirmBallPickUp) and 
                     rebelline_vars.get("startrebelline1") == 0.0 and
                     rebelline_vars.get("startrebelline2") == 0.0  and 
                     (
@@ -260,28 +262,94 @@ class LogicController:
                     print("📦 Detected object dropped by SCARA → REBELLINE")
 
                     try:
-                        if color_rebel == "white" or color_rebel == "orange":
-                            self.robot_map["rebelline"].program_name = "RebelLine1.xml"
-                            rebelline_vars["lastprogram"] = "RebelLine1"
-                            print(f"🤖 Load: RebelLine1")
-                        elif color_rebel == "blue":
-                            self.robot_map["rebelline"].program_name = "RebelLine2.xml"
-                            rebelline_vars["lastprogram"] = "RebelLine2"
-                            print(f"🤖 Load: RebelLine2")
-                        else:
-                            raise ValueError(f"❌ Unknown or no color detected: {color_rebel}")
+                        rebelline_vars = self.get_robot_vars("RebelLine")
+                        safepos = rebelline_vars.get("safepos", 0.0)
+                        # Fase 1: cargar la secuencia SafePos
+                        if not self.boolWaitingForConfirmBallPickUp:
+                            if color_rebel in ["white", "orange"]:
+                                self.robot_map["rebelline"].program_name = "RebelLineSafePos1.xml"
+                                rebelline_vars["lastprogram"] = "RebelLineSafePos1"
+                                lastProgram = "RebelLineSafePos1"
+                                self.boolWaitingForConfirmBallPickUp = True
+                                print(f"🤖 Load: RebelLineSafePos1")
+                            elif color_rebel == "blue":
+                                self.robot_map["rebelline"].program_name = "RebelLineSafePos2.xml"
+                                rebelline_vars["lastprogram"] = "RebelLineSafePos2"
+                                lastProgram = "RebelLineSafePos2"
+                                self.boolWaitingForConfirmBallPickUp = True
+                                print(f"🤖 Load: RebelLineSafePos2")
+                            else:
+                                ##raise ValueError(f"❌ Unknown or no color detected: {color_rebel}")
+                                True
 
-                        self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
-                        self.robot_map["rebelline"].run_task()
-                        print(f"🤖 Load: InitSafePos")
-                            
-                            
-                            
-                        rebelline_vars["startrebelline"] = 1.0
+                            self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
+                            self.robot_map["rebelline"].run_task()
 
+                        ##print(f" Safe Position: {safepos}")
+                        #print(f" Detected Position: {not_detected_after}")
+                        
+                        while safepos == 0.0:
+                            rebelline_vars = self.get_robot_vars("RebelLine")
+                            safepos = rebelline_vars.get("safepos", 0.0)
+                            print (safepos)
+                            time.sleep(3)
+                        
+                        # Fase 2: verificación después del SafePos
+                        safepos = rebelline_vars.get("safepos", 0.0)
+                        detected_after_safe, color_after_safe, ts = self.vision.get_detection("URL_rebel")
+                        now = time.time()
+                    
+                        # not_detected_after = not detected_after_safe and (now - ts) < 5.0    
+                        # if ((now-ts)>10) and detected_after_safe:
+                        #     self.boolWaitingForConfirmBallPickUp = False
+                            
+                        if self.boolWaitingForConfirmBallPickUp and not detected_after_safe and safepos==1.0:
+                            not_detected_after = True
+                        elif self.boolWaitingForConfirmBallPickUp and detected_after_safe and safepos == 1.0:
+                            self.boolWaitingForConfirmBallPickUp = False
+                            not_detected_after = False                            
+                            
+                        print("Deberìa entrar AL CICLO DESEADO 1") 
+                        if safepos == 1.0:
+                            print("Entre AL CICLO DESEADO 1")
+                            print(not_detected_after)
+                            print(self.boolWaitingForConfirmBallPickUp)
+                            if not_detected_after: 
+                                self.boolWaitingForConfirmBallPickUp = False
+                                safepos = 0.0
+                                print("Entre AL CICLO DESEADO 2")
+                                print(f"✅ Ball not detected after SafePos → continue sequence")  
+                                if lastProgram == "RebelLineSafePos1":
+                                    self.robot_map["rebelline"].program_name = "RebelLineEnd1.xml"
+                                    print("📦 Proceed with: RebelLineEnd1")
+                                elif lastProgram == "RebelLineSafePos2":
+                                    self.robot_map["rebelline"].program_name = "RebelLineEnd2.xml"
+                                    print("📦 Proceed with: RebelLineEnd2")
+         
+                                self.robot_map["rebelline"].sequence_path = "sequences/RebelLine/"
+                                self.robot_map["rebelline"].run_task()
+                                rebelline_vars["startrebelline"] = 1.0
+                                
+                            elif not self.boolWaitingForConfirmBallPickUp:
+                                print(f"🔄 Ball detected after SafePos → reloading sequence")          
+                                rebelline_vars["safepos"] = 0.0  # Importante si el mismo safePos debe marcarse de nuevo
+                                self.boolWaitingForConfirmBallPickUp = True
+                                # Decidir nuevo intento
+                                if color_after_safe in ["white", "orange"]:
+                                    self.robot_map["rebelline"].program_name = "RebelLineSafePos1.xml"
+                                    rebelline_vars["lastprogram"] = "RebelLineSafePos1"
+                                    print("📦 Retry: RebelLineSafePos1")
+                                    
+                                elif color_after_safe == "blue":
+                                    self.robot_map["rebelline"].program_name = "RebelLineSafePos2.xml"
+                                    rebelline_vars["lastprogram"] = "RebelLineSafePos2"
+                                    print("📦 Retry: RebelLineSafePos2")
+                                
+                                self.robot_map["rebelline"].run_task()
+ 
                     except Exception as e:
                         print(f"⚠️ RebelLine color logic failed: {e}")
-
+                    print(f"Variables actualizadas rebeline: {self.get_robot_vars('RebelLine')}")
                     print(f"📦 Finalized: REBELLINE task started. Vars: {rebelline_vars}")
 
                 #---------------Reset Rebel Line variable---------------------

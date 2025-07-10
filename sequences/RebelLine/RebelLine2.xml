@@ -28,4 +28,5 @@
     <Joint AbortCondition="False" Nr="25" Source="Numerical" velPercent="70" acc="50" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="734.15" e2="25" e3="0" Descr="" />
     <Store Nr="26" Type="number" Value="0" Name="startrebelline2" Descr="" />
     <Store Nr="27" Type="number" Value="1" Name="isfinishrebelline2" Descr="" />
+    <Store Nr="28" Type="number" Value="0" Name="safepos" Descr="" />
 </Program>
