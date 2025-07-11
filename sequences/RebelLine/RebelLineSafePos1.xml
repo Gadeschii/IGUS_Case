@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Program>
+    <Header RobotName="igus REBEL-6DOF" RobotType="REBEL-6DOF-01" GripperType="" Software="iRC V902-14-003" VelocitySetting="0" />
+    <Store Nr="1" Type="number" Value="0" Name="startrebelline1" Descr="" />
+    <Store Nr="2" Type="number" Value="1" Name="startrebelline1" Descr="" />
+    <Store Nr="3" Type="number" Value="0" Name="isfinishrebelline1" Descr="" />
+    <Store Nr="4" Type="number" Value="0" Name="posreciverebelline1" Descr="" />
+    <Output Nr="5" Channel="DOut31" State="False" Descr="" />
+    <Store Nr="6" Type="number" Value="0" Name="safepos" Descr="" />
+    <Store Nr="7" Type="number" Value="0" Name="posdropobjrebellinetorebel1" Descr="" />
+    <Joint AbortCondition="False" Nr="8" Source="Numerical" velPercent="70" acc="50" smooth="0" a1="60.97" a2="41.66" a3="51.17" a4="-0.67" a5="85.49" a6="-33.49" e1="334.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="9" Source="Numerical" velPercent="70" acc="50" smooth="0" a1="60.97" a2="70.7" a3="107.2" a4="0" a5="6.4" a6="-32.97" e1="334.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="10" Source="Numerical" velPercent="70" acc="50" smooth="0" a1="60.97" a2="89" a3="91.5" a4="-0.4" a5="3.8" a6="-32.97" e1="334.2" e2="25" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="11" Source="Numerical" velPercent="40" acc="50" smooth="0" a1="61.4" a2="114.8" a3="67.6" a4="-3.9" a5="2.4" a6="-31.1" e1="334.2" e2="25" e3="0" Descr="" />
+    <Output Nr="12" Channel="DOut31" State="True" Descr="" />
+    <Wait Nr="13" Type="Time" Seconds="3" Descr="" />
+    <Store Nr="14" Type="number" Value="1" Name="posreciverebelline1" Descr="" />
+    <Joint AbortCondition="False" Nr="15" Source="Numerical" velPercent="45" acc="50" smooth="0" a1="60.5" a2="94.7" a3="85.5" a4="-0.8" a5="4.1" a6="-33" e1="334.2" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="16" Source="Numerical" velPercent="70" acc="50" smooth="0" a1="60.4" a2="6.5" a3="80.6" a4="-0.2" a5="88.8" a6="-34.2" e1="334.24" e2="0" e3="0" Descr="" />
+    <Store Nr="17" Type="number" Value="1" Name="safepos" Descr="" />
+    <Store Nr="18" Type="number" Value="0" Name="startrebelline2" Descr="" />
+    <Store Nr="19" Type="number" Value="0" Name="startrebelline1" Descr="" />
+</Program>

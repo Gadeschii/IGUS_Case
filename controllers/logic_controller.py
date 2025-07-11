@@ -214,6 +214,7 @@ class LogicController:
                 if (
                     (isObjForScara or self.boolWaitingForConfirmBallPickUpScara) and 
                     not isObjForRebelLine and
+                    not self.boolWaitingForConfirmBallPickUp and
                     scara_vars.get("startscara") == 0.0
                     
                     # not detect_ball_and_color(RTSP_URL_2)[0] and
@@ -545,7 +546,9 @@ class LogicController:
                     
                     print(f"Variables actualizadas rebeline: {self.get_robot_vars('RebelLine')}")
                     print(f"📦 Finalized: REBELLINE task started. Vars: {rebelline_vars}")
-
+                print("\033[93mLas Variables de inicio son:\033[0m")
+                print(rebelline_vars.get("isfinishrebelline1", 0.0))
+                print(rebelline_vars.get("isfinishrebelline2", 0.0))
                 #---------------Reset Rebel Line variable---------------------
                 if (
                     rebelline_vars.get("isfinishrebelline1", 0.0) == 1.0 or
