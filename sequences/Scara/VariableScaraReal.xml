@@ -8,4 +8,5 @@
     <Output Nr="5" Channel="DOut22" State="False" Descr="" />
     <Output Nr="6" Channel="DOut23" State="False" Descr="" />
     <Output Nr="7" Channel="DOut24" State="False" Descr="" />
+    <Store Nr="8" Type="number" Value="5" Name="scarasafepos" Descr="" />
   </Program>

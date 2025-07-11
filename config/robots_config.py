@@ -4,7 +4,7 @@ robots_config = {
         "type": "ScaraRobot",
         "ip": "192.168.3.104",
         "port": 3920,
-        "program_name": "ScaraReal.xml",
+        "program_name": None,
         "sequence_path": "sequences/Scara/",
         "id": "scara",
         "var_file": "VariableScaraReal.xml"

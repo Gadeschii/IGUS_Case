@@ -31,10 +31,13 @@ class D1Motor:
         self.DInputs = DInputs
         
         self.DInputs_array = bytearray(DInputs)
-        
+        self.status = [0, 0, 0, 0, 0, 13, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2]
+        self.status_array = bytearray(self.status)
         self.statusSpeed = [0, 0, 0, 0, 0, 13, 0, 43, 13, 0, 0, 0, 96, 108, 0, 0, 0, 0, 4]
         self.statusSpeed_array = bytearray(self.statusSpeed)
-        
+        self.boolAlreadyHomedAtIni = False
+        self.boolReachedPos = False
+        self.boolMoveCommandSent = False
         self.statusPosition = [0, 0, 0, 0, 0, 13, 0, 43, 13, 0, 0, 0, 96, 100, 0, 0, 0, 0, 4]
         self.statusPosition_array = bytearray(self.statusPosition)
         self.boolHomeAfterSequence = False
@@ -69,9 +72,20 @@ class D1Motor:
             raise RuntimeError(f"❌ Failed to connect to {self.robot_id} ({self.ip}:{self.port}) → {e}")
 
     def reference(self):
-        print(f"🌟 Referencing motor '{self.robot_id}'")
-        self.homing()
-        self.initialize()
+        if not self.boolAlreadyHomedAtIni:
+            print(f"🌟 Referencing motor '{self.robot_id}'")
+            self.initialize()
+            self.homing()
+            
+            self.boolAlreadyHomedAtIni = True
+        # if not self.boolAlreadyHomedAtIni:
+            
+        #     print(f"🌟 Referencing motor '{self.robot_id}'")
+        #     self.homing()
+        #     time.sleep(10)
+        #     self.initialize()
+        #     time.sleep(10)
+        #     self.boolAlreadyHomedAtIni = True
         
     def initialize(self):
         if self.initialized:
@@ -92,6 +106,7 @@ class D1Motor:
     
     
     def homing(self):
+        print("\033[91mEstoy en Homing\033[0m")
         self.boolHomingAfterSequence = True
         print(f"🌟 Starting homing for '{self.robot_id}'...")
         self.sendCommand(self.enableOperation_array)
@@ -148,13 +163,33 @@ class D1Motor:
 
     def move_to_right(self):
         # self._prepare_motion()
-        if ((self.convertBytesToInt(self.sendCommand(self.statusPosition_array), 4)> 360000) and
+        print("\033[91mEstoy entrando\033[0m")
+        
+        # if not self.boolMoveCommandSent:
+        #     if ((self.convertBytesToInt(self.sendCommand(self.statusPosition_array), 4) < -360000) and
+        #         self.boolHomeAfterSequence and
+        #         not self.boolHomingAfterSequence):
+        #         self.homing()
+            
+        #     elif not (self.convertBytesToInt(self.sendCommand(self.statusSpeed_array), 4)< -0.1) and not self.boolHomingAfterSequence:
+            
+        #         self.set_mode(1)
+        #         self.sendCommand(self.enableOperation_array)
+        #         self._send_velocity_accel()
+        #         self._send_target_positionA()
+        #         self._start_motion()
+        #         self.boolHomeAfterSequence = True
+        #         self.boolMoveCommandSent = True
+        
+            
+            
+        
+        if ((self.convertBytesToInt(self.sendCommand(self.statusPosition_array), 4) < -360000) and
             self.boolHomeAfterSequence and
             not self.boolHomingAfterSequence):
-            
             self.homing()
             
-        elif not (self.convertBytesToInt(self.sendCommand(self.statusSpeed_array), 4)> 0.5) and not self.boolHomingAfterSequence:
+        elif not (self.convertBytesToInt(self.sendCommand(self.statusSpeed_array), 4)< -0.1) and not self.boolHomingAfterSequence:
         
             self.set_mode(1)
             self.sendCommand(self.enableOperation_array)
@@ -162,6 +197,8 @@ class D1Motor:
             self._send_target_positionA()
             self._start_motion()
             self.boolHomeAfterSequence = True
+            
+            
             
         print("🚪 Motor moving to Right position")
         # self.homing()
@@ -228,7 +265,7 @@ class D1Motor:
         
     def convertBytesToInt(self, arrayParam, numberOfBytes):
         data = arrayParam[(numberOfBytes*-1):]
-        dataConvertedToInt = int.from_bytes(data, byteorder='little')
+        dataConvertedToInt = int.from_bytes(data, byteorder='little', signed=True)
         return dataConvertedToInt
         
     def _start_motion(self):

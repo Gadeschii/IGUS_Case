@@ -11,7 +11,7 @@
     <Joint AbortCondition="False" Nr="8" Source="Numerical" velPercent="70" acc="50" smooth="0" a1="60.97" a2="70.7" a3="107.2" a4="0" a5="6.4" a6="-32.97" e1="334.2" e2="25" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="9" Source="Numerical" velPercent="70" acc="50" smooth="0" a1="60.97" a2="89" a3="91.5" a4="-0.4" a5="3.8" a6="-32.97" e1="334.2" e2="25" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="10" Source="Numerical" velPercent="40" acc="30" smooth="0" a1="59.9" a2="116.5" a3="66.4" a4="-1.9" a5="2.9" a6="-32.2" e1="341.9" e2="25" e3="0" Descr="" />
-    <Output Nr="11" Channel="DOut31" State="False" Descr="" />
+    <Output Nr="11" Channel="DOut31" State="True" Descr="" />
     <Wait Nr="12" Type="Time" Seconds="3" Descr="" />
     <Store Nr="13" Type="number" Value="1" Name="posreciverebelline2" Descr="" />
     <Joint AbortCondition="False" Nr="14" Source="Numerical" velPercent="45" acc="50" smooth="0" a1="60.3" a2="95.8" a3="82.1" a4="-1" a5="12.9" a6="-32.8" e1="334.2" e2="0" e3="0" Descr="" />

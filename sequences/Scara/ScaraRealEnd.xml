@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Program>
+    <Header RobotName="Scara Robot" RobotType="RL-SCR-0100" GripperType="" Software="iRC V902-14-003" VelocitySetting="2" />
+    <Store Nr="1" Type="number" Value="0" Name="scarasafepos" Descr="" />
+    <Joint AbortCondition="False" Nr="2" Source="Numerical" velPercent="70" acc="40" smooth="0" a1="470" a2="-30.3" a3="69" a4="34" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="Aqui deberia el gripper soltar" />
+    <Joint AbortCondition="False" Nr="3" Source="Numerical" velPercent="70" acc="40" smooth="0" a1="470" a2="47.3" a3="33.5" a4="28.6" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="Aqui deberia el gripper soltar" />
+    <Joint AbortCondition="False" Nr="4" Source="Numerical" velPercent="70" acc="40" smooth="0" a1="455" a2="47.3" a3="33.5" a4="28.6" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="Aqui deberia el gripper soltar" />
+    <Output Nr="5" Channel="DOut22" State="False" Descr="" />
+    <Output Nr="6" Channel="DOut24" State="False" Descr="" />
+    <Output Nr="7" Channel="DOut23" State="True" Descr="" />
+    <Output Nr="8" Channel="DOut22" State="True" Descr="" />
+    <Wait Nr="9" Type="Time" Seconds="1" Descr="" />
+    <Output Nr="10" Channel="DOut22" State="False" Descr="" />
+    <Output Nr="11" Channel="DOut23" State="False" Descr="" />
+    <Joint AbortCondition="False" Nr="12" Source="Numerical" velPercent="70" acc="40" smooth="0" a1="470" a2="47.3" a3="33.5" a4="28.6" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="Aqui deberia el gripper soltar" />
+    <Joint AbortCondition="False" Nr="13" Source="Numerical" velPercent="70" acc="40" smooth="0" a1="470" a2="4.3" a3="68.7" a4="28.6" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="Aqui deberia el gripper soltar" />
+    <Store Nr="14" Type="number" Value="1" Name="posdropobjscara" Descr="" />
+    <Joint AbortCondition="True" Nr="15" Source="Numerical" velPercent="70" acc="40" smooth="0" a1="469.96" a2="-30.35" a3="66.98" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="16" Source="Numerical" velPercent="70" acc="40" smooth="0" a1="470" a2="-30" a3="66.98" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
+    <Joint AbortCondition="False" Nr="17" Source="Numerical" velPercent="70" acc="40" smooth="0" a1="109.46" a2="-55.4" a3="95.3" a4="27.9" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
+    <Output Nr="18" Channel="DOut24" State="False" Descr="" />
+    <Output Nr="19" Channel="DOut22" State="False" Descr="" />
+    <Store Nr="20" Type="number" Value="0" Name="startscara" Descr="" />
+    <Store Nr="21" Type="number" Value="1" Name="isfinishscara" Descr="" />
+</Program>
