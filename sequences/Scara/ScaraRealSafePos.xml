@@ -20,10 +20,11 @@
     <Joint AbortCondition="False" Nr="17" Source="Numerical" velPercent="70" acc="40" smooth="0" a1="0.5" a2="19.4" a3="-58.9" a4="34" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
     <Output Nr="18" Channel="DOut24" State="True" Descr="" />
     <Output Nr="19" Channel="DOut22" State="True" Descr="" />
-    <Wait Nr="20" Type="Time" Seconds="4" Descr="" />
+    <Wait Nr="20" Type="Time" Seconds="2" Descr="" />
     <Store Nr="21" Type="number" Value="1" Name="posrecivescara" Descr="" />
     <Joint AbortCondition="False" Nr="22" Source="Numerical" velPercent="70" acc="40" smooth="0" a1="136.01" a2="-10.76" a3="40.95" a4="34.02" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
     <Joint AbortCondition="False" Nr="23" Source="Numerical" velPercent="40" acc="40" smooth="0" a1="294.28" a2="-61.48" a3="94.6" a4="34" a5="0" a6="0" e1="0" e2="0" e3="0" Descr="" />
     <Store Nr="24" Type="number" Value="1" Name="scarasafepos" Descr="" />
     <Store Nr="25" Type="number" Value="0" Name="isfinishscara" Descr="" />
+    <Store Nr="1" Type="number" Value="0" Name="startscara" Descr="" />
 </Program>

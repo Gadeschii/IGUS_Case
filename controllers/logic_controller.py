@@ -71,7 +71,7 @@ class LogicController:
 
         
 
-        threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
+        # threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
 
         while True:
             # =========================
@@ -101,8 +101,8 @@ class LogicController:
             recent_scara = detected_scara and (now - ts_scara < 1.5)
             recent_rebel = detected_rebel and (now - ts_rebel < 1.5)
 
-            isObjForScara = recent_scara
-            isObjForRebelLine = recent_rebel
+            isObjForScara = detected_scara
+            isObjForRebelLine = detected_rebel
                 
             #=====================================================
             
@@ -136,7 +136,7 @@ class LogicController:
                   
                     # ========== 🎯 SCARA ball detection ==========
                     
-                    if not isObjForScara:
+                    if not isObjForScara and not self.boolWaitingForConfirmBallPickUpScara:
                         print("⏳ No ball detected for SCARA → move D1 door")
                         if self.d1_door:
                             # print("SI APAREZCO MAS DE UNA VEZ, NO DEBERÍA PASAR HIJUEPUTA")
@@ -154,8 +154,8 @@ class LogicController:
                                 self.d1_door.move_to_right()
                     else:
                         print("✅ ping pong ball detected for SCARA")
-                        if self.d1_door:
-                            isObjForScara = True
+                    #     if self.d1_door:
+                    #         isObjForScara = True
                     
                     # if not isObjForScara:
                     #     try:
@@ -201,7 +201,16 @@ class LogicController:
                 #=====================================================
                 #               🤖 SCARA robot logic
                 #=====================================================      
-                                
+                print("\033[94mAntes de entrar al IF del SCARA\033[0m")
+                print(isObjForScara)
+                print(self.boolWaitingForConfirmBallPickUpScara)
+                print(isObjForRebelLine)
+                print(scara_vars.get("startscara") == 0.0)
+                print((isObjForScara or self.boolWaitingForConfirmBallPickUpScara) and 
+                    not isObjForRebelLine and
+                    scara_vars.get("startscara") == 0.0
+                    and not self.boolWaitingForConfirmBallPickUp)
+       
                 if (
                     (isObjForScara or self.boolWaitingForConfirmBallPickUpScara) and 
                     not isObjForRebelLine and
@@ -236,7 +245,7 @@ class LogicController:
                         #--------------------------------------------------------
                         
                         while ScaraSafePos == 0.0:
-                            time.sleep(3)
+                            time.sleep(1)
                             scara_vars = self.get_robot_vars("Scara")
                             ScaraSafePos = scara_vars.get("scarasafepos", 0.0)
                             print(f"Waiting for SCARA SafePos → current value: {ScaraSafePos}")
@@ -257,7 +266,8 @@ class LogicController:
                         print("✅ SafePos reached → checking post-pickup conditions")
                         print(f"not_detected_after_scara = {not_detected_after_scara}")
                         print(f"boolWaitingForConfirmBallPickUpScara = {self.boolWaitingForConfirmBallPickUpScara}")
-
+                        print("\033[92m¡Este es el texto que necesitamos: \033[0m")
+                        print(ScaraSafePos)
                         if ScaraSafePos == 1.0:    # if ScaraSafePos in [1.0, 5.0]:
                             if not_detected_after_scara:
                                 
@@ -458,7 +468,7 @@ class LogicController:
                             rebelline_vars = self.get_robot_vars("RebelLine")
                             safepos = rebelline_vars.get("safepos", 0.0)
                             print (safepos)
-                            time.sleep(3)
+                            time.sleep(1)
                         
                         # ✅ Phase 2: Check if ball was picked up successfully
                         safepos = rebelline_vars.get("safepos", 0.0)
