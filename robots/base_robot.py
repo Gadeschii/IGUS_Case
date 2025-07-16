@@ -18,20 +18,20 @@ class BaseRobot:
         self._last_status = None
         self.connected = False
         
-    ####################################################################################  
+    ####################################################################################
     #                                  E-Stop()
     ####################################################################################
     
     def get_e_stop(self):
         return self.controller.get_e_stop()
         
-    ####################################################################################  
+    ####################################################################################
     #                                  CONNECT()
     ####################################################################################    
-        
+    
     def connect(self):
         print(f"\n{'='*30}")
-        print(f"🛠️  Prepare robot: {self.robot_id.upper()}")
+        print(f"🛠️  Preparing robot: {self.robot_id.upper()}")
         print(f"{'='*30}")
 
         print(f"🔌 Connecting to {self.ip}:{self.port}")
@@ -41,25 +41,26 @@ class BaseRobot:
             f"🔎 Please ensure the robot is powered on and the IP address is correct."
         )
 
-        print("♻️ Reiniciando robot...")
+        print("♻️ Restarting robot...")
         self.controller.reset()
 
-        print("🔓 Activated remote control...")
+        print("🔓 Activating remote control...")
         if not self.controller.set_active_control(True):
-            raise Exception("❌ Can't activated remote control...")
+            raise Exception("❌ Failed to activate remote control...")
 
-        print("⚡ Enable robot...")
+        print("⚡ Enabling robot...")
         if not self.controller.enable():
-            raise Exception("❌ Can't Enable robot")
+            raise Exception("❌ Failed to enable robot")
 
-        print("⏳Esperando a que el robot esté listo...")
+        print("⏳ Waiting for robot to be ready...")
         if not self.controller.wait_for_kinematics_ready(timeout=30):
-            raise Exception("❌ El robot no está listo tras el referenciado.")
-        print(f"✅ {self.robot_id.upper()}: Conected sucessfully  ")    
-        
-    ####################################################################################  
+            raise Exception("❌ Robot not ready after referencing.")
+        print(f"✅ {self.robot_id.upper()}: Connected successfully")
+
+    ####################################################################################
     #                               REFERENCE()
     ####################################################################################
+    
     def reference(self):
         if self.robot_id == "scara":
             self._reference_scara()
@@ -68,17 +69,15 @@ class BaseRobot:
         elif self.robot_id in ["rebel1", "rebel2"]:
             self._reference_rebel_generic()
         else:
-            raise Exception(f"❌ No identificado: {self.robot_id}")
+            raise Exception(f"❌ Unrecognized robot: {self.robot_id}")
         
-        print("⏳ Esperando readiness...")
+        print("⏳ Waiting for readiness...")
         if not self.controller.wait_for_kinematics_ready(timeout=30):
-            raise Exception("❌ Robot no listo tras referenciado.")
-
-    
+            raise Exception("❌ Robot not ready after referencing.")
 
     def import_variables(self):
         print("📥 Loading required variables...")
-        
+
         if self.var_file:
             print(f"📤 Uploading variable file: {self.sequence_path + self.var_file}")
             if not self.controller.upload_file(self.sequence_path + self.var_file, self.remote_folder):
@@ -91,7 +90,7 @@ class BaseRobot:
 
             print("✅ Variables successfully initialized.")
 
-            print("▶️ Starting program...")
+            print("▶️ Starting variable program...")
             time.sleep(0.5)
             # print("✨ This is where the magic should happen")
             if not self.controller.start_programm():
@@ -104,39 +103,36 @@ class BaseRobot:
         print(f"✅ Variable preparation complete for: {self.robot_id.upper()}")
         print(f"\n{'='*30}")
 
-    
-        
     def run_task(self):
         try:
-            print ("🚀 Execute main task (placeholder)")
+            print("🚀 Executing main task (placeholder)")
             print(f"\n{'='*30}")
-            print(f"▶️  Ejecutando secuencia para: {self.robot_id.upper()}")
+            print(f"▶️  Running sequence for: {self.robot_id.upper()}")
             print(f"{'='*30}")
 
-            print(f"📤 Subiendo archivo de secuencia: {self.sequence_path + self.program_name}")
+            print(f"📤 Uploading sequence file: {self.sequence_path + self.program_name}")
             if not self.controller.upload_file(self.sequence_path + self.program_name, self.remote_folder):
-                raise Exception("❌ Fallo al subir el archivo de secuencia.")
+                raise Exception("❌ Failed to upload sequence file.")
 
-            print(f"📦 Cargando programa de movimiento... {self.program_name}")
+            print(f"📦 Loading movement program: {self.program_name}")
             if not self.controller.load_programm(self.program_name):
-                raise Exception("❌ Fallo al cargar el programa de movimiento.")
+                raise Exception("❌ Failed to load movement program.")
 
-            print(f"▶️ Iniciando programa de {self.robot_id.upper()}")
+            print(f"▶️ Starting program for {self.robot_id.upper()}")
             if not self.controller.start_programm():
-                raise Exception("❌ Error al iniciar el programa de movimiento.")
+                raise Exception("❌ Error while starting movement program.")
             time.sleep(0.5)
 
             # self.wait_for_finish_signal()
-            # print(f"✅ Secuencia completada para: {self.robot_id.upper()}")
+            # print(f"✅ Sequence completed for: {self.robot_id.upper()}")
 
         except Exception as e:
-            print(f"❌ Error en secuencia de {self.robot_id.upper()}: {e}") 
-        
+            print(f"❌ Error in sequence for {self.robot_id.upper()}: {e}") 
 
     def disable(self):
-        print("⛔ Disable motors")
+        print("⛔ Disabling motors")
         self.controller.disable()
 
     def close(self):
-        print("🔒 Close CRI connection")
+        print("🔒 Closing CRI connection")
         self.controller.close()

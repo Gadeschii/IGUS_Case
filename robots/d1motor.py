@@ -106,7 +106,7 @@ class D1Motor:
     
     
     def homing(self):
-        print("\033[91mEstoy en Homing\033[0m")
+        print("\033[91m I'm in Homing\033[0m")
         self.boolHomingAfterSequence = True
         print(f"🌟 Starting homing for '{self.robot_id}'...")
         self.sendCommand(self.enableOperation_array)
@@ -163,7 +163,7 @@ class D1Motor:
 
     def move_to_right(self):
         # self._prepare_motion()
-        print("\033[91mEstoy entrando\033[0m")
+        print("\033[91m I'm come in\033[0m")
         
         # if not self.boolMoveCommandSent:
         #     if ((self.convertBytesToInt(self.sendCommand(self.statusPosition_array), 4) < -360000) and
