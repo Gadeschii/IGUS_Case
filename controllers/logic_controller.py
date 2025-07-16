@@ -14,7 +14,7 @@ RTSP_URL = os.getenv("RTSP_URL")
 RTSP_URL_2 = os.getenv("RTSP_URL_2")
 
 DOOR_CLOSED_POS = 0.0
-DOOR_OPEN_POS = 100.0 # tengo qeu mirar para que el open door sea dar una vuelta
+DOOR_OPEN_POS = 100.0 
 
 class LogicController:
     def __init__(self, robots):
@@ -98,7 +98,7 @@ class LogicController:
             detected_rebel, color_rebel, ts_rebel = self.vision.get_detection("URL_rebel")
 
             now = time.time()
-            recent_scara = detected_scara and (now - ts_scara < 1.5)
+            recent_scara = detected_scara and (now - ts_scara < 2.5)
             recent_rebel = detected_rebel and (now - ts_rebel < 1.5)
 
             isObjForScara = detected_scara
@@ -123,10 +123,7 @@ class LogicController:
                 if self.d1_door:
                     self.d1_door.reference()
                     
-                    # Scara camera
-                    # detected_scara, color_scara = detect_ball_and_color(RTSP_URL)
-                    
-                    # TODO: revisar que el D1 no se active a la primera de cambio sino que espere a que el scara este segiuro de que ha cogido la pelota
+                    # TODO: revisar que el D1 no se active a la primera de cambio sino que espere a que el scara esté seguro de que ha cogido la pelota
                     
                     detected_scara, color_scara, timestamp  = self.vision.get_detection("URL_scara")
 
@@ -136,76 +133,29 @@ class LogicController:
                   
                     # ========== 🎯 SCARA ball detection ==========
                     
+                    print (f" ObjForScara -- {isObjForScara}")
+                    print (f" Wait -- {self.boolWaitingForConfirmBallPickUpScara}")
+                    
                     if not isObjForScara and not self.boolWaitingForConfirmBallPickUpScara:
                         print("⏳ No ball detected for SCARA → move D1 door")
                         if self.d1_door:
-                            # print("SI APAREZCO MAS DE UNA VEZ, NO DEBERÍA PASAR HIJUEPUTA")
-                            # print("La HP velocidad es:")
-                            # print(self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusSpeed_array), 4))
-                            # print("La HP posición es:")
-                            # print(self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusPosition_array), 4))
                             speed = self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusSpeed_array), 4)
                             if speed >  -0.5:
-                                print("SI APAREZCO MAS DE UNA VEZ, NO DEBERÍA PASAR HIJUEPUTA2")
-                                print("La HP velocidad es:")
-                                # speed = self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusSpeed_array), 4)
-                                # print("La HP posición es:")
-                                # speed = self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusPosition_array), 4)
                                 self.d1_door.move_to_right()
                     else:
                         print("✅ ping pong ball detected for SCARA")
-                    #     if self.d1_door:
-                    #         isObjForScara = True
-                    
-                    # if not isObjForScara:
-                    #     try:
-                    #         # Get latest detection status and timestamp
-                    #         detected_scara, _ , ts_scara  = self.vision.get_detection("URL_scara")
-                    #         now = time.time()
-                    #         recent_detection = detected_scara and (now - ts_scara) < 1.5
-                            
-                    #         if not recent_detection:
-                    #             print("⏳ No ball detected for SCARA → move D1 door")
-                    #             if self.d1_door:
-                    #                 # Only open if the door isn't already open (motor not moving)
-                    #                 if not(((self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusSpeed_array), 4)) > 0.5)):
-                    #                     self.d1_door.move_to_right()
-                    #         else:
-                    #             print("✅ Recent ping pong ball detected for SCARA")
-                    #             isObjForScara = True
-
-                            
-                    #         # # detected_scara, _ = detect_ball_and_color(RTSP_URL)
-                    #         # detected_scara, _ , ts_scara  = self.vision.get_detection("URL_scara")
-                    #         # now = time.time()
-                    #         # recent_detection = detected_scara and (now - ts_scara) < 1.5
-                    #         # if recent_detection:
-                    #         #     print("✅ Ping pong ball detected → SCARA task ready")
-                    #         #     isObjForScara = True
-                    #         #     # 🔒 Move door to closed position
-                    #         #     # self.d1_door.move_to_left() 
-                    #         #     # self.d1_door.current_position = 0.0
-                    #         # else:
-                    #         #     print("⏳ No ball yet for SCARA")
-                    #         #     # 🚪 Open the door
-                    #         #     if not(((self.d1_door.convertBytesToInt(self.d1_door.sendCommand(self.d1_door.statusSpeed_array), 4)) > 0.5)):
-                    #         #        self.d1_door.move_to_right() 
-    
-    
-    
-                    #     except RuntimeError as e:
-                    #         print(f"⚠️ SCARA camera error: {e}")
-                            
-                    # print("📦 Ball ready for SCARA → SCARA can start its task")
-
+     
                 #=====================================================
                 #               🤖 SCARA robot logic
                 #=====================================================      
                 print("\033[94mAntes de entrar al IF del SCARA\033[0m")
+                
                 print(isObjForScara)
                 print(self.boolWaitingForConfirmBallPickUpScara)
                 print(isObjForRebelLine)
                 print(scara_vars.get("startscara") == 0.0)
+                
+                print("\033[94m Condición para entrar al SCARA : \033[0m")
                 print((isObjForScara or self.boolWaitingForConfirmBallPickUpScara) and 
                     not isObjForRebelLine and
                     scara_vars.get("startscara") == 0.0
@@ -299,73 +249,7 @@ class LogicController:
                         print(f"⚠️ SCARA logic error: {e}")
 
                     print("🔄 SCARA completed task flow → ready for next cycle")
-                                    
-   
-                    # scara_vars = self.get_robot_vars("Scara")
-                    # ScaraSafePos = rebelline_vars.get("ScaraSafePos", 0.0)
                         
-                    # print("🟢 Starting initial Safe SCARA task...")
-                    # # time to be sure that the ball was static
-                    # time.sleep(4.5) 
-                    # self.robot_map["scara"].program_name = "ScaraRealSafePos.xml"
-                    # self.robot_map["scara"].run_task()
-                    
-                    # while ScaraSafePos == 0.0:
-                    #     scara_vars = self.get_robot_vars("Scara")
-                    #     ScaraSafePos = scara_vars.get("ScaraSafePos", 0.0)
-                    #     print (ScaraSafePos)
-                    #     time.sleep(3)
-                    
-                    # ScaraSafePos = scara_vars.get("scarasafepos", 0.0)
-                    # detected_after_safe_scara, _ , ts_scara = self.vision.get_detection("URL_scara")
-                    # now = time.time()
-                    
-                    # if self.boolWaitingForConfirmBallPickUpScara and not detected_after_safe_scara and ScaraSafePos==1.0:
-                    #     not_detected_after_scara = True
-                            
-                    # elif self.boolWaitingForConfirmBallPickUpScara and detected_after_safe_scara and ScaraSafePos == 1.0:
-                    #     self.boolWaitingForConfirmBallPickUpScara = False
-                    #     not_detected_after_scara = False                            
-                            
-                        
-                    # if ScaraSafePos == 1.0 or ScaraSafePos == 5.0:
-                    #     print("Entre AL CICLO DESEADO 1")
-                    #     print(not_detected_after_scara)
-                    #     print(self.boolWaitingForConfirmBallPickUpScara)
-                    #     if not_detected_after_scara: 
-                    #             self.boolWaitingForConfirmBallPickUpScara = False
-                    #             ScaraSafePos = 0.0
-                    #             print("Entre AL CICLO DESEADO 2")
-                    #             print(f"✅ Ball not detected after SafePos → continue sequence")  
-                    #             if lastProgram == "ScaraRealSafePos":
-                    #                 self.robot_map["scara"].program_name = "ScaraRealEnd.xml"
-                    #                 print("📦 Proceed with: ScaraRealEnd")
-         
-                    #                 self.robot_map["scara"].sequence_path = "sequences/Scara/"
-                    #                 self.robot_map["scara"].run_task()
-                                
-                    #     elif not self.boolWaitingForConfirmBallPickUpScara or ScaraSafePos == 5.0:
-                    #             print(f"🔄 Ball detected after SafePos → reloading sequence")          
-                    #             scara_vars["scarasafepos"] = 0.0  # Importante si el mismo safePos debe marcarse de nuevo
-                    #             self.boolWaitingForConfirmBallPickUpScara = True
-                    #             # Decidir nuevo intento
-                    #             self.robot_map["scara"].program_name = "ScaraRealSafePos.xml"
-                    #             rebelline_vars["lastprogram"] = "ScaraRealSafePos"
-                    #             print("📦 Retry: ScaraRealSafePos")
-                            
-                                
-                    #             self.robot_map["scara"].run_task()    
-
-                    
-                    # scara_vars.get("posrecivescara") == 1.0
-                    # #isObjForScara = False
-                    # print("🔄 Scara received object → there isn't objet for Scara")
-                    
-                    
-                    
-                    
-                    
-                    
                 #=====================================================
                 #          🔄 SCARA triggers REBELLINE flag
                 #=====================================================
@@ -546,9 +430,9 @@ class LogicController:
                     
                     print(f"Variables actualizadas rebeline: {self.get_robot_vars('RebelLine')}")
                     print(f"📦 Finalized: REBELLINE task started. Vars: {rebelline_vars}")
-                print("\033[93mLas Variables de inicio son:\033[0m")
-                print(rebelline_vars.get("isfinishrebelline1", 0.0))
-                print(rebelline_vars.get("isfinishrebelline2", 0.0))
+                print("\033[93m Las Variables de inicio para Rebels son :\033[0m")
+                print(f"Rebel 1 -- {rebelline_vars.get('isfinishrebelline1', 0.0)}")
+                print(f"Rebel 2 -- {rebelline_vars.get('isfinishrebelline2', 0.0)}")
                 #---------------Reset Rebel Line variable---------------------
                 if (
                     rebelline_vars.get("isfinishrebelline1", 0.0) == 1.0 or
