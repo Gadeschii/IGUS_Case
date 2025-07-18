@@ -263,17 +263,19 @@ class LogicController:
                         
                         detected_after_safe_scara, _, ts_scara = self.vision.get_detection("URL_scara")
                         now = time.time()
-
-                        if self.boolWaitingForConfirmBallPickUpScara and not detected_after_safe_scara and ScaraSafePos == 1.0:
-                            not_detected_after_scara = True
-                        elif self.boolWaitingForConfirmBallPickUpScara and detected_after_safe_scara and ScaraSafePos == 1.0:
+     
+                        if self.boolWaitingForConfirmBallPickUpScara and detected_after_safe_scara and ScaraSafePos == 1.0:
                             self.boolWaitingForConfirmBallPickUpScara = False
-                            not_detected_after_scara = False
+
+                        # if self.boolWaitingForConfirmBallPickUpScara and not detected_after_safe_scara and ScaraSafePos == 1.0:
+                        #     not_detected_after_scara = True
+                        # elif self.boolWaitingForConfirmBallPickUpScara and detected_after_safe_scara and ScaraSafePos == 1.0:
+                        #     self.boolWaitingForConfirmBallPickUpScara = False
+                        #     not_detected_after_scara = False
 
                         print("✅ SafePos reached → checking post-pickup conditions:")
 
                         print(f"""\033[94m📊 [SCARA Post-Pickup Check]
-                            • No Detected after SafePos  = {not_detected_after_scara}
                             • Detected after SafePos     = {detected_after_safe_scara}
                             • Waiting confirmation flag  = {self.boolWaitingForConfirmBallPickUpScara}
                             • SCARA SafePos value        = {ScaraSafePos}
@@ -281,7 +283,7 @@ class LogicController:
                         
                         
                         if ScaraSafePos == 1.0:    # if ScaraSafePos in [1.0, 5.0]:
-                            if not_detected_after_scara:
+                            if not detected_after_safe_scara:
                                 
                                 #--------------------------------------------------------
                                 # 🎯 Object successfully picked → proceed to End sequence
