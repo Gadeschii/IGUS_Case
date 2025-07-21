@@ -1,8 +1,8 @@
 from enum import Enum
-import time
 from controllers.logic_controller import LogicController
 
 class SystemState(Enum):
+    INIT = 0
     CONNECTING = 1
     REFERENCING = 2
     IMPORTING = 3
@@ -12,42 +12,41 @@ class SystemState(Enum):
 class StateController:
     def __init__(self, robots):
         self.robots = robots
+        self.state = SystemState.INIT
+        self.logic = None
+
+    def connect_robots(self):
+        print("🔌 Connecting all robots...")
+        for robot in self.robots:
+            robot.connect()
         self.state = SystemState.CONNECTING
+        return "Robots connected"
 
-    def run_case(self):
-        while self.state != SystemState.CLOSING:
-            if self.state == SystemState.CONNECTING:
-                print("\n" + "*" * 30)
-                print("🔌 Connecting all robots...")
-                for robot in self.robots:
-                    robot.connect()
-                self.state = SystemState.REFERENCING
+    def reference_robots(self):
+        print("🎯 Referencing all robots...")
+        for robot in self.robots:
+            robot.reference()
+        self.state = SystemState.REFERENCING
+        return "Robots referenced"
 
-            elif self.state == SystemState.REFERENCING:
-                print("\n" + "*" * 30)
-                print("🎯 Referencing all robots...")
-                for robot in self.robots:
-                    robot.reference()
-                self.state = SystemState.IMPORTING
+    def import_variables(self):
+        print("📥 Importing variables...")
+        for robot in self.robots:
+            robot.import_variables()
+        self.state = SystemState.IMPORTING
+        return "Variables imported"
 
-            elif self.state == SystemState.IMPORTING:
-                print("\n" + "*" * 30)
-                print("📥 Importing variables...")
-                for robot in self.robots:
-                    robot.import_variables()
-                self.state = SystemState.RUNNING
+    def start_logic(self):
+        print("🚀 Starting logic controller...")
+        self.logic = LogicController(self.robots)
+        self.logic.run_scenario()
+        self.state = SystemState.RUNNING
+        return "Logic sequence started"
 
-            elif self.state == SystemState.RUNNING:
-                print("\n" + "*" * 30)
-                print("🚀 Initial startup complete, passing control to logic controller...")     
-                logic = LogicController(self.robots)
-                print("\n🧠 Start coordination logic between robots")
-                logic.run_scenario() 
-
-                break 
-
-        print("\n" + "*" * 30)
-        print("🔒 Closing all robot sessions...")
+    def shutdown(self):
+        print("🔒 Shutting down...")
         for robot in self.robots:
             robot.disable()
             robot.close()
+        self.state = SystemState.CLOSING
+        return "System shut down"

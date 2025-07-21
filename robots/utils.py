@@ -1,4 +1,24 @@
 import time
+from config.robots_config import robots_config
+from robots.base_robot import BaseRobot
+
+def load_robots():
+    robots = []
+
+    for config in robots_config.values():
+        if config.get("type") in ["ScaraRobot", "RebelLineRobot", "Rebel1Robot", "Rebel2Robot"]:
+            robot = BaseRobot(
+                name=config["id"],
+                program_name=config.get("program_name"),
+                ip=config["ip"],
+                sequence_path=config["sequence_path"],
+                var_file=config.get("var_file"),
+                port=config["port"],
+                id=config["id"]
+            )
+            robots.append(robot)
+
+    return robots
 
 def wait_until_axes_referenced(self, axes=("A1", "A2", "A3", "A4", "A5", "A6", "E1"), timeout = 400) -> bool:
     print(f"⏳ Waiting for axes {axes} to be referenced...")
