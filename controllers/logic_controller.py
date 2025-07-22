@@ -6,6 +6,7 @@ import time
 from controllers.color_detector import *
 from controllers.color_detector import VisionManager
 from dotenv import load_dotenv
+from state_controller import StateController
 from controllers.usb_pingpong_detector import usb_detect_pingpong_color
 import os
 
@@ -17,7 +18,7 @@ DOOR_CLOSED_POS = 0.0
 DOOR_OPEN_POS = 100.0 
 
 class LogicController:
-    def __init__(self, robots):
+    def __init__(self, robots, state_controller):
         self.robots = robots
         self.robot_map = {robot.robot_id: robot for robot in robots}
         self._was_in_emergency = False
@@ -25,6 +26,7 @@ class LogicController:
         self.d1_elevator = None
         self.RebelLineStart = False
         self.ScaraStarted = False
+        self.state_controller = state_controller
         self.boolWaitingForConfirmBallPickUp = False
         self.boolWaitingForConfirmBallPickUpScara = False
         self.vision = VisionManager({
@@ -96,8 +98,6 @@ class LogicController:
     def run_scenario(self):
         print("\n🔁 Starting infinite production loop, waiting for objet")
 
-        
-
         # threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
 
         while True:
@@ -117,6 +117,11 @@ class LogicController:
                         print(f"⚠️ Failed to disconnect {robot.robot_id.upper()}: {e}")
                 break  # ⛔ Exit infinite loop
             
+            
+            # PAUSE control
+            if self.state_controller.state == StateController.SystemState.PAUSED:
+                print("⏸️ Paused. Waiting to resume...")
+                time.sleep(3)
             
             #=====================================================
             #               🎥 Camara vision
@@ -582,5 +587,5 @@ class LogicController:
                 print(f"⚠️ Logic loop error: {e}")
                 time.sleep(1)
 
-
+        
 

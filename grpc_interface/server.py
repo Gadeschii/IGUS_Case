@@ -30,6 +30,11 @@ class RobotControllerService(robot_controller_pb2_grpc.RobotControllerServicer):
     def Reference(self, request, context):
         msg = state.reference_robots()
         return robot_controller_pb2.Status(message=msg, success=True)
+    
+    def ReferenceSingle(self, request, context):
+        msg = state.reference_robot_by_id(request.robot_id)
+        return robot_controller_pb2.Status(message=msg, success="referenced" in msg.lower())
+
 
     def ImportVariables(self, request, context):
         msg = state.import_variables()

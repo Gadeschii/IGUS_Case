@@ -5,7 +5,8 @@ option python_package = "grpc_interface";
 
 service RobotController {
   rpc ConectingSequence (Empty) returns (Status);
-  rpc Reference (Empty) returns (Status);
+  rpc ReferenceSequence(Empty) returns (Status);          
+  rpc ReferenceSingle(RobotIdRequest) returns (Status);
   rpc ImportVariables (Empty) returns (Status);
   rpc StartSequence (Empty) returns (Status);
   rpc Stop (Empty) returns (Status);
@@ -17,4 +18,8 @@ message Empty {}
 message Status {
   string message = 1;
   bool success = 2;
+}
+
+message RobotIdRequest {
+  string robot_id = 1;
 }
