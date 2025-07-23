@@ -1,5 +1,5 @@
 from enum import Enum
-from controllers.logic_controller import LogicController
+# from controllers.logic_controller import LogicController
 
 class SystemState(Enum):
     INIT = 0
@@ -46,6 +46,7 @@ class StateController:
         return "Variables imported"
 
     def start_logic(self):
+        from controllers.logic_controller import LogicController
         print("🚀 Starting logic controller...")
         self.logic = LogicController(self.robots,  self)
         self.logic.run_scenario()

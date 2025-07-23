@@ -1,5 +1,6 @@
 from .base_robot import BaseRobot
-from .utils import wait_until_axes_referenced, check_robot_ready
+# scara.py
+from robots.robot_helpers import wait_until_axes_referenced, check_robot_ready
 
 
 import time
@@ -10,7 +11,7 @@ class ScaraRobot(BaseRobot):
     
     
     def _reference_scara(self):
-        print("🔧 Referenciando SCARA: primero A1...")
+        print("🔧 Referencing SCARA: first A1...")
         time.sleep(0.1)
 
         if self.controller.are_all_axes_referenced(axes=("A1", "A2", "A3", "A4")):

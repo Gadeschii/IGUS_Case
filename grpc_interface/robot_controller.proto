@@ -1,16 +1,16 @@
 syntax = "proto3";
 
 package robot;
-option python_package = "grpc_interface";
+
 
 service RobotController {
-  rpc ConectingSequence (Empty) returns (Status);
-  rpc ReferenceSequence(Empty) returns (Status);          
+  rpc ConectingSequence(Empty) returns (Status);
+  rpc ReferenceSequence(Empty) returns (Status);     
   rpc ReferenceSingle(RobotIdRequest) returns (Status);
-  rpc ImportVariables (Empty) returns (Status);
-  rpc StartSequence (Empty) returns (Status);
-  rpc Stop (Empty) returns (Status);
-  rpc GetState (Empty) returns (Status);
+  rpc StartSequence(Empty) returns (Status);
+  rpc PauseSequence(Empty) returns (Status);
+  rpc ResumeSequence(Empty) returns (Status);
+  rpc StopSequence(Empty) returns (Status);
 }
 
 message Empty {}

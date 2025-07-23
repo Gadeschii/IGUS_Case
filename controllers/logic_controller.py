@@ -6,7 +6,7 @@ import time
 from controllers.color_detector import *
 from controllers.color_detector import VisionManager
 from dotenv import load_dotenv
-from state_controller import StateController
+from controllers.state_controller import StateController
 from controllers.usb_pingpong_detector import usb_detect_pingpong_color
 import os
 

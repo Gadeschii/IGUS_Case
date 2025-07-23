@@ -74,6 +74,10 @@ class BaseRobot:
         print("⏳ Waiting for readiness...")
         if not self.controller.wait_for_kinematics_ready(timeout=30):
             raise Exception("❌ Robot not ready after referencing.")
+        
+    ####################################################################################
+    #                               IMPORT VARIABLES()
+    ####################################################################################    
 
     def import_variables(self):
         print("📥 Loading required variables...")

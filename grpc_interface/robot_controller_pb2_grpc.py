@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from grpc_interface import robot_controller_pb2 as robot__controller__pb2
+import robot_controller_pb2 as robot__controller__pb2
 
 GRPC_GENERATED_VERSION = '1.73.1'
 GRPC_VERSION = grpc.__version__
@@ -26,8 +26,7 @@ if _version_not_supported:
 
 
 class RobotControllerStub(object):
-    """Servicio disponible para el cliente (Blazor)
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -40,36 +39,78 @@ class RobotControllerStub(object):
                 request_serializer=robot__controller__pb2.Empty.SerializeToString,
                 response_deserializer=robot__controller__pb2.Status.FromString,
                 _registered_method=True)
-        self.StopSequence = channel.unary_unary(
-                '/robot.RobotController/StopSequence',
+        self.ReferenceSequence = channel.unary_unary(
+                '/robot.RobotController/ReferenceSequence',
                 request_serializer=robot__controller__pb2.Empty.SerializeToString,
                 response_deserializer=robot__controller__pb2.Status.FromString,
                 _registered_method=True)
-        self.ReferenceSequence = channel.unary_unary(
-                '/robot.RobotController/ReferenceSequence',
+        self.ReferenceSingle = channel.unary_unary(
+                '/robot.RobotController/ReferenceSingle',
+                request_serializer=robot__controller__pb2.RobotIdRequest.SerializeToString,
+                response_deserializer=robot__controller__pb2.Status.FromString,
+                _registered_method=True)
+        self.StartSequence = channel.unary_unary(
+                '/robot.RobotController/StartSequence',
+                request_serializer=robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=robot__controller__pb2.Status.FromString,
+                _registered_method=True)
+        self.PauseSequence = channel.unary_unary(
+                '/robot.RobotController/PauseSequence',
+                request_serializer=robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=robot__controller__pb2.Status.FromString,
+                _registered_method=True)
+        self.ResumeSequence = channel.unary_unary(
+                '/robot.RobotController/ResumeSequence',
+                request_serializer=robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=robot__controller__pb2.Status.FromString,
+                _registered_method=True)
+        self.StopSequence = channel.unary_unary(
+                '/robot.RobotController/StopSequence',
                 request_serializer=robot__controller__pb2.Empty.SerializeToString,
                 response_deserializer=robot__controller__pb2.Status.FromString,
                 _registered_method=True)
 
 
 class RobotControllerServicer(object):
-    """Servicio disponible para el cliente (Blazor)
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def ConectingSequence(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
-    
 
-    def StopSequence(self, request, context):
+    def ReferenceSequence(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ReferenceSequence(self, request, context):
+    def ReferenceSingle(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def StartSequence(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def PauseSequence(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ResumeSequence(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def StopSequence(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -83,13 +124,33 @@ def add_RobotControllerServicer_to_server(servicer, server):
                     request_deserializer=robot__controller__pb2.Empty.FromString,
                     response_serializer=robot__controller__pb2.Status.SerializeToString,
             ),
-            'StopSequence': grpc.unary_unary_rpc_method_handler(
-                    servicer.StopSequence,
+            'ReferenceSequence': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReferenceSequence,
                     request_deserializer=robot__controller__pb2.Empty.FromString,
                     response_serializer=robot__controller__pb2.Status.SerializeToString,
             ),
-            'ReferenceSequence': grpc.unary_unary_rpc_method_handler(
-                    servicer.ReferenceSequence,
+            'ReferenceSingle': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReferenceSingle,
+                    request_deserializer=robot__controller__pb2.RobotIdRequest.FromString,
+                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+            ),
+            'StartSequence': grpc.unary_unary_rpc_method_handler(
+                    servicer.StartSequence,
+                    request_deserializer=robot__controller__pb2.Empty.FromString,
+                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+            ),
+            'PauseSequence': grpc.unary_unary_rpc_method_handler(
+                    servicer.PauseSequence,
+                    request_deserializer=robot__controller__pb2.Empty.FromString,
+                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+            ),
+            'ResumeSequence': grpc.unary_unary_rpc_method_handler(
+                    servicer.ResumeSequence,
+                    request_deserializer=robot__controller__pb2.Empty.FromString,
+                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+            ),
+            'StopSequence': grpc.unary_unary_rpc_method_handler(
+                    servicer.StopSequence,
                     request_deserializer=robot__controller__pb2.Empty.FromString,
                     response_serializer=robot__controller__pb2.Status.SerializeToString,
             ),
@@ -100,11 +161,9 @@ def add_RobotControllerServicer_to_server(servicer, server):
     server.add_registered_method_handlers('robot.RobotController', rpc_method_handlers)
 
 
-
  # This class is part of an EXPERIMENTAL API.
 class RobotController(object):
-    """Servicio disponible para el cliente (Blazor)
-    """
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def ConectingSequence(request,
@@ -134,33 +193,6 @@ class RobotController(object):
             _registered_method=True)
 
     @staticmethod
-    def StopSequence(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/robot.RobotController/StopSequence',
-            robot__controller__pb2.Empty.SerializeToString,
-            robot__controller__pb2.Status.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
     def ReferenceSequence(request,
             target,
             options=(),
@@ -175,6 +207,141 @@ class RobotController(object):
             request,
             target,
             '/robot.RobotController/ReferenceSequence',
+            robot__controller__pb2.Empty.SerializeToString,
+            robot__controller__pb2.Status.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ReferenceSingle(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/robot.RobotController/ReferenceSingle',
+            robot__controller__pb2.RobotIdRequest.SerializeToString,
+            robot__controller__pb2.Status.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def StartSequence(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/robot.RobotController/StartSequence',
+            robot__controller__pb2.Empty.SerializeToString,
+            robot__controller__pb2.Status.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def PauseSequence(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/robot.RobotController/PauseSequence',
+            robot__controller__pb2.Empty.SerializeToString,
+            robot__controller__pb2.Status.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ResumeSequence(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/robot.RobotController/ResumeSequence',
+            robot__controller__pb2.Empty.SerializeToString,
+            robot__controller__pb2.Status.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def StopSequence(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/robot.RobotController/StopSequence',
             robot__controller__pb2.Empty.SerializeToString,
             robot__controller__pb2.Status.FromString,
             options,

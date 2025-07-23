@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16robot_controller.proto\x12\x05robot\"\x07\n\x05\x45mpty\"*\n\x06Status\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0f\n\x07success\x18\x02 \x01(\x08\x32\xa2\x01\n\x0fRobotController\x12\x30\n\x11\x43onectingSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12+\n\x0cStopSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12\x30\n\x11ReferenceSequence\x12\x0c.robot.Empty\x1a\r.robot.Statusb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16robot_controller.proto\x12\x05robot\"\x07\n\x05\x45mpty\"*\n\x06Status\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0f\n\x07success\x18\x02 \x01(\x08\"\"\n\x0eRobotIdRequest\x12\x10\n\x08robot_id\x18\x01 \x01(\t2\xe6\x02\n\x0fRobotController\x12\x30\n\x11\x43onectingSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12\x30\n\x11ReferenceSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12\x37\n\x0fReferenceSingle\x12\x15.robot.RobotIdRequest\x1a\r.robot.Status\x12,\n\rStartSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12,\n\rPauseSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12-\n\x0eResumeSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12+\n\x0cStopSequence\x12\x0c.robot.Empty\x1a\r.robot.Statusb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,6 +35,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_EMPTY']._serialized_end=40
   _globals['_STATUS']._serialized_start=42
   _globals['_STATUS']._serialized_end=84
-  _globals['_ROBOTCONTROLLER']._serialized_start=87
-  _globals['_ROBOTCONTROLLER']._serialized_end=249
+  _globals['_ROBOTIDREQUEST']._serialized_start=86
+  _globals['_ROBOTIDREQUEST']._serialized_end=120
+  _globals['_ROBOTCONTROLLER']._serialized_start=123
+  _globals['_ROBOTCONTROLLER']._serialized_end=481
 # @@protoc_insertion_point(module_scope)

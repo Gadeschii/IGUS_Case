@@ -1,5 +1,8 @@
 from .base_robot import BaseRobot
-from .utils import wait_until_axes_referenced,check_robot_ready
+# from .utils import wait_until_axes_referenced,check_robot_ready
+
+from robots.robot_helpers import wait_until_axes_referenced, check_robot_ready
+
 
 import time
 

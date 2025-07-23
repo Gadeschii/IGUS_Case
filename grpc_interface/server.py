@@ -4,8 +4,9 @@ from concurrent import futures
 from grpc_interface import robot_controller_pb2
 from grpc_interface import robot_controller_pb2_grpc
 
-from controllers.logic_controller import LogicController
 from controllers.state_controller import StateController
+from controllers.logic_controller import LogicController
+
 
 from config import robots_config
 from robots.base_robot import BaseRobot 
@@ -15,8 +16,9 @@ from grpc_reflection.v1alpha import reflection
 from robots.utils import load_robots
 
 robots = load_robots()
-logic = LogicController(robots)
-state = StateController(logic.robots)
+state = StateController(robots)
+logic = LogicController(robots, state)
+
 
 
 class RobotControllerService(robot_controller_pb2_grpc.RobotControllerServicer):
@@ -25,9 +27,8 @@ class RobotControllerService(robot_controller_pb2_grpc.RobotControllerServicer):
         return robot_controller_pb2.Status(message=msg, success=True)
     
     # def Enable(self, request, context): 
-       
 
-    def Reference(self, request, context):
+    def ReferenceSequence(self, request, context):
         msg = state.reference_robots()
         return robot_controller_pb2.Status(message=msg, success=True)
     
@@ -42,12 +43,20 @@ class RobotControllerService(robot_controller_pb2_grpc.RobotControllerServicer):
 
     def StartSequence(self, request, context):
         msg = state.start_logic()
-
         return robot_controller_pb2.Status(message=msg, success=True)
 
-    def Stop(self, request, context):
+    def PauseSequence(self, request, context):
+        msg = state.pause_logic()  
+        return robot_controller_pb2.Status(message=msg, success=True)
+
+    def ResumeSequence(self, request, context):
+        msg = state.resume_logic()
+        return robot_controller_pb2.Status(message=msg, success=True)
+
+    def StopSequence(self, request, context):
         msg = state.shutdown()
         return robot_controller_pb2.Status(message=msg, success=True)
+
     
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

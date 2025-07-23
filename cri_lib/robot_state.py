@@ -163,6 +163,9 @@ class ReferencingAxisState(Enum):
     NOT_REFERENCED = 0
     REFERENCED = 1
     REFERENCING = 2
+    #Javi:
+    UNKNOWN= 3
+    
 
 
 @dataclass

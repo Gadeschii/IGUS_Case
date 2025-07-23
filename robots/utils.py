@@ -2,58 +2,46 @@ import time
 from config.robots_config import robots_config
 from robots.base_robot import BaseRobot
 
+from robots.scara import ScaraRobot
+from robots.rebelline import RebelLineRobot
+from robots.rebel1 import Rebel1Robot
+from robots.rebel2 import Rebel2Robot
+
 def load_robots():
     robots = []
 
     for config in robots_config.values():
-        if config.get("type") in ["ScaraRobot", "RebelLineRobot", "Rebel1Robot", "Rebel2Robot"]:
-            robot = BaseRobot(
-                name=config["id"],
-                program_name=config.get("program_name"),
-                ip=config["ip"],
-                sequence_path=config["sequence_path"],
-                var_file=config.get("var_file"),
-                port=config["port"],
-                id=config["id"]
-            )
-            robots.append(robot)
+        robot_type = config.get("type")
+        if robot_type not in ["ScaraRobot", "RebelLineRobot", "Rebel1Robot", "Rebel2Robot"]:
+            continue  # Ignora el D1Door u otros dispositivos
+
+        common_args = {
+            "name": config.get("id"),
+            "program_name": config.get("program_name"),
+            "ip": config.get("ip"),
+            "sequence_path": config.get("sequence_path"),
+            "var_file": config.get("var_file", ""),
+            "port": config.get("port"),
+            "id": config.get("id")
+        }
+
+        if robot_type == "ScaraRobot":
+            from robots.scara import ScaraRobot
+            robot = ScaraRobot(**common_args)
+        elif robot_type == "RebelLineRobot":
+            from robots.rebelline import RebelLineRobot
+            robot = RebelLineRobot(**common_args)
+        elif robot_type == "Rebel1Robot":
+            from robots.rebel1 import Rebel1Robot
+            robot = Rebel1Robot(**common_args)
+        elif robot_type == "Rebel2Robot":
+            from robots.rebel2 import Rebel2Robot
+            robot = Rebel2Robot(**common_args)
+
+        robots.append(robot)
 
     return robots
 
-def wait_until_axes_referenced(self, axes=("A1", "A2", "A3", "A4", "A5", "A6", "E1"), timeout = 400) -> bool:
-    print(f"⏳ Waiting for axes {axes} to be referenced...")
-    start = time.time()
-    while time.time() - start < timeout:
-        if self.controller.are_all_axes_referenced(axes):
-            print("♻️ Second reset...")
-            self.controller.reset()
-
-            print("🔓 Enabling remote control...")
-            if not self.controller.set_active_control(True):
-                raise Exception("❌ Could not enable remote control.")
-
-            print("⚡ Enabling robot...")
-            if not self.controller.enable():
-                raise Exception("❌ Could not enable the robot.")
-
-            return True
-        time.sleep(1)
-    raise TimeoutError(f"❌ Timeout: Axes {axes} not referenced in time.")
-
-  ####################################################################################  
-  #                                      CHECK()
-   ####################################################################################   
-def check_robot_ready(self):
-    if not self.controller.robot_state.active_control:
-        raise Exception("❌ Remote control is not active.")
-
-    if not self.controller.robot_state.main_relay:
-        raise Exception("❌ Main relay is not active.")
-
-    for i, err in enumerate(self.controller.robot_state.error_states):
-        if any([getattr(err, attr) for attr in vars(err)]):
-            raise Exception(f"❌ Error on axis {i}: {err}")
-    print("✅ Safe SCARA position.")
 
 ##################################################################################### 
 #                                      Get Variable() from .xml
