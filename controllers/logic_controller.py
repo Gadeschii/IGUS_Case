@@ -7,6 +7,7 @@ from controllers.color_detector import *
 from controllers.color_detector import VisionManager
 from dotenv import load_dotenv
 from controllers.state_controller import StateController
+from controllers.state_controller import SystemState
 from controllers.usb_pingpong_detector import usb_detect_pingpong_color
 import os
 
@@ -98,7 +99,7 @@ class LogicController:
     def run_scenario(self):
         print("\n🔁 Starting infinite production loop, waiting for objet")
 
-        # threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
+        threading.Thread(target=self.print_robot_variables_periodically, daemon=True).start()
 
         while True:
             # =========================
@@ -117,9 +118,10 @@ class LogicController:
                         print(f"⚠️ Failed to disconnect {robot.robot_id.upper()}: {e}")
                 break  # ⛔ Exit infinite loop
             
-            
-            # PAUSE control
-            if self.state_controller.state == StateController.SystemState.PAUSED:
+            #=====================================================
+            #                 Pause control
+            #=====================================================
+            if self.state_controller.state == SystemState.PAUSED:
                 print("⏸️ Paused. Waiting to resume...")
                 time.sleep(3)
             
@@ -239,9 +241,6 @@ class LogicController:
                         # ⏳ Wait until SCARA confirms reaching SafePos
                         #--------------------------------------------------------
                         
-                        # Initialize timer to control how often we print to the console
-                        start_time = time.time()
-
                         # Initialize timer to control how often we print to the console
                         start_time = time.time()
 

@@ -106,7 +106,10 @@ class BaseRobot:
 
         print(f"✅ Variable preparation complete for: {self.robot_id.upper()}")
         print(f"\n{'='*30}")
-
+        
+    ####################################################################################
+    #                               RUN TASK()
+    ####################################################################################  
     def run_task(self):
         try:
             print("🚀 Executing main task (placeholder)")

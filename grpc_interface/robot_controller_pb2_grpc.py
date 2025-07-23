@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import robot_controller_pb2 as robot__controller__pb2
+from grpc_interface import robot_controller_pb2 as robot__controller__pb2
 
 GRPC_GENERATED_VERSION = '1.73.1'
 GRPC_VERSION = grpc.__version__
@@ -49,6 +49,11 @@ class RobotControllerStub(object):
                 request_serializer=robot__controller__pb2.RobotIdRequest.SerializeToString,
                 response_deserializer=robot__controller__pb2.Status.FromString,
                 _registered_method=True)
+        self.ImportVariables = channel.unary_unary(
+                '/robot.RobotController/ImportVariables',
+                request_serializer=robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=robot__controller__pb2.Status.FromString,
+                _registered_method=True)
         self.StartSequence = channel.unary_unary(
                 '/robot.RobotController/StartSequence',
                 request_serializer=robot__controller__pb2.Empty.SerializeToString,
@@ -87,6 +92,12 @@ class RobotControllerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ReferenceSingle(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ImportVariables(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -132,6 +143,11 @@ def add_RobotControllerServicer_to_server(servicer, server):
             'ReferenceSingle': grpc.unary_unary_rpc_method_handler(
                     servicer.ReferenceSingle,
                     request_deserializer=robot__controller__pb2.RobotIdRequest.FromString,
+                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+            ),
+            'ImportVariables': grpc.unary_unary_rpc_method_handler(
+                    servicer.ImportVariables,
+                    request_deserializer=robot__controller__pb2.Empty.FromString,
                     response_serializer=robot__controller__pb2.Status.SerializeToString,
             ),
             'StartSequence': grpc.unary_unary_rpc_method_handler(
@@ -235,6 +251,33 @@ class RobotController(object):
             target,
             '/robot.RobotController/ReferenceSingle',
             robot__controller__pb2.RobotIdRequest.SerializeToString,
+            robot__controller__pb2.Status.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ImportVariables(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/robot.RobotController/ImportVariables',
+            robot__controller__pb2.Empty.SerializeToString,
             robot__controller__pb2.Status.FromString,
             options,
             channel_credentials,

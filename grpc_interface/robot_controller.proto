@@ -7,6 +7,7 @@ service RobotController {
   rpc ConectingSequence(Empty) returns (Status);
   rpc ReferenceSequence(Empty) returns (Status);     
   rpc ReferenceSingle(RobotIdRequest) returns (Status);
+  rpc ImportVariables (Empty) returns (Status);
   rpc StartSequence(Empty) returns (Status);
   rpc PauseSequence(Empty) returns (Status);
   rpc ResumeSequence(Empty) returns (Status);

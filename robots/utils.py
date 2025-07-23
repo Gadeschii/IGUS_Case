@@ -1,4 +1,5 @@
 import time
+import importlib
 from config.robots_config import robots_config
 from robots.base_robot import BaseRobot
 
@@ -7,14 +8,23 @@ from robots.rebelline import RebelLineRobot
 from robots.rebel1 import Rebel1Robot
 from robots.rebel2 import Rebel2Robot
 
+
 def load_robots():
     robots = []
 
     for config in robots_config.values():
         robot_type = config.get("type")
-        if robot_type not in ["ScaraRobot", "RebelLineRobot", "Rebel1Robot", "Rebel2Robot"]:
-            continue  # Ignora el D1Door u otros dispositivos
+        class_name = robot_type
+        module_name = "robots." + robot_type.lower() if robot_type == "D1Motor" else "robots." + robot_type.replace("Robot", "").lower()
 
+        try:
+            module = importlib.import_module(module_name)
+            RobotClass = getattr(module, class_name)
+        except (ModuleNotFoundError, AttributeError) as e:
+            print(f"❌ Could not load class {class_name}: {e}")
+            continue
+
+        # Filtrar argumentos comunes
         common_args = {
             "name": config.get("id"),
             "program_name": config.get("program_name"),
@@ -25,23 +35,68 @@ def load_robots():
             "id": config.get("id")
         }
 
-        if robot_type == "ScaraRobot":
-            from robots.scara import ScaraRobot
-            robot = ScaraRobot(**common_args)
-        elif robot_type == "RebelLineRobot":
-            from robots.rebelline import RebelLineRobot
-            robot = RebelLineRobot(**common_args)
-        elif robot_type == "Rebel1Robot":
-            from robots.rebel1 import Rebel1Robot
-            robot = Rebel1Robot(**common_args)
-        elif robot_type == "Rebel2Robot":
-            from robots.rebel2 import Rebel2Robot
-            robot = Rebel2Robot(**common_args)
+        # Si tiene 'role', añadirlo solo si la clase es D1Motor
+        if robot_type == "D1Motor":
+            common_args["role"] = config.get("role")
+            common_args["status"] = config.get("status")
+            common_args["shutdown"] = config.get("shutdown")
+            common_args["switchOn"] = config.get("switchOn")
+            common_args["enableOperation"] = config.get("enableOperation")
+            common_args["stop"] = config.get("stop")
+            common_args["reset"] = config.get("reset")
+            common_args["DInputs"] = config.get("DInputs")
 
+        robot = RobotClass(**common_args)
         robots.append(robot)
 
     return robots
 
+####################################################################################
+#                                  Dryve - D1 Motor
+####################################################################################
+
+# def load_robot_class(class_name):
+#     module_name = "robots." + class_name.lower() if class_name == "D1Motor" else "robots." + class_name.replace("Robot", "").lower()
+#     module = importlib.import_module(module_name)
+#     return getattr(module, class_name)
+
+####################################################################################
+#                                  Rest of Motor
+####################################################################################
+
+# def load_robots():
+#     robots = []
+
+#     for config in robots_config.values():
+#         robot_type = config.get("type")
+#         if robot_type not in ["ScaraRobot", "RebelLineRobot", "Rebel1Robot", "Rebel2Robot"]:
+#             continue  
+#         common_args = {
+#             "name": config.get("id"),
+#             "program_name": config.get("program_name"),
+#             "ip": config.get("ip"),
+#             "sequence_path": config.get("sequence_path"),
+#             "var_file": config.get("var_file", ""),
+#             "port": config.get("port"),
+#             "id": config.get("id")
+#         }
+
+#         if robot_type == "ScaraRobot":
+#             from robots.scara import ScaraRobot
+#             robot = ScaraRobot(**common_args)
+#         elif robot_type == "RebelLineRobot":
+#             from robots.rebelline import RebelLineRobot
+#             robot = RebelLineRobot(**common_args)
+#         elif robot_type == "Rebel1Robot":
+#             from robots.rebel1 import Rebel1Robot
+#             robot = Rebel1Robot(**common_args)
+#         elif robot_type == "Rebel2Robot":
+#             from robots.rebel2 import Rebel2Robot
+#             robot = Rebel2Robot(**common_args)
+
+#         robots.append(robot)
+
+#     return robots
 
 ##################################################################################### 
 #                                      Get Variable() from .xml
