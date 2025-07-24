@@ -1,18 +1,8 @@
 syntax = "proto3";
 
+option csharp_namespace = "MultiRobotgRPC.Grpc";
+
 package robot;
-
-
-service RobotController {
-  rpc ConectingSequence(Empty) returns (Status);
-  rpc ReferenceSequence(Empty) returns (Status);     
-  rpc ReferenceSingle(RobotIdRequest) returns (Status);
-  rpc ImportVariables (Empty) returns (Status);
-  rpc StartSequence(Empty) returns (Status);
-  rpc PauseSequence(Empty) returns (Status);
-  rpc ResumeSequence(Empty) returns (Status);
-  rpc StopSequence(Empty) returns (Status);
-}
 
 message Empty {}
 
@@ -21,6 +11,28 @@ message Status {
   bool success = 2;
 }
 
+message RobotConnectionStatus {
+  string robot_id = 1;
+  bool connected = 2;
+  string status_message = 3;
+}
+
+message RobotStatusList {
+  repeated RobotConnectionStatus statuses = 1;
+}
+
 message RobotIdRequest {
   string robot_id = 1;
+}
+
+service RobotController {
+  rpc ConectingSequence(Empty) returns (Status);
+  rpc GetConnectionStatuses(Empty) returns (RobotStatusList);
+  rpc ReferenceSequence(Empty) returns (Status);     
+  rpc ReferenceSingle(RobotIdRequest) returns (Status);
+  rpc ImportVariables (Empty) returns (Status);
+  rpc StartSequence(Empty) returns (Status);
+  rpc PauseSequence(Empty) returns (Status);
+  rpc ResumeSequence(Empty) returns (Status);
+  rpc StopSequence(Empty) returns (Status);
 }

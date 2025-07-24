@@ -11,6 +11,10 @@ class D1Motor:
         self.robot_id = id.lower()
         self.id = id
         self.status = status
+        
+        self.connected = True
+        
+        
         self.status_array = bytearray(status)
 
         self.shutdown = shutdown
@@ -67,9 +71,14 @@ class D1Motor:
             print("🔓 Activating control...")
             print("⚡ Enabling motor...")
             self.reference()
+            self.connected = True
             print(f"✅ {self.robot_id.upper()}: Connected successfully")
         except ConnectionRefusedError as e:
             raise RuntimeError(f"❌ Failed to connect to {self.robot_id} ({self.ip}:{self.port}) → {e}")
+        
+    def is_connected(self):
+        return getattr(self, "connected", False)
+
 
     def reference(self):
         if not self.boolAlreadyHomedAtIni:

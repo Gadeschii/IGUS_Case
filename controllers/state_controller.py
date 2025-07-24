@@ -19,7 +19,11 @@ class StateController:
     def connect_robots(self):
         print("🔌 Connecting all robots...")
         for robot in self.robots:
+            self.connected = False
             robot.connect()
+            
+            print(f"🧠 Connecting: {robot.robot_id} - instance ID: {id(robot)}")
+
         self.state = SystemState.CONNECTING
         return "Robots connected"
 

@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from grpc_interface import robot_controller_pb2 as robot__controller__pb2
+from grpc_interface import robot_controller_pb2 as grpc__interface_dot_robot__controller__pb2
 
 GRPC_GENERATED_VERSION = '1.73.1'
 GRPC_VERSION = grpc.__version__
@@ -18,7 +18,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in robot_controller_pb2_grpc.py depends on'
+        + f' but the generated code in grpc_interface/robot_controller_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -36,43 +36,48 @@ class RobotControllerStub(object):
         """
         self.ConectingSequence = channel.unary_unary(
                 '/robot.RobotController/ConectingSequence',
-                request_serializer=robot__controller__pb2.Empty.SerializeToString,
-                response_deserializer=robot__controller__pb2.Status.FromString,
+                request_serializer=grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=grpc__interface_dot_robot__controller__pb2.Status.FromString,
+                _registered_method=True)
+        self.GetConnectionStatuses = channel.unary_unary(
+                '/robot.RobotController/GetConnectionStatuses',
+                request_serializer=grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=grpc__interface_dot_robot__controller__pb2.RobotStatusList.FromString,
                 _registered_method=True)
         self.ReferenceSequence = channel.unary_unary(
                 '/robot.RobotController/ReferenceSequence',
-                request_serializer=robot__controller__pb2.Empty.SerializeToString,
-                response_deserializer=robot__controller__pb2.Status.FromString,
+                request_serializer=grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=grpc__interface_dot_robot__controller__pb2.Status.FromString,
                 _registered_method=True)
         self.ReferenceSingle = channel.unary_unary(
                 '/robot.RobotController/ReferenceSingle',
-                request_serializer=robot__controller__pb2.RobotIdRequest.SerializeToString,
-                response_deserializer=robot__controller__pb2.Status.FromString,
+                request_serializer=grpc__interface_dot_robot__controller__pb2.RobotIdRequest.SerializeToString,
+                response_deserializer=grpc__interface_dot_robot__controller__pb2.Status.FromString,
                 _registered_method=True)
         self.ImportVariables = channel.unary_unary(
                 '/robot.RobotController/ImportVariables',
-                request_serializer=robot__controller__pb2.Empty.SerializeToString,
-                response_deserializer=robot__controller__pb2.Status.FromString,
+                request_serializer=grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=grpc__interface_dot_robot__controller__pb2.Status.FromString,
                 _registered_method=True)
         self.StartSequence = channel.unary_unary(
                 '/robot.RobotController/StartSequence',
-                request_serializer=robot__controller__pb2.Empty.SerializeToString,
-                response_deserializer=robot__controller__pb2.Status.FromString,
+                request_serializer=grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=grpc__interface_dot_robot__controller__pb2.Status.FromString,
                 _registered_method=True)
         self.PauseSequence = channel.unary_unary(
                 '/robot.RobotController/PauseSequence',
-                request_serializer=robot__controller__pb2.Empty.SerializeToString,
-                response_deserializer=robot__controller__pb2.Status.FromString,
+                request_serializer=grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=grpc__interface_dot_robot__controller__pb2.Status.FromString,
                 _registered_method=True)
         self.ResumeSequence = channel.unary_unary(
                 '/robot.RobotController/ResumeSequence',
-                request_serializer=robot__controller__pb2.Empty.SerializeToString,
-                response_deserializer=robot__controller__pb2.Status.FromString,
+                request_serializer=grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=grpc__interface_dot_robot__controller__pb2.Status.FromString,
                 _registered_method=True)
         self.StopSequence = channel.unary_unary(
                 '/robot.RobotController/StopSequence',
-                request_serializer=robot__controller__pb2.Empty.SerializeToString,
-                response_deserializer=robot__controller__pb2.Status.FromString,
+                request_serializer=grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=grpc__interface_dot_robot__controller__pb2.Status.FromString,
                 _registered_method=True)
 
 
@@ -80,6 +85,12 @@ class RobotControllerServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def ConectingSequence(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetConnectionStatuses(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -132,43 +143,48 @@ def add_RobotControllerServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'ConectingSequence': grpc.unary_unary_rpc_method_handler(
                     servicer.ConectingSequence,
-                    request_deserializer=robot__controller__pb2.Empty.FromString,
-                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+                    request_deserializer=grpc__interface_dot_robot__controller__pb2.Empty.FromString,
+                    response_serializer=grpc__interface_dot_robot__controller__pb2.Status.SerializeToString,
+            ),
+            'GetConnectionStatuses': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetConnectionStatuses,
+                    request_deserializer=grpc__interface_dot_robot__controller__pb2.Empty.FromString,
+                    response_serializer=grpc__interface_dot_robot__controller__pb2.RobotStatusList.SerializeToString,
             ),
             'ReferenceSequence': grpc.unary_unary_rpc_method_handler(
                     servicer.ReferenceSequence,
-                    request_deserializer=robot__controller__pb2.Empty.FromString,
-                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+                    request_deserializer=grpc__interface_dot_robot__controller__pb2.Empty.FromString,
+                    response_serializer=grpc__interface_dot_robot__controller__pb2.Status.SerializeToString,
             ),
             'ReferenceSingle': grpc.unary_unary_rpc_method_handler(
                     servicer.ReferenceSingle,
-                    request_deserializer=robot__controller__pb2.RobotIdRequest.FromString,
-                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+                    request_deserializer=grpc__interface_dot_robot__controller__pb2.RobotIdRequest.FromString,
+                    response_serializer=grpc__interface_dot_robot__controller__pb2.Status.SerializeToString,
             ),
             'ImportVariables': grpc.unary_unary_rpc_method_handler(
                     servicer.ImportVariables,
-                    request_deserializer=robot__controller__pb2.Empty.FromString,
-                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+                    request_deserializer=grpc__interface_dot_robot__controller__pb2.Empty.FromString,
+                    response_serializer=grpc__interface_dot_robot__controller__pb2.Status.SerializeToString,
             ),
             'StartSequence': grpc.unary_unary_rpc_method_handler(
                     servicer.StartSequence,
-                    request_deserializer=robot__controller__pb2.Empty.FromString,
-                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+                    request_deserializer=grpc__interface_dot_robot__controller__pb2.Empty.FromString,
+                    response_serializer=grpc__interface_dot_robot__controller__pb2.Status.SerializeToString,
             ),
             'PauseSequence': grpc.unary_unary_rpc_method_handler(
                     servicer.PauseSequence,
-                    request_deserializer=robot__controller__pb2.Empty.FromString,
-                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+                    request_deserializer=grpc__interface_dot_robot__controller__pb2.Empty.FromString,
+                    response_serializer=grpc__interface_dot_robot__controller__pb2.Status.SerializeToString,
             ),
             'ResumeSequence': grpc.unary_unary_rpc_method_handler(
                     servicer.ResumeSequence,
-                    request_deserializer=robot__controller__pb2.Empty.FromString,
-                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+                    request_deserializer=grpc__interface_dot_robot__controller__pb2.Empty.FromString,
+                    response_serializer=grpc__interface_dot_robot__controller__pb2.Status.SerializeToString,
             ),
             'StopSequence': grpc.unary_unary_rpc_method_handler(
                     servicer.StopSequence,
-                    request_deserializer=robot__controller__pb2.Empty.FromString,
-                    response_serializer=robot__controller__pb2.Status.SerializeToString,
+                    request_deserializer=grpc__interface_dot_robot__controller__pb2.Empty.FromString,
+                    response_serializer=grpc__interface_dot_robot__controller__pb2.Status.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -196,8 +212,35 @@ class RobotController(object):
             request,
             target,
             '/robot.RobotController/ConectingSequence',
-            robot__controller__pb2.Empty.SerializeToString,
-            robot__controller__pb2.Status.FromString,
+            grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+            grpc__interface_dot_robot__controller__pb2.Status.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetConnectionStatuses(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/robot.RobotController/GetConnectionStatuses',
+            grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+            grpc__interface_dot_robot__controller__pb2.RobotStatusList.FromString,
             options,
             channel_credentials,
             insecure,
@@ -223,8 +266,8 @@ class RobotController(object):
             request,
             target,
             '/robot.RobotController/ReferenceSequence',
-            robot__controller__pb2.Empty.SerializeToString,
-            robot__controller__pb2.Status.FromString,
+            grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+            grpc__interface_dot_robot__controller__pb2.Status.FromString,
             options,
             channel_credentials,
             insecure,
@@ -250,8 +293,8 @@ class RobotController(object):
             request,
             target,
             '/robot.RobotController/ReferenceSingle',
-            robot__controller__pb2.RobotIdRequest.SerializeToString,
-            robot__controller__pb2.Status.FromString,
+            grpc__interface_dot_robot__controller__pb2.RobotIdRequest.SerializeToString,
+            grpc__interface_dot_robot__controller__pb2.Status.FromString,
             options,
             channel_credentials,
             insecure,
@@ -277,8 +320,8 @@ class RobotController(object):
             request,
             target,
             '/robot.RobotController/ImportVariables',
-            robot__controller__pb2.Empty.SerializeToString,
-            robot__controller__pb2.Status.FromString,
+            grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+            grpc__interface_dot_robot__controller__pb2.Status.FromString,
             options,
             channel_credentials,
             insecure,
@@ -304,8 +347,8 @@ class RobotController(object):
             request,
             target,
             '/robot.RobotController/StartSequence',
-            robot__controller__pb2.Empty.SerializeToString,
-            robot__controller__pb2.Status.FromString,
+            grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+            grpc__interface_dot_robot__controller__pb2.Status.FromString,
             options,
             channel_credentials,
             insecure,
@@ -331,8 +374,8 @@ class RobotController(object):
             request,
             target,
             '/robot.RobotController/PauseSequence',
-            robot__controller__pb2.Empty.SerializeToString,
-            robot__controller__pb2.Status.FromString,
+            grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+            grpc__interface_dot_robot__controller__pb2.Status.FromString,
             options,
             channel_credentials,
             insecure,
@@ -358,8 +401,8 @@ class RobotController(object):
             request,
             target,
             '/robot.RobotController/ResumeSequence',
-            robot__controller__pb2.Empty.SerializeToString,
-            robot__controller__pb2.Status.FromString,
+            grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+            grpc__interface_dot_robot__controller__pb2.Status.FromString,
             options,
             channel_credentials,
             insecure,
@@ -385,8 +428,8 @@ class RobotController(object):
             request,
             target,
             '/robot.RobotController/StopSequence',
-            robot__controller__pb2.Empty.SerializeToString,
-            robot__controller__pb2.Status.FromString,
+            grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+            grpc__interface_dot_robot__controller__pb2.Status.FromString,
             options,
             channel_credentials,
             insecure,

@@ -35,17 +35,21 @@ class BaseRobot:
         print(f"{'='*30}")
 
         print(f"🔌 Connecting to {self.ip}:{self.port}")
+        
         if not self.controller.connect(self.ip, self.port):
+            self.connected = False
             raise Exception(
             f"❌ Failed to connect to robot '{self.robot_id.upper()}' at {self.ip}:{self.port}.\n"
             f"🔎 Please ensure the robot is powered on and the IP address is correct."
         )
-
+        self.connected = True
+            
         print("♻️ Restarting robot...")
         self.controller.reset()
 
         print("🔓 Activating remote control...")
         if not self.controller.set_active_control(True):
+            
             raise Exception("❌ Failed to activate remote control...")
 
         print("⚡ Enabling robot...")
@@ -55,7 +59,15 @@ class BaseRobot:
         print("⏳ Waiting for robot to be ready...")
         if not self.controller.wait_for_kinematics_ready(timeout=30):
             raise Exception("❌ Robot not ready after referencing.")
+        self.connected = True
+        print (f"{self.connected}")
         print(f"✅ {self.robot_id.upper()}: Connected successfully")
+        
+        
+    def is_connected(self) -> bool:
+        return self.controller.is_connected() if self.controller else False
+
+    
 
     ####################################################################################
     #                               REFERENCE()

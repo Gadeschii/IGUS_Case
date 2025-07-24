@@ -125,6 +125,11 @@ class CRIController:
         except Exception as e:
             logger.exception("An error occurred while attempting to connect.")
             return False
+        
+    #Javi:
+    def is_connected(self) -> bool:
+        return self.connected
+
 
     def close(self) -> None:
         """

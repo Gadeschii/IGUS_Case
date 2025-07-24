@@ -8,7 +8,9 @@ from robots.rebelline import RebelLineRobot
 from robots.rebel1 import Rebel1Robot
 from robots.rebel2 import Rebel2Robot
 
-
+####################################################################################
+#                                  Motor
+####################################################################################
 def load_robots():
     robots = []
 
@@ -24,7 +26,7 @@ def load_robots():
             print(f"❌ Could not load class {class_name}: {e}")
             continue
 
-        # Filtrar argumentos comunes
+        
         common_args = {
             "name": config.get("id"),
             "program_name": config.get("program_name"),
@@ -34,8 +36,11 @@ def load_robots():
             "port": config.get("port"),
             "id": config.get("id")
         }
-
-        # Si tiene 'role', añadirlo solo si la clase es D1Motor
+        
+        ###############################################################
+        #                   Dryve - D1 Motor
+        ###############################################################
+     
         if robot_type == "D1Motor":
             common_args["role"] = config.get("role")
             common_args["status"] = config.get("status")
