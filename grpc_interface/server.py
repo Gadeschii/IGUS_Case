@@ -15,11 +15,6 @@ from grpc_reflection.v1alpha import reflection
 
 from robots.utils import load_robots
 
-# robots = load_robots()
-# state_controller  = StateController(robots)
-# logic_controller  = LogicController(robots, state_controller)
-
-
 class RobotControllerService(robot_controller_pb2_grpc.RobotControllerServicer):
     
     def __init__(self, logic, state):
@@ -35,7 +30,7 @@ class RobotControllerService(robot_controller_pb2_grpc.RobotControllerServicer):
         statuses = []
 
         for robot in self.state.robots:  
-            print(f"🧠 Status check: {robot.robot_id} - instance ID: {id(robot)}")
+            print(f"🧠 Connection status check: {robot.robot_id} - instance ID: {id(robot)}")
             if hasattr(robot, "is_connected") and callable(robot.is_connected):
                 connected = robot.is_connected()
             else:
@@ -61,6 +56,28 @@ class RobotControllerService(robot_controller_pb2_grpc.RobotControllerServicer):
     def ReferenceSingle(self, request, context):
         msg = self.state.reference_robot_by_id(request.robot_id)
         return robot_controller_pb2.Status(message=msg, success="referenced" in msg.lower())
+    
+    
+    def GetReferenceStatuses(self, request, context):
+        statuses = []
+
+        for robot in self.state.robots:
+            try:
+                print(f"🧠 Reference Status check: {robot.robot_id} - instance ID: {id(robot)}")
+                referenced = robot.is_referenced() if hasattr(robot, "is_referenced") else False
+                message = "Referenced" if referenced else "Not Referenced"
+            except Exception as e:
+                referenced = False
+                message = f"❌ Error: {e}"
+
+            statuses.append(robot_controller_pb2.RobotReferenceStatus(
+                robot_id=robot.robot_id,
+                referenced=referenced,
+                reference_message=message
+            ))
+
+        return robot_controller_pb2.RobotReferenceList(statuses=statuses)
+
 
 
     def ImportVariables(self, request, context):

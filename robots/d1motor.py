@@ -12,7 +12,8 @@ class D1Motor:
         self.id = id
         self.status = status
         
-        self.connected = True
+        self.connected = False
+        self.boolAlreadyHomedAtIni = False
         
         
         self.status_array = bytearray(status)
@@ -96,6 +97,10 @@ class D1Motor:
         #     time.sleep(10)
         #     self.boolAlreadyHomedAtIni = True
         
+        
+    def is_referenced(self):
+        return self.boolAlreadyHomedAtIni
+        
     def initialize(self):
         if self.initialized:
             return
@@ -114,6 +119,8 @@ class D1Motor:
         print(f"✅ Motor '{self.robot_id}' enabled")
     
     
+   
+
     def homing(self):
         print("\033[91m I'm in Homing\033[0m")
         self.boolHomingAfterSequence = True

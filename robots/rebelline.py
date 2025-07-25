@@ -9,12 +9,13 @@ import time
 class RebelLineRobot(BaseRobot):
     def __init__(self, name, **kwargs):
         super().__init__(name=name, **kwargs)
+        self.supported_axes = "A1", "A2", "A3", "A4", "A5", "A6", "E1"
         
     def _reference_rebelline(self):
         print("🔧 Referencing REBELLINE: Checking axes...")
         time.sleep(0.1)
         
-        if self.controller.are_all_axes_referenced(axes=("A1", "A2", "A3", "A4", "A5", "A6", "E1")):
+        if self.controller.are_all_axes_referenced(axes=(self.supported_axes)):
             RebelLineRobot.move_to_safe_position_rebelline(self)
             return
         else:
@@ -41,7 +42,7 @@ class RebelLineRobot(BaseRobot):
                 raise Exception("❌ Failed to reference remaining joints in REBELLINE.")
 
             time.sleep(0.2)
-            wait_until_axes_referenced(self,axes=("A1", "A2", "A3", "A4", "A5", "A6", "E1"))
+            wait_until_axes_referenced(self,axes=(self.supported_axes))
             time.sleep(0.1)
             self.controller.reset()
             time.sleep(0.5)
@@ -49,7 +50,11 @@ class RebelLineRobot(BaseRobot):
             time.sleep(0.5)
             RebelLineRobot.move_to_safe_position_rebelline(self)
         
-            
+    def is_referenced(self):
+        try:
+            return self.controller.are_all_axes_referenced(self.supported_axes)
+        except Exception:
+            return False        
             
     def move_to_safe_position_rebelline(self):
         print("🕹️ Moving RebelLine to safe position...")

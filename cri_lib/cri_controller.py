@@ -613,13 +613,13 @@ class CRIController:
         try:
             axis_state = getattr(state, axis)
             if axis_state == ReferencingAxisState.REFERENCED:
-                print(f"✅ {axis} está referenciado.")
+                print(f"✅ {axis} axis referenced.")
                 return True
             else:
-                print(f"❌ {axis} NO está referenciado (estado: {axis_state.name})")
+                print(f"❌ {axis} It's NOT referenced (status: {axis_state.name})")
                 return False
         except AttributeError:
-            print(f"⚠️ Eje {axis} no encontrado en el estado de referenciado.")
+            print(f"⚠️ Axis {axis} It's not search in the referenced status.")
             return False
 
      #Javi:   
@@ -638,9 +638,7 @@ class CRIController:
         """
         self.get_referencing_info()
         state = self.robot_state.referencing_state
-        
-        
-       
+
         for axis in axes:
             axis_state = getattr(state, axis)
             if axis_state != ReferencingAxisState.REFERENCED:

@@ -54,6 +54,11 @@ class RobotControllerStub(object):
                 request_serializer=grpc__interface_dot_robot__controller__pb2.RobotIdRequest.SerializeToString,
                 response_deserializer=grpc__interface_dot_robot__controller__pb2.Status.FromString,
                 _registered_method=True)
+        self.GetReferenceStatuses = channel.unary_unary(
+                '/robot.RobotController/GetReferenceStatuses',
+                request_serializer=grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+                response_deserializer=grpc__interface_dot_robot__controller__pb2.RobotReferenceList.FromString,
+                _registered_method=True)
         self.ImportVariables = channel.unary_unary(
                 '/robot.RobotController/ImportVariables',
                 request_serializer=grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
@@ -103,6 +108,12 @@ class RobotControllerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ReferenceSingle(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetReferenceStatuses(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -160,6 +171,11 @@ def add_RobotControllerServicer_to_server(servicer, server):
                     servicer.ReferenceSingle,
                     request_deserializer=grpc__interface_dot_robot__controller__pb2.RobotIdRequest.FromString,
                     response_serializer=grpc__interface_dot_robot__controller__pb2.Status.SerializeToString,
+            ),
+            'GetReferenceStatuses': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetReferenceStatuses,
+                    request_deserializer=grpc__interface_dot_robot__controller__pb2.Empty.FromString,
+                    response_serializer=grpc__interface_dot_robot__controller__pb2.RobotReferenceList.SerializeToString,
             ),
             'ImportVariables': grpc.unary_unary_rpc_method_handler(
                     servicer.ImportVariables,
@@ -295,6 +311,33 @@ class RobotController(object):
             '/robot.RobotController/ReferenceSingle',
             grpc__interface_dot_robot__controller__pb2.RobotIdRequest.SerializeToString,
             grpc__interface_dot_robot__controller__pb2.Status.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetReferenceStatuses(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/robot.RobotController/GetReferenceStatuses',
+            grpc__interface_dot_robot__controller__pb2.Empty.SerializeToString,
+            grpc__interface_dot_robot__controller__pb2.RobotReferenceList.FromString,
             options,
             channel_credentials,
             insecure,

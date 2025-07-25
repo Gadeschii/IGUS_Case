@@ -36,12 +36,19 @@ class BaseRobot:
 
         print(f"🔌 Connecting to {self.ip}:{self.port}")
         
-        if not self.controller.connect(self.ip, self.port):
-            self.connected = False
-            raise Exception(
-            f"❌ Failed to connect to robot '{self.robot_id.upper()}' at {self.ip}:{self.port}.\n"
-            f"🔎 Please ensure the robot is powered on and the IP address is correct."
-        )
+        if not self.controller.connected:
+            if not self.controller.connect(self.ip, self.port):
+                self.connected = False
+                raise Exception(
+                f"❌ Failed to connect to robot '{self.robot_id.upper()}' at {self.ip}:{self.port}.\n"
+                f"🔎 Please ensure the robot is powered on and the IP address is correct."
+            )
+                
+        else:
+            print(f"✅ {self.robot_id.upper()}: Already connected")
+            print(self.controller.is_connected())
+            return
+        ##self.connected = self.controller.connected
         self.connected = True
             
         print("♻️ Restarting robot...")

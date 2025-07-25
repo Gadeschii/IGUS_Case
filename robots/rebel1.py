@@ -4,6 +4,9 @@ import time
 class Rebel1Robot(BaseRobot):
     def __init__(self, name, **kwargs):
         super().__init__(name=name, **kwargs)
+        self.supported_axes = ("A1", "A2", "A3", "A4", "A5", "A6")
+
+
         
         
     def _reference_rebel_generic(self):
@@ -12,6 +15,7 @@ class Rebel1Robot(BaseRobot):
         if not self.controller.reference_all_joints():
             raise Exception("❌ Failed to reference all joints.")
         print(f"{self.robot_id.upper()}, referenced")
+        
 
         time.sleep(0.1)
         self.controller.reset()
@@ -19,4 +23,8 @@ class Rebel1Robot(BaseRobot):
         self.controller.enable()
         time.sleep(0.5)
 
-    
+    def is_referenced(self):
+        try:
+            return self.controller.are_all_axes_referenced(self.supported_axes)
+        except Exception:
+            return False

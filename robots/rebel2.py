@@ -4,6 +4,7 @@ import time
 class Rebel2Robot(BaseRobot):
    def __init__(self, name, **kwargs):
         super().__init__(name=name, **kwargs)
+        self.supported_axes = ("A1", "A2", "A3", "A4", "A5", "A6")
         
         
    def _reference_rebel_generic(self):
@@ -18,3 +19,9 @@ class Rebel2Robot(BaseRobot):
       time.sleep(0.5)
       self.controller.enable()
       time.sleep(0.5) 
+   
+   def is_referenced(self):
+        try:
+            return self.controller.are_all_axes_referenced(self.supported_axes)
+        except Exception:
+            return False

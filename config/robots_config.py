@@ -1,4 +1,4 @@
-
+# Real
 robots_config = {
     "Scara": {
         "type": "ScaraRobot",
@@ -55,3 +55,60 @@ robots_config = {
     
 }
 
+#Simulation:
+
+# robots_config = {
+#     "Scara": {
+#         "type": "ScaraRobot",
+#         "ip": "127.0.0.1",
+#         "port": 3922,
+#         "program_name": None,
+#         "sequence_path": "sequences/Scara/",
+#         "id": "scara",
+#         "var_file": "VariableScaraReal.xml"
+#     },
+#     "RebelLine": {
+#         "type": "RebelLineRobot",
+#         "ip": "127.0.0.1",
+#         "port": 3923,
+#         "program_name": None,
+#         "sequence_path": "sequences/RebelLine/",
+#         "id": "rebelline",
+#         "var_file": "VariableRebelLine.xml"
+#     },
+#     "Rebel1": {
+#         "type": "Rebel1Robot",
+#         "ip": "127.0.0.1",
+#         "port": 3921,
+#         "program_name": "Rebel1.xml",
+#         "sequence_path": "sequences/Rebel1/",
+#         "id": "rebel1",
+#         "var_file": "VariableRebel1.xml"
+#     },
+#     "Rebel2": {
+#         "type": "Rebel2Robot",
+#         "ip": "127.0.0.1",
+#         "port": 3924,
+#         "program_name": "Rebel2.xml",
+#         "sequence_path": "sequences/Rebel2/",
+#         "id": "rebel2",
+#         "var_file": "VariableRebel2.xml"
+#     },
+    
+#     "D1Door": {
+#         "type": "D1Motor",
+#         "ip": "192.168.3.70",
+#         "port": 502,
+#         "id": "d1door",
+#         "role": "door",
+#         "status" : [0, 0, 0, 0, 0, 13, 0, 43, 13, 0, 0, 0, 96, 65, 0, 0, 0, 0, 2],
+#         "shutdown": [0, 0, 0, 0, 0, 15, 0, 43, 13, 1, 0, 0, 96, 64, 0, 0, 0, 0, 2, 6, 0],
+#         "switchOn" : [0, 0, 0, 0, 0, 15, 0, 43, 13, 1, 0, 0, 96, 64, 0, 0, 0, 0, 2, 7, 0],
+#         "enableOperation" : [0, 0, 0, 0, 0, 15, 0, 43,13, 1, 0, 0, 96, 64, 0, 0, 0, 0, 2, 79, 0], ##15 --> 79
+#         "stop" : [0, 0, 0, 0, 0, 15, 0, 43,13, 1, 0, 0, 96, 64, 0, 0, 0, 0, 2, 15, 1],
+#         "reset" : [0, 0, 0, 0, 0, 15, 0, 43, 13, 1, 0, 0, 96, 64, 0, 0, 0, 0, 2, 0, 1],
+#         "DInputs": [0, 0, 0, 0, 0, 13, 0, 43, 13, 0, 0, 0, 96, 253, 0, 0, 0, 0, 4],
+        
+#     },
+    
+# }
