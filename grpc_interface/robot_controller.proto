@@ -20,9 +20,14 @@ message RobotConnectionStatus {
 message RobotStatusList {
   repeated RobotConnectionStatus statuses = 1;
 }
-
-
-
+message RobotImportStatusList {
+  repeated RobotImportStatus statuses = 1;
+}
+message RobotImportStatus {
+  string robot_id = 1;
+  bool imported = 2;
+  string status_message = 3;
+}
 message RobotReferenceStatus {
   string robot_id = 1;
   bool referenced = 2;
@@ -44,6 +49,7 @@ service RobotController {
   rpc ReferenceSingle(RobotIdRequest) returns (Status);
   rpc GetReferenceStatuses(Empty) returns (RobotReferenceList);
   rpc ImportVariables (Empty) returns (Status);
+  rpc GetImportVariableStatuses (Empty) returns (RobotImportStatusList);
   rpc StartSequence(Empty) returns (Status);
   rpc PauseSequence(Empty) returns (Status);
   rpc ResumeSequence(Empty) returns (Status);

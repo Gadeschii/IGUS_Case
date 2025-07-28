@@ -13,6 +13,7 @@ class BaseRobot:
         self.remote_folder = remote_folder
         self.wait_timeout = wait_timeout
         self.var_file = var_file
+        self.variables_imported  = False
         self.robot_id = id.lower()
         self.controller = CRIController()
         self._last_status = None
@@ -122,9 +123,14 @@ class BaseRobot:
             # print(f"🤖 Robot {self.robot_id.upper()} variable state:")
             # print(self.controller.robot_state.variabels)
             # print(f"📍 Robot {self.robot_id} was in the above state")
+            
+            self.variables_imported  = True
 
         print(f"✅ Variable preparation complete for: {self.robot_id.upper()}")
         print(f"\n{'='*30}")
+        
+    def is_variables_imported(self) -> bool:
+        return getattr(self, 'variables_imported', False)
         
     ####################################################################################
     #                               RUN TASK()

@@ -83,6 +83,22 @@ class RobotControllerService(robot_controller_pb2_grpc.RobotControllerServicer):
     def ImportVariables(self, request, context):
         msg = self.state.import_variables()
         return robot_controller_pb2.Status(message=msg, success=True)
+    
+    def GetImportVariableStatuses(self, request, context):
+        statuses = []
+
+        for robot in self.state.robots:
+            imported = getattr(robot, "variables_imported", False)
+
+            status = robot_controller_pb2.RobotImportStatus(
+                robot_id=robot.robot_id,
+                imported=imported,
+                status_message="Imported" if imported else "Not Imported"
+            )
+            statuses.append(status)
+
+        return robot_controller_pb2.RobotImportStatusList(statuses=statuses)
+
 
     def StartSequence(self, request, context):
         msg = self.state.start_logic()

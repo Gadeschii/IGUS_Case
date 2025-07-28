@@ -14,6 +14,7 @@ class D1Motor:
         
         self.connected = False
         self.boolAlreadyHomedAtIni = False
+        self.variables_imported  = False
         
         
         self.status_array = bytearray(status)
@@ -306,6 +307,7 @@ class D1Motor:
     def import_variables(self):
         # D1 motors do not import variables
         print(f"📥 D1Motor '{self.robot_id}': no variables to import (skipped)")
+        self.variables_imported = True
 
     def check_errors(self):
         # Puedes personalizar los telegramas de error si tienes un protocolo claro

@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n%grpc_interface/robot_controller.proto\x12\x05robot\"\x07\n\x05\x45mpty\"*\n\x06Status\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0f\n\x07success\x18\x02 \x01(\x08\"T\n\x15RobotConnectionStatus\x12\x10\n\x08robot_id\x18\x01 \x01(\t\x12\x11\n\tconnected\x18\x02 \x01(\x08\x12\x16\n\x0estatus_message\x18\x03 \x01(\t\"A\n\x0fRobotStatusList\x12.\n\x08statuses\x18\x01 \x03(\x0b\x32\x1c.robot.RobotConnectionStatus\"W\n\x14RobotReferenceStatus\x12\x10\n\x08robot_id\x18\x01 \x01(\t\x12\x12\n\nreferenced\x18\x02 \x01(\x08\x12\x19\n\x11reference_message\x18\x03 \x01(\t\"C\n\x12RobotReferenceList\x12-\n\x08statuses\x18\x01 \x03(\x0b\x32\x1b.robot.RobotReferenceStatus\"\"\n\x0eRobotIdRequest\x12\x10\n\x08robot_id\x18\x01 \x01(\t2\x96\x04\n\x0fRobotController\x12\x30\n\x11\x43onectingSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12=\n\x15GetConnectionStatuses\x12\x0c.robot.Empty\x1a\x16.robot.RobotStatusList\x12\x30\n\x11ReferenceSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12\x37\n\x0fReferenceSingle\x12\x15.robot.RobotIdRequest\x1a\r.robot.Status\x12?\n\x14GetReferenceStatuses\x12\x0c.robot.Empty\x1a\x19.robot.RobotReferenceList\x12.\n\x0fImportVariables\x12\x0c.robot.Empty\x1a\r.robot.Status\x12,\n\rStartSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12,\n\rPauseSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12-\n\x0eResumeSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12+\n\x0cStopSequence\x12\x0c.robot.Empty\x1a\r.robot.StatusB\x16\xaa\x02\x13MultiRobotgRPC.Grpcb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n%grpc_interface/robot_controller.proto\x12\x05robot\"\x07\n\x05\x45mpty\"*\n\x06Status\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0f\n\x07success\x18\x02 \x01(\x08\"T\n\x15RobotConnectionStatus\x12\x10\n\x08robot_id\x18\x01 \x01(\t\x12\x11\n\tconnected\x18\x02 \x01(\x08\x12\x16\n\x0estatus_message\x18\x03 \x01(\t\"A\n\x0fRobotStatusList\x12.\n\x08statuses\x18\x01 \x03(\x0b\x32\x1c.robot.RobotConnectionStatus\"C\n\x15RobotImportStatusList\x12*\n\x08statuses\x18\x01 \x03(\x0b\x32\x18.robot.RobotImportStatus\"O\n\x11RobotImportStatus\x12\x10\n\x08robot_id\x18\x01 \x01(\t\x12\x10\n\x08imported\x18\x02 \x01(\x08\x12\x16\n\x0estatus_message\x18\x03 \x01(\t\"W\n\x14RobotReferenceStatus\x12\x10\n\x08robot_id\x18\x01 \x01(\t\x12\x12\n\nreferenced\x18\x02 \x01(\x08\x12\x19\n\x11reference_message\x18\x03 \x01(\t\"C\n\x12RobotReferenceList\x12-\n\x08statuses\x18\x01 \x03(\x0b\x32\x1b.robot.RobotReferenceStatus\"\"\n\x0eRobotIdRequest\x12\x10\n\x08robot_id\x18\x01 \x01(\t2\xdf\x04\n\x0fRobotController\x12\x30\n\x11\x43onectingSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12=\n\x15GetConnectionStatuses\x12\x0c.robot.Empty\x1a\x16.robot.RobotStatusList\x12\x30\n\x11ReferenceSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12\x37\n\x0fReferenceSingle\x12\x15.robot.RobotIdRequest\x1a\r.robot.Status\x12?\n\x14GetReferenceStatuses\x12\x0c.robot.Empty\x1a\x19.robot.RobotReferenceList\x12.\n\x0fImportVariables\x12\x0c.robot.Empty\x1a\r.robot.Status\x12G\n\x19GetImportVariableStatuses\x12\x0c.robot.Empty\x1a\x1c.robot.RobotImportStatusList\x12,\n\rStartSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12,\n\rPauseSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12-\n\x0eResumeSequence\x12\x0c.robot.Empty\x1a\r.robot.Status\x12+\n\x0cStopSequence\x12\x0c.robot.Empty\x1a\r.robot.StatusB\x16\xaa\x02\x13MultiRobotgRPC.Grpcb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -40,12 +40,16 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_ROBOTCONNECTIONSTATUS']._serialized_end=185
   _globals['_ROBOTSTATUSLIST']._serialized_start=187
   _globals['_ROBOTSTATUSLIST']._serialized_end=252
-  _globals['_ROBOTREFERENCESTATUS']._serialized_start=254
-  _globals['_ROBOTREFERENCESTATUS']._serialized_end=341
-  _globals['_ROBOTREFERENCELIST']._serialized_start=343
-  _globals['_ROBOTREFERENCELIST']._serialized_end=410
-  _globals['_ROBOTIDREQUEST']._serialized_start=412
-  _globals['_ROBOTIDREQUEST']._serialized_end=446
-  _globals['_ROBOTCONTROLLER']._serialized_start=449
-  _globals['_ROBOTCONTROLLER']._serialized_end=983
+  _globals['_ROBOTIMPORTSTATUSLIST']._serialized_start=254
+  _globals['_ROBOTIMPORTSTATUSLIST']._serialized_end=321
+  _globals['_ROBOTIMPORTSTATUS']._serialized_start=323
+  _globals['_ROBOTIMPORTSTATUS']._serialized_end=402
+  _globals['_ROBOTREFERENCESTATUS']._serialized_start=404
+  _globals['_ROBOTREFERENCESTATUS']._serialized_end=491
+  _globals['_ROBOTREFERENCELIST']._serialized_start=493
+  _globals['_ROBOTREFERENCELIST']._serialized_end=560
+  _globals['_ROBOTIDREQUEST']._serialized_start=562
+  _globals['_ROBOTIDREQUEST']._serialized_end=596
+  _globals['_ROBOTCONTROLLER']._serialized_start=599
+  _globals['_ROBOTCONTROLLER']._serialized_end=1206
 # @@protoc_insertion_point(module_scope)
